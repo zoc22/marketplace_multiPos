@@ -1,0 +1,412 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+@import "./assets/styles/main.css";
+
+/* ----------------------------------------------------
+   TAILWIND V4 THEME CONFIGURATION OVERRIDES
+   ---------------------------------------------------- */
+@theme {
+  --font-sans: var(--font-family);
+
+  --text-xs: var(--text-xs);
+  --text-sm: var(--text-sm);
+  --text-base: var(--text-base);
+  --text-lg: var(--text-lg);
+  --text-xl: var(--text-xl);
+  --text-2xl: var(--text-2xl);
+  --text-3xl: var(--text-3xl);
+  --text-4xl: var(--text-4xl);
+
+  --font-weight-regular: var(--font-weight-regular);
+  --font-weight-medium: var(--font-weight-medium);
+  --font-weight-semibold: var(--font-weight-semibold);
+  --font-weight-bold: var(--font-weight-bold);
+
+  --animate-fade-in: fadeIn 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+  --shadow-subtle: var(--shadow-subtle);
+  --shadow-medium: var(--shadow-medium);
+  --shadow-elevated: var(--shadow-elevated);
+
+  /* Spacing Scale override mapped to our custom variables */
+  --spacing-1: var(--spacing-1);
+  --spacing-2: var(--spacing-2);
+  --spacing-3: var(--spacing-3);
+  --spacing-4: var(--spacing-4);
+  --spacing-5: var(--spacing-5);
+  --spacing-6: var(--spacing-6);
+  --spacing-8: var(--spacing-8);
+  --spacing-10: var(--spacing-10);
+  --spacing-12: var(--spacing-12);
+  --spacing-16: var(--spacing-16);
+  --spacing-20: var(--spacing-20);
+  --spacing-24: var(--spacing-24);
+  --spacing-32: var(--spacing-32);
+
+  /* Theme colors override */
+  --color-primary: var(--color-primary);
+  --color-secondary: var(--color-secondary);
+  --color-tertiary: var(--color-tertiary);
+  --color-danger: var(--color-danger);
+  --color-warning: var(--color-warning);
+  --color-info: var(--color-info);
+
+  /* Standard color slots mappings for Tailwind directives */
+  --color-slate-950: var(--color-background);
+  --color-slate-900: var(--color-surface);
+  --color-slate-850: var(--color-surface-elevated);
+  --color-slate-800: var(--color-border);
+  --color-slate-700: var(--color-border);
+  --color-slate-100: var(--color-text-primary);
+  --color-slate-200: var(--color-text-primary);
+  --color-slate-300: var(--color-text-secondary);
+  --color-slate-400: var(--color-text-secondary);
+  --color-slate-500: var(--color-text-tertiary);
+  --color-slate-600: var(--color-text-tertiary);
+}
+
+/* ----------------------------------------------------
+   SKELETON & ANIMATIONS OVERRIDES
+   ---------------------------------------------------- */
+.animate-fade-in {
+  animation: fadeIn 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(2px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.skeleton-box {
+  display: inline-block;
+  height: 100%;
+  width: 105%;
+  background: linear-gradient(-90deg, var(--color-surface) 0%, var(--color-surface-elevated) 50%, var(--color-surface) 100%);
+  background-size: 400% 400%;
+  animation: pulse-skeleton 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-skeleton {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ----------------------------------------------------
+   ACCENTS & SEMANTIC MAPPING OVERRIDES
+   ---------------------------------------------------- */
+
+/* backgrounds */
+.bg-slate-950,
+.bg-black,
+.bg-\[\#020503\],
+.bg-\[\#040817\],
+.bg-\[\#070b19\],
+.bg-\[\#05091a\],
+.bg-\[\#090f23\],
+.bg-\[\#040f0c\],
+.bg-\[\#091114\] {
+  background-color: var(--color-background) !important;
+  color: var(--color-text-primary);
+}
+
+.bg-slate-900,
+.bg-\[\#0a2317\],
+.bg-slate-950\/50,
+.bg-slate-900\/40,
+.bg-\[\#0d1633\],
+.bg-\[\#0b132b\],
+.bg-\[\#0d2226\],
+.bg-slate-900\/30,
+.bg-slate-905,
+.bg-\[\#1e293b\]\/10 {
+  background-color: var(--color-surface) !important;
+}
+
+.bg-slate-950\/80,
+.bg-slate-950\/40,
+.bg-\[\#101424\],
+.bg-emerald-950\/20,
+.bg-emerald-950\/40,
+.bg-emerald-950\/60,
+.bg-indigo-950\/40 {
+  background-color: var(--color-surface-elevated) !important;
+}
+
+/* borders */
+.border-slate-900,
+.border-slate-800,
+.border-\[\#121c3b\],
+.border-emerald-950,
+.border-indigo-900,
+.border-slate-800\/40,
+.border-\[\#121c3b\]\/30,
+.border-\[\#121c3b\]\/50,
+.border-emerald-900\/40,
+.border-indigo-950,
+.border-indigo-900\/60 {
+  border-color: var(--color-border) !important;
+}
+
+/* texts */
+.text-slate-100,
+.text-slate-200,
+.text-slate-300,
+.text-slate-350,
+.text-slate-355 {
+  color: var(--color-text-primary) !important;
+}
+
+.text-slate-450,
+.text-slate-400,
+.text-slate-405,
+.text-slate-500,
+.text-slate-550,
+.text-slate-600 {
+  color: var(--color-text-secondary) !important;
+}
+
+.text-zinc-500,
+.text-zinc-550 {
+  color: var(--color-text-tertiary) !important;
+}
+
+/* primary active links & buttons */
+.bg-indigo-600,
+.bg-indigo-650,
+.hover\:bg-indigo-700:hover,
+.hover\:bg-indigo-600:hover,
+.bg-indigo-600\/10 {
+  background-color: var(--color-primary) !important;
+  color: #0A0A0F !important;
+}
+
+.bg-indigo-600 *,
+.bg-indigo-650 *,
+.hover\:bg-indigo-700:hover * {
+  color: #0A0A0F !important;
+}
+
+.text-indigo-400,
+.text-indigo-300,
+.text-indigo-405,
+.hover\:text-indigo-400:hover {
+  color: var(--color-primary) !important;
+}
+
+.border-indigo-400,
+.border-indigo-500,
+.border-indigo-600,
+.border-indigo-800,
+.border-indigo-900,
+.border-indigo-950 {
+  border-color: var(--color-border) !important;
+}
+
+/* secondary active success links & badges */
+.text-emerald-400,
+.text-emerald-450,
+.text-emerald-500 {
+  color: var(--color-secondary) !important;
+}
+.bg-emerald-500,
+.bg-emerald-600 {
+  background-color: var(--color-secondary) !important;
+  color: #FFFFFF !important;
+}
+
+/* Warning badges */
+.text-yellow-400,
+.text-yellow-500,
+.text-orange-400,
+.text-amber-500 {
+  color: var(--color-warning) !important;
+}
+.bg-yellow-500,
+.bg-orange-500 {
+  background-color: var(--color-warning) !important;
+}
+
+/* Danger badges */
+.text-red-400,
+.text-red-500,
+.text-rose-400,
+.text-rose-450 {
+  color: var(--color-danger) !important;
+}
+.bg-red-500,
+.bg-red-600,
+.bg-red-950\/40,
+.bg-red-950\/20 {
+  background-color: var(--color-danger) !important;
+  color: #FFFFFF !important;
+}
+
+/* Info badges */
+.text-blue-400,
+.text-blue-500,
+.text-sky-400 {
+  color: var(--color-info) !important;
+}
+
+/* tables */
+tr.hover\:bg-slate-900\/30:hover {
+  background-color: var(--color-surface-elevated) !important;
+}
+
+.divide-y {
+  --tw-divide-y-reverse: 0;
+  border-top-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));
+  border-bottom-width: calc(1px * var(--tw-divide-y-reverse));
+  border-color: var(--color-border) !important;
+}
+
+table th {
+  background-color: var(--color-surface-elevated) !important;
+  color: var(--color-text-secondary) !important;
+}
+
+/* inputs & interactive elements */
+select,
+textarea,
+input {
+  background-color: var(--color-surface) !important;
+  color: var(--color-text-primary) !important;
+  border-color: var(--color-border) !important;
+}
+
+/* hover states general overrides */
+.hover\:bg-slate-850:hover,
+.hover\:bg-slate-900\/40:hover,
+.hover\:bg-slate-800:hover {
+  background-color: var(--color-surface-elevated) !important;
+  color: var(--color-text-primary) !important;
+}
+
+/* ----------------------------------------------------
+   TOOLTIP CUSTOM CONTAINER SYSTEM
+   ---------------------------------------------------- */
+.custom-tooltip-trigger {
+  position: relative;
+}
+
+.custom-tooltip-trigger::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--color-surface-elevated);
+  color: var(--color-text-primary);
+  font-family: monospace;
+  font-size: 9px;
+  padding: 4px 8px;
+  white-space: nowrap;
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+  border: 1px solid var(--color-border);
+}
+
+.custom-tooltip-trigger:hover::after {
+  opacity: 1;
+}
+
+/* ----------------------------------------------------
+   PRINTABLE & INVOICE READABILITY OVERRIDES
+   ---------------------------------------------------- */
+#printable-po-sheet,
+#printable-po-sheet *,
+#invoice-sheet,
+#invoice-sheet *,
+.printable-area,
+.printable-area * {
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+  background-color: transparent !important;
+}
+
+#printable-po-sheet,
+#invoice-sheet,
+.printable-area {
+  background-color: #ffffff !important;
+}
+
+#printable-po-sheet .text-slate-500,
+#invoice-sheet .text-slate-500,
+.printable-area .text-slate-500 {
+  color: #475569 !important;
+}
+
+#printable-po-sheet .text-slate-600,
+#invoice-sheet .text-slate-600,
+.printable-area .text-slate-600 {
+  color: #334155 !important;
+}
+
+#printable-po-sheet .text-slate-700,
+#invoice-sheet .text-slate-700,
+.printable-area .text-slate-700 {
+  color: #1e293b !important;
+}
+
+#printable-po-sheet .text-slate-800,
+#invoice-sheet .text-slate-800,
+.printable-area .text-slate-800 {
+  color: #0f172a !important;
+}
+
+#printable-po-sheet .text-slate-900,
+#printable-po-sheet .text-slate-950,
+#invoice-sheet .text-slate-900,
+#invoice-sheet .text-slate-950,
+.printable-area .text-slate-900,
+.printable-area .text-slate-950 {
+  color: #020617 !important;
+}
+
+/* ----------------------------------------------------
+   PRINT MEDIA SYSTEM (ISOLATED DOCUMENT PRINTING)
+   ---------------------------------------------------- */
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+  
+  #printable-po-sheet,
+  #printable-po-sheet *,
+  #invoice-sheet,
+  #invoice-sheet *,
+  .printable-area,
+  .printable-area * {
+    visibility: visible !important;
+  }
+
+  #printable-po-sheet,
+  #invoice-sheet,
+  .printable-area {
+    position: fixed !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100vw !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 15mm !important;
+    background-color: #ffffff !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  .hide-on-print,
+  .hide-on-print * {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
+

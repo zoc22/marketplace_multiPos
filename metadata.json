@@ -1,0 +1,6 @@
+{
+  "name": "Enterprise B2B Cameroon Marketplace",
+  "description": "Sovereign wholesale B2B exchange platform with multi-vendor logistics routes, CEMAC certificates, secure Escrow ledger, and dynamic catalogs for agricultural trade.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

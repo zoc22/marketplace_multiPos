@@ -1,0 +1,26 @@
+[data-theme="light"] {
+  /* Nouvelles Variables Marketplace */
+  --light-bg-main: 254 253 251; /* #fefdfb */
+  --light-bg-sec: 241 237 232; /* #f1ede8 */
+  --text-main: 51 45 41; /* #332d29 */
+  --text-sec: 108 96 87; /* #6c6057 */
+  --accent-green: 55 208 146; /* #37d092 */
+  --button-orange: 255 111 78; /* #ff6f4e */
+  --button-text: 255 255 255; /* #ffffff */
+  --divider: 223 215 208; /* #dfd7d0 */
+  --card-shadow: 0 4px 10px rgba(108, 96, 87, 0.1);
+  
+  /* Overrides du système de base pour le mode clair */
+  --color-background: #fefdfb;
+  --color-surface: #fefdfb;
+  --color-surface-elevated: #f1ede8;
+  --color-text-primary: #332d29;
+  --color-text-secondary: #6c6057;
+  --color-text-tertiary: #6c6057;
+  --color-border: #dfd7d0;
+  
+  /* Shadows (same structures but lighter opacity for light mode visual comfort) */
+  --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-medium: var(--card-shadow);
+  --shadow-elevated: 0 8px 32px rgba(0, 0, 0, 0.12);
+}

@@ -1,0 +1,27 @@
+[data-theme="dark"] {
+
+  /* Fallbacks pour les variables marketplace en mode sombre */
+  --light-bg-main: 10 10 15; /* bg-[#0a0a0f] */
+  --light-bg-sec: 28 28 46; /* bg-[#1c1c2e] */
+  --text-main: 255 255 255; /* text-white */
+  --text-sec: 184 181 176; /* text-[#b8b5b0] */
+  --accent-green: 16 185 129; /* emerald-500 */
+  --button-orange: 245 158 11; /* amber-500 */
+  --button-text: 26 26 26; /* text-[#1A1A1A] */
+  --divider: 255 255 255; /* fallback border, opacity usually applied */
+
+  --color-background: #0A0A0F;
+  --color-surface: #14141E;
+  --color-surface-elevated: #1C1C2E;
+  
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #B8B5B0;
+  --color-text-tertiary: #8A8780;
+  
+  --color-border: rgba(255, 255, 255, 0.06);
+  
+  /* Shadows */
+  --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.12);
+  --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.16);
+  --shadow-elevated: 0 8px 32px rgba(0, 0, 0, 0.24);
+}

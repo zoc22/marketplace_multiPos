@@ -1,0 +1,61 @@
+:root {
+  /* Typography */
+  --font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  
+  /* Font size scale */
+  --text-xs: 0.8125rem;   /* 13px - Badges/Statuts */
+  --text-sm: 0.9375rem;   /* 15px - Labels/Table data */
+  --text-base: 1rem;      /* 16px - Base text */
+  --text-lg: 1.125rem;    /* 18px - Subtitles/H4 */
+  --text-xl: 1.25rem;     /* 20px - Section titles/H3 */
+  --text-2xl: 1.5rem;     /* 24px - H2 */
+  --text-3xl: 2rem;       /* 32px - H1 */
+  --text-4xl: 2.5rem;     /* 40px */
+
+  /* Font weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Line heights */
+  --line-height-body: 1.5;
+  --line-height-title: 1.2;
+
+  /* Spacing Scale (based on 4px base) */
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 20px;
+  --spacing-6: 24px;
+  --spacing-8: 32px;
+  --spacing-10: 40px;
+  --spacing-12: 48px;
+  --spacing-16: 64px;
+  --spacing-20: 80px;
+  --spacing-24: 96px;
+  --spacing-32: 128px;
+
+  /* Layout */
+  --container-max-width: 1440px;
+  --padding-desktop: 24px;
+  --padding-tablet: 16px;
+  --padding-mobile: 12px;
+
+  /* Static Design System Colors */
+  --color-primary: #C8A96E;      /* Or brassé */
+  --color-secondary: #2D7D6E;    /* Émeraude profond */
+  --color-tertiary: #8B5E3C;     /* Bronze */
+  
+  /* Status Colors */
+  --color-danger: #D43F34;
+  --color-warning: #E8A84C;
+  --color-info: #4A8DB7;
+
+  /* Transitions */
+  --transition-duration-fast: 150ms;
+  --transition-duration-normal: 250ms;
+  --transition-duration-slow: 400ms;
+  --transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
+}

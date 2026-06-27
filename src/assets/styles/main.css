@@ -1,0 +1,572 @@
+@import "./variables.css";
+@import "./themes/light.css";
+@import "./themes/dark.css";
+
+/* ----------------------------------------------------
+   GLOBAL BORDER-RADIUS ACCESSIBILITY SYSTEM
+   ---------------------------------------------------- */
+/* We relaxed this reset so that custom border-radius classes can be applied */
+
+/* ----------------------------------------------------
+   TRANSITIONS SYSTEM
+   ---------------------------------------------------- */
+*, *::before, *::after {
+  transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform;
+  transition-timing-function: var(--transition-timing);
+  transition-duration: var(--transition-duration-normal);
+}
+
+/* Transition speed modifiers */
+.transition-fast {
+  transition-duration: var(--transition-duration-fast) !important;
+}
+.transition-normal {
+  transition-duration: var(--transition-duration-normal) !important;
+}
+.transition-slow {
+  transition-duration: var(--transition-duration-slow) !important;
+}
+
+/* ----------------------------------------------------
+   BASE APPLICATION RESET & TYPOGRAPHY
+   ---------------------------------------------------- */
+html, body {
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  font-family: var(--font-family);
+  font-size: var(--text-sm); /* 15px mobile default */
+  line-height: var(--line-height-body);
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (min-width: 768px) {
+  html, body {
+    font-size: var(--text-base); /* 16px desktop */
+  }
+}
+
+h1, .text-3xl {
+  font-size: var(--text-3xl) !important; /* 32px */
+  font-weight: var(--font-weight-bold) !important;
+  line-height: var(--line-height-title);
+}
+
+h2, .text-2xl {
+  font-size: var(--text-2xl) !important; /* 24px */
+  font-weight: var(--font-weight-semibold) !important;
+  line-height: var(--line-height-title);
+}
+
+h3, .text-xl {
+  font-size: var(--text-xl) !important; /* 20px */
+  font-weight: var(--font-weight-semibold) !important;
+  line-height: var(--line-height-title);
+}
+
+h4, .text-lg {
+  font-size: var(--text-lg) !important; /* 18px */
+  font-weight: var(--font-weight-medium) !important;
+  line-height: var(--line-height-title);
+}
+
+/* Global Table Overrides */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th {
+  font-size: 15px !important; /* 15px semibold */
+  font-weight: 600 !important;
+  padding: 16px 20px !important;
+  background-color: var(--color-surface-elevated, #1C1C2E) !important;
+  border-bottom: 2px solid var(--color-primary, #C8A96E) !important;
+}
+[data-theme="light"] table th {
+  background-color: var(--color-surface-elevated, #F0EFEB) !important;
+}
+
+table td {
+  font-size: 15px !important;
+  padding: 14px 20px !important;
+}
+
+/* Lignes : Alternance (hover + striped) */
+table tbody tr {
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+table tbody tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.02) !important;
+}
+[data-theme="light"] table tbody tr:nth-child(even) {
+  background-color: var(--color-surface-alt, #F5F3EE) !important;
+}
+table tbody tr:hover {
+  background-color: rgba(200, 169, 110, 0.08) !important; /* Hover shadow subtil */
+}
+
+/* Actions Icons */
+table td button svg,
+table td a svg {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+/* Statuts / Badges */
+table td span[class*="rounded"],
+table td span[class*="bg-"][class*="text-"] {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  padding: 4px 12px !important;
+}
+
+/* --- LISTES (OrderList, ProductList, etc.) --- */
+ul > li[class*="p-"] {
+  padding: 16px 20px !important;
+  margin-bottom: 8px !important;
+}
+ul > li .flex.justify-end {
+  text-align: right;
+  justify-content: flex-end;
+}
+
+/* --- FILTERS BAR --- */
+.filter-bar,
+.filters-container,
+form.grid {
+  gap: 16px !important;
+}
+
+/* Inputs / Selects dans filtres */
+input[type="text"],
+input[type="search"],
+select {
+  font-size: 16px !important;
+  padding: 14px 16px;
+}
+
+label {
+  font-size: 15px !important;
+}
+
+/* ----------------------------------------------------
+   ETAPE 18 : NAVIGATION & BREADCRUMBS
+   ---------------------------------------------------- */
+
+/* --- BREADCRUMBS --- */
+nav[aria-label="Breadcrumb"] ol,
+.flex.items-center.text-sm.text-slate-500.font-mono > span,
+.flex.items-center.text-sm.text-slate-500.font-mono > a,
+.breadcrumb {
+  font-size: 15px !important;
+}
+
+.flex.items-center.text-sm.text-slate-500.font-mono {
+  padding: 12px 0 !important;
+}
+
+/* Séparateurs */
+.flex.items-center.text-sm.text-slate-500.font-mono > svg,
+nav[aria-label="Breadcrumb"] svg {
+  width: 16px !important;
+  height: 16px !important;
+  margin: 0 8px !important;
+}
+
+/* Inactif */
+.flex.items-center.text-sm.text-slate-500.font-mono a,
+nav[aria-label="Breadcrumb"] a {
+  color: var(--color-text-muted, #9A9A9A) !important;
+}
+.flex.items-center.text-sm.text-slate-500.font-mono a:hover,
+nav[aria-label="Breadcrumb"] a:hover {
+  text-decoration: underline !important;
+}
+
+/* Actif */
+.flex.items-center.text-sm.text-slate-500.font-mono span.text-accent-green,
+.flex.items-center.text-sm.text-slate-500.font-mono span.font-bold,
+nav[aria-label="Breadcrumb"] a.router-link-active,
+nav[aria-label="Breadcrumb"] li[aria-current="page"] {
+  font-weight: 600 !important; /* semibold */
+  color: var(--color-primary, #C8A96E) !important;
+}
+
+/* Responsive Hide */
+@media (max-width: 768px) {
+  .flex.items-center.text-sm.text-slate-500.font-mono,
+  nav[aria-label="Breadcrumb"] {
+    display: none !important;
+  }
+}
+
+/* --- SIDEBAR NAVIGATION --- */
+aside nav > div {
+  margin-bottom: 8px !important; /* gap entre sections */
+}
+
+aside nav a,
+aside nav button {
+  font-size: 15px !important;
+  font-weight: 500 !important; /* medium */
+  padding: 12px 16px !important;
+}
+
+aside nav a svg,
+aside nav button svg {
+  width: 24px !important;
+  height: 24px !important;
+}
+
+/* Actif */
+aside nav a.router-link-active,
+aside nav a.router-link-exact-active,
+aside nav a.bg-emerald-950\/40,
+aside nav button.text-accent-green {
+  background-color: rgba(200, 169, 110, 0.1) !important; /* fond accent 10% */
+  color: var(--color-primary, #C8A96E) !important;
+  border-left-color: var(--color-primary, #C8A96E) !important;
+}
+
+/* Hover */
+aside nav a:hover:not(.router-link-active),
+aside nav button:hover:not(.text-accent-green) {
+  background-color: rgba(200, 169, 110, 0.05) !important; /* fond accent 5% */
+}
+
+/* Sous-menus indent */
+aside nav div.pl-6 > a,
+aside nav div > a[class*="pl-"] {
+  padding-left: 16px !important;
+  margin-left: 16px !important;
+}
+
+/* --- HEADER --- */
+header.bg-slate-950\/95,
+.h-16.border-b.border-slate-800 {
+  padding: 16px 24px !important;
+  border-bottom: 1px solid var(--color-border, #E5E3DE) !important;
+}
+[data-theme="dark"] header.bg-slate-950\/95,
+[data-theme="dark"] .h-16.border-b.border-slate-800 {
+  border-bottom: 1px solid #1e293b !important;
+}
+
+/* Logo */
+header span.text-sm.font-bold.text-accent-green,
+.font-bold.text-slate-200.uppercase.text-sm.tracking-wider {
+  font-size: 20px !important;
+  font-weight: 700 !important; /* bold */
+  color: var(--color-primary, #C8A96E) !important;
+}
+
+/* Nav items */
+header nav a {
+  font-size: 15px !important;
+  font-weight: 500 !important;
+}
+
+/* Actions Icons */
+header button svg,
+header a svg.h-6.w-6 {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+/* --- TENANT SWITCHER --- */
+header .text-xs.font-mono.uppercase.text-slate-500,
+aside .text-[10px].uppercase.font-mono.text-accent-green {
+  font-size: 14px !important;
+}
+
+/* Badge tenant actif */
+header span.bg-accent-green,
+aside span.bg-accent-green {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  padding: 4px 12px !important;
+  border-radius: 9999px !important;
+}
+
+/* ----------------------------------------------------
+   ETAPE 19 : FORMS & INPUTS
+   ---------------------------------------------------- */
+
+/* --- LABELS --- */
+label,
+.form-label,
+label.block {
+  font-size: 15px !important;
+  font-weight: 500 !important; /* medium */
+  margin-bottom: 6px !important;
+  display: inline-block;
+}
+
+/* --- INPUTS & SELECTS & TEXTAREAS --- */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="search"],
+input[type="tel"],
+input[type="url"],
+input[type="date"],
+select,
+textarea {
+  font-size: 16px !important;
+  padding: 14px 16px;
+  min-height: 52px !important;
+  border: 1px solid #2A2A3A !important;
+  border-radius: 8px; /* Slightly rounded corners instead of sharp styling */
+  transition: all 0.2s ease !important;
+}
+
+[data-theme="light"] input[type="text"],
+[data-theme="light"] input[type="email"],
+[data-theme="light"] input[type="password"],
+[data-theme="light"] input[type="number"],
+[data-theme="light"] input[type="search"],
+[data-theme="light"] input[type="tel"],
+[data-theme="light"] input[type="url"],
+[data-theme="light"] input[type="date"],
+[data-theme="light"] select,
+[data-theme="light"] textarea {
+  border: 1px solid #E5E3DE !important;
+  background-color: #FFFFFF !important;
+  color: #1A1A1A !important;
+}
+
+/* Focus State */
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="search"]:focus,
+input[type="tel"]:focus,
+input[type="url"]:focus,
+input[type="date"]:focus,
+select:focus,
+textarea:focus {
+  border-color: #C8A96E !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(200, 169, 110, 0.2) !important;
+}
+
+/* Placeholder */
+input::placeholder,
+textarea::placeholder {
+  font-size: 16px !important;
+  color: var(--color-text-muted, #9A9A9A) !important;
+}
+
+/* --- TEXTAREA SPECIFICS --- */
+textarea {
+  min-height: 100px !important;
+  resize: vertical !important;
+}
+
+/* --- SELECT SPECIFICS --- */
+select {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23C8A96E'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 16px center !important;
+  background-size: 20px !important;
+  padding-right: 48px !important; /* Make room for chevron */
+}
+
+/* --- ERROR STATES --- */
+input.error,
+input.has-error,
+input.border-red-500,
+input.border-red-400 {
+  border-color: #D43F34 !important;
+}
+
+p.text-red-500,
+p.text-red-400,
+span.error-message {
+  font-size: 14px !important;
+  color: #D43F34 !important;
+  margin-top: 4px !important;
+}
+
+/* --- CHECKBOX & RADIO --- */
+input[type="checkbox"],
+input[type="radio"] {
+  width: 20px !important;
+  height: 20px !important;
+  min-height: 20px !important; /* Overriding 52px */
+  border: 1px solid #2A2A3A !important;
+  accent-color: #C8A96E !important; /* Native styling */
+  padding: 0 !important;
+  margin: 0 !important;
+  cursor: pointer;
+}
+[data-theme="light"] input[type="checkbox"],
+[data-theme="light"] input[type="radio"] {
+  border: 1px solid #E5E3DE !important;
+}
+
+input[type="checkbox"]:checked,
+input[type="radio"]:checked {
+  background-color: #C8A96E !important;
+  border-color: #C8A96E !important;
+}
+input[type="checkbox"]:focus,
+input[type="radio"]:focus {
+  box-shadow: 0 0 0 2px rgba(200, 169, 110, 0.2) !important;
+}
+
+/* Checkbox/Radio Labels & Gaps */
+.flex.items-center.space-x-2,
+.flex.items-center.gap-2 {
+  gap: 8px !important;
+}
+input[type="checkbox"] + label,
+input[type="radio"] + label,
+.flex.items-center > label {
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  margin-bottom: 0 !important; /* cancel block mb */
+  cursor: pointer;
+}
+
+/* --- FILE UPLOAD --- */
+.border-dashed,
+[class*="border-dashed"],
+.dropzone {
+  min-height: 120px !important;
+  border-style: dashed !important;
+  border-width: 2px !important;
+  border-color: #2A2A3A !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.3s ease !important;
+}
+[data-theme="light"] .border-dashed,
+[data-theme="light"] [class*="border-dashed"] {
+  border-color: #E5E3DE !important;
+}
+.border-dashed:hover,
+[class*="border-dashed"]:hover {
+  border-color: #C8A96E !important;
+  background-color: rgba(200, 169, 110, 0.02) !important;
+}
+
+.border-dashed svg,
+[class*="border-dashed"] svg {
+  width: 32px !important;
+  height: 32px !important;
+  margin-bottom: 8px !important;
+  color: var(--color-primary, #C8A96E) !important;
+}
+
+.border-dashed span,
+.border-dashed p,
+[class*="border-dashed"] span,
+[class*="border-dashed"] p {
+  font-size: 16px !important;
+}
+
+/* Pagination */
+.pagination-container,
+.pagination-text,
+.pagination-button {
+  font-size: var(--text-sm) !important; /* 15px */
+}
+
+a, button {
+  font-family: inherit;
+}
+
+/* ----------------------------------------------------
+   GLOBAL SCROLLBAR OVERRIDES
+   ---------------------------------------------------- */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: var(--color-border) !important;
+  border-radius: 0px !important;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-tertiary) !important;
+}
+
+/* HIDE SCROLLBAR BUT KEEP FUNCTIONAL */
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none !important;
+}
+
+/* ----------------------------------------------------
+   PRINT SYSTEM FOR CLEAN INVOICES & PO SHEETS
+   ---------------------------------------------------- */
+@media print {
+  /* Hide all generic workspace layout components */
+  aside, 
+  header, 
+  footer, 
+  nav, 
+  button, 
+  .hide-on-print,
+  #modal-close-btn,
+  #btn-print-po,
+  #btn-track-delivery {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* Force printable areas to take full page space */
+  #printable-po-sheet, 
+  #invoice-sheet,
+  .printable-area {
+    visibility: visible !important;
+    display: block !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Ensure all parent containers are visible, display blocks, and don't crop */
+  html, 
+  body, 
+  #app, 
+  main, 
+  .workspace-layout, 
+  .page-container, 
+  .modal-container, 
+  .fixed, 
+  .absolute {
+    height: auto !important;
+    min-height: auto !important;
+    overflow: visible !important;
+    display: block !important;
+    position: static !important;
+    background: transparent !important;
+  }
+}
+
