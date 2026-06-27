@@ -5,7 +5,7 @@ import { mockUsers } from '@/utils/mocks/seed.js';
 export const useAuthStore = defineStore('auth', {
   state: () => {
     // Attempt loading initial state from local storage or use defaults
-    const savedState = localStorage.getItem('pinia_auth_v4');
+    const savedState = localStorage.getItem('pinia_auth_v5');
     if (savedState) {
       try {
         const parsed = JSON.parse(savedState);
@@ -97,7 +97,7 @@ export const useAuthStore = defineStore('auth', {
   },
   actions: {
     saveState() {
-      localStorage.setItem('pinia_auth_v4', JSON.stringify(this.$state));
+      localStorage.setItem('pinia_auth_v5', JSON.stringify(this.$state));
     },
 
     // Unified Login (Email + Password + 2FA + UniqueCode)
@@ -420,6 +420,7 @@ export const useAuthStore = defineStore('auth', {
 
     // Clear simulated DB back to defaults
     hardReset() {
+      localStorage.removeItem('pinia_auth_v5');
       localStorage.removeItem('pinia_auth_v4');
       localStorage.removeItem('pinia_auth_v3');
       localStorage.removeItem('pinia_auth_v2'); // Also clean up the old one

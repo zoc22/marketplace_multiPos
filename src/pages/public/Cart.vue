@@ -1,104 +1,107 @@
 <template>
-  <div class="min-h-screen bg-[#070b12] text-slate-100 flex flex-col justify-between">
+  <div class="min-h-screen bg-light-bg-main dark:bg-[#070b12] text-text-main dark:text-slate-100 flex flex-col justify-between pt-28">
     
     <!-- NAVIGATION BAR -->
     <PublicHeader />
 
     <!-- INTRO DECK -->
-    <main class="flex-1 py-12 px-4 md:px-8 max-w-5xl mx-auto w-full space-y-8 select-none">
+    <main class="flex-1 py-12 px-4 xl:px-12 w-full space-y-8 select-none max-w-[1600px] mx-auto">
       
       <!-- BREATHTAKING HEADER -->
-      <div class="border-b border-[#0f2129] pb-6">
-        <div class="inline-flex items-center space-x-1.5 bg-[#0e2126] text-emerald-450 px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-widest block w-fit mb-2">
-          <span>Souverain B2B Escrow System</span>
+      <div class="border-b border-divider dark:border-slate-800 pb-6">
+        <div class="inline-flex items-center space-x-1.5 bg-button-orange/20 border border-button-orange/30 text-button-orange px-3 py-1 rounded-full text-[10px] font-sans font-bold uppercase tracking-widest w-fit mb-3">
+          <span>Achat Sécurisé</span>
         </div>
-        <h1 class="text-2xl font-extrabold text-white uppercase font-mono">
-          🛒 Mon Panier Multi-Vendeurs (Coopératives)
+        <h1 class="text-3xl font-black text-text-main dark:text-white uppercase font-sans flex items-center gap-3">
+          <ShoppingCartIcon class="h-8 w-8 text-button-orange" aria-label="Cart" />
+          <span>Mon Panier</span>
         </h1>
-        <p class="text-xs text-slate-405 leading-relaxed tracking-wide mt-1">
-          Sous le protocole KONG B2B, vos lots d'achat sont scindés et gérés par lot fournisseur (Coopérative). Chaque sous-panier dispose de ses propres modes d'acheminement douanier et est réglé sous séquestre sécurisé.
+        <p class="text-sm text-slate-400 mt-2 max-w-2xl leading-relaxed">
+          Vos articles sont regroupés par boutique pour optimiser la logistique. Chaque commande bénéficie de notre garantie "Satisfait ou Remboursé" et d'un paiement 100% sécurisé.
         </p>
       </div>
 
       <!-- EMPTY STATE -->
       <div 
         v-if="cartStore.items.length === 0" 
-        class="text-center py-16 bg-[#0a1117]/40 border border-dashed border-[#142630] rounded-2xl space-y-4"
+        class="text-center py-16 bg-light-bg-main dark:bg-[#0a1017] border border-dashed border-divider dark:border-slate-800 rounded-3xl space-y-5"
       >
-        <div class="text-slate-600 text-4xl block">🛍️</div>
-        <h3 class="text-sm font-mono font-bold text-slate-300 uppercase">VOTRE PANIER EST ACTUELLEMENT VIDE</h3>
-        <p class="text-xs text-slate-500 max-w-sm mx-auto leading-relaxed">
-          Explorez le catalogue de fèves, épices IGP camerounaises et kits d'équipements pour commander votre premier lot sous Escrow.
+        <div class="flex justify-center">
+          <ShoppingBagIcon class="h-16 w-16 text-text-sec" aria-label="Empty Bag" />
+        </div>
+        <h3 class="text-lg font-sans font-black text-text-main dark:text-white uppercase">VOTRE PANIER EST ACTUELLEMENT VIDE</h3>
+        <p class="text-sm text-slate-400 max-w-sm mx-auto leading-relaxed">
+          Découvrez nos meilleures offres et promotions sur des milliers de produits de qualité supérieure.
         </p>
         <router-link 
           to="/products"
-          class="inline-block px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-450 hover:to-teal-555 text-slate-950 font-mono font-bold text-xs uppercase tracking-wider rounded-lg transition"
+          class="inline-block mt-4 px-6 py-3 bg-button-orange hover:bg-button-orange\/90 text-text-main font-sans font-black text-sm uppercase tracking-wider rounded-xl shadow-lg shadow-amber-500/20 transition-all"
         >
-          Parcourir les Lots &rarr;
+          Commencer mes achats &rarr;
         </router-link>
       </div>
 
       <!-- MULTI-SELLER SYSTEM GRIDS -->
       <div v-else class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
-        <!-- COLUMN 1: INTERACTIVE SUB-BASKETS PER COOPERATIVE -->
+        <!-- COLUMN 1: INTERACTIVE SUB-BASKETS PER SELLER -->
         <div class="lg:col-span-8 space-y-8">
           
           <div 
             v-for="(sellerBasket, bIdx) in cartStore.cartGroupedBySupplier" 
             :key="sellerBasket.supplierId"
-            class="bg-[#091116] border border-[#142732] rounded-2xl overflow-hidden shadow-xl"
+            class="bg-light-bg-main dark:bg-[#0a1017] border border-divider dark:border-slate-800 rounded-3xl overflow-hidden shadow-2xl"
           >
             <!-- SUB-BASKET TOP BRAND HEAD -->
-            <div class="bg-gradient-to-r from-[#0c1f26] to-[#0a1117] px-4.5 py-3.5 border-b border-[#142a34] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5">
-              <div class="flex items-center space-x-2.5">
-                <div class="h-6.5 w-6.5 rounded bg-accent-green text-slate-955 flex items-center justify-center text-xs font-mono font-extrabold uppercase">
-                  COOP
+            <div class="bg-gradient-to-r from-slate-900 to-[#0a1017] px-6 py-4 border-b border-divider dark:border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div class="flex items-center space-x-3">
+                <div class="h-8 w-8 rounded-lg bg-button-orange text-text-main flex items-center justify-center text-sm font-sans font-black uppercase">
+                  <BuildingOfficeIcon class="h-5 w-5" />
                 </div>
                 <div>
-                  <span class="text-[9px] uppercase font-mono text-slate-500 block leading-none">Wholesale Supplier Block</span>
-                  <h3 class="text-[12.5px] font-sans font-bold text-accent-green mt-1 uppercase leading-none">
+                  <span class="text-[10px] uppercase font-sans text-slate-400 block leading-none font-bold">Vendu et expédié par</span>
+                  <h3 class="text-base font-sans font-black text-text-main dark:text-white mt-1 uppercase leading-none truncate max-w-xs">
                     {{ sellerBasket.supplierName }}
                   </h3>
                 </div>
               </div>
 
               <!-- Real-time seller sub-total badge -->
-              <div class="px-3 py-1 bg-slate-950/80 border border-slate-900 rounded-lg text-xs font-mono">
-                <span class="text-slate-500">Lot Subtotal:</span>
-                <span class="text-emerald-404 font-bold ml-1.5">{{ formatCFA(sellerBasket.subtotal) }}</span>
+              <div class="px-4 py-2 bg-light-bg-main dark:bg-slate-950 border border-divider dark:border-slate-800 rounded-xl text-sm font-sans font-bold flex items-center gap-2">
+                <span class="text-slate-400">Sous-total Boutique:</span>
+                <span class="text-button-orange">{{ formatCFA(sellerBasket.subtotal) }}</span>
               </div>
             </div>
 
             <!-- ITEM LINES -->
-            <div class="divide-y divide-slate-900 px-4.5">
+            <div class="divide-y divide-slate-800/50 px-6">
               <div 
                 v-for="item in sellerBasket.items" 
                 :key="item.product.id"
-                class="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-mono text-xs"
+                class="py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-6 font-sans text-sm"
               >
                 <!-- Thumbnail + Metadata -->
-                <div class="flex items-center space-x-4">
-                  <img :src="item.product.image" class="h-12 w-12 rounded-lg object-cover border border-[#152e3b]/40" />
-                  <div class="truncate max-w-[15rem] sm:max-w-[18rem]">
-                    <span class="text-[8.5px] uppercase font-bold text-slate-500 leading-none">SKU: {{ item.product.sku }}</span>
-                    <h4 class="text-[12px] font-bold text-slate-201 leading-tight truncate mt-0.5" :title="item.product.name">
+                <div class="flex items-center space-x-4 flex-1">
+                  <img :src="item.product.image" class="h-16 w-16 rounded-xl object-cover border border-divider dark:border-slate-800" />
+                  <div class="truncate max-w-[15rem] sm:max-w-xs">
+                    <span class="text-[9px] uppercase font-bold text-slate-500 leading-none">RÉF: {{ item.product.sku }}</span>
+                    <h4 class="text-sm font-bold text-text-main dark:text-white leading-tight truncate mt-1 group-hover:text-button-orange transition-colors" :title="item.product.name">
                       {{ item.product.name }}
                     </h4>
-                    <p class="text-[10px] text-slate-450 mt-1">
-                      {{ formatCFA(item.product.price) }} <span class="font-sans text-[10px] text-slate-505">sans taxe / {{ item.product.unit }}</span>
+                    <p class="text-xs text-slate-400 mt-1 font-bold">
+                      {{ formatCFA(item.product.price) }} <span class="font-normal text-[10px] text-slate-500">/ {{ item.product.unit }}</span>
                     </p>
                   </div>
                 </div>
 
                 <!-- Live Quantity Mutator + Subtotal Column -->
-                <div class="flex items-center justify-between sm:justify-end space-x-6">
+                <div class="flex items-center justify-between sm:justify-end space-x-6 sm:w-auto w-full">
                   
                   <!-- Numeric quantity editor -->
-                  <div class="flex items-center space-x-1.5 bg-slate-950 p-1 border border-slate-900 rounded-lg">
+                  <div class="flex items-center space-x-1.5 bg-light-bg-sec dark:bg-slate-900 p-1.5 border border-divider dark:border-slate-800 rounded-xl">
                     <button 
                       @click="decreaseQty(item)"
-                      class="h-6 w-6 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold flex items-center justify-center text-xs"
+                      class="h-7 w-7 rounded-lg bg-light-bg-sec dark:bg-slate-800 hover:bg-slate-700 hover:text-button-orange text-text-main dark:text-white font-bold flex items-center justify-center text-lg transition"
                     >
                       -
                     </button>
@@ -106,13 +109,13 @@
                       type="number" 
                       :value="item.quantity"
                       @change="onQtyFieldChange($event, item)"
-                      class="w-12 bg-transparent border-none text-center text-xs text-emerald-450 font-bold focus:ring-0 p-0"
+                      class="w-12 bg-transparent border-none text-center text-sm text-text-main dark:text-white font-black focus:ring-0 p-0"
                       min="1"
                       :max="item.product.stock || 50000"
                     />
                     <button 
                       @click="increaseQty(item)"
-                      class="h-6 w-6 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold flex items-center justify-center text-xs"
+                      class="h-7 w-7 rounded-lg bg-light-bg-sec dark:bg-slate-800 hover:bg-slate-700 hover:text-button-orange text-text-main dark:text-white font-bold flex items-center justify-center text-lg transition"
                     >
                       +
                     </button>
@@ -120,8 +123,8 @@
 
                   <!-- Row Total cost -->
                   <div class="text-right min-w-[5.5rem]">
-                    <span class="text-[9px] text-slate-500 block uppercase font-mono">Row Total</span>
-                    <span class="text-emerald-404 font-extrabold text-[12.5px] mt-0.5 inline-block">
+                    <span class="text-[10px] text-slate-500 block uppercase font-bold">Total Ligne</span>
+                    <span class="text-button-orange font-black text-sm mt-0.5 inline-block">
                       {{ formatCFA(item.product.price * item.quantity) }}
                     </span>
                   </div>
@@ -129,44 +132,45 @@
                   <!-- Delete -->
                   <button 
                     @click="cartStore.removeFromCart(item.product.id)"
-                    class="text-red-500 hover:text-red-400 font-bold text-base leading-none p-1 pointer-events-auto"
-                    title="Remove item"
+                    class="h-8 w-8 rounded-lg flex items-center justify-center bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-text-main dark:text-white font-bold text-xl transition pointer-events-auto"
+                    title="Retirer l'article"
                   >
-                    &times;
+                    <TrashIcon class="h-4 w-4" />
                   </button>
 
                 </div>
               </div>
             </div>
 
-            <!-- SUPPLIER LOGISTICS SECTION (Separate fret calculations per seller) -->
-            <div class="bg-slate-950/60 p-4 border-t border-slate-900 space-y-3 font-mono">
+            <!-- SUPPLIER LOGISTICS SECTION -->
+            <div class="bg-light-bg-sec dark:bg-slate-900/50 p-5 border-t border-divider dark:border-slate-800 space-y-4 font-sans">
               <div class="flex justify-between items-center">
-                <span class="text-[9px] uppercase tracking-wider text-slate-500 font-extrabold flex items-center space-x-1.5">
-                  <span class="inline-block h-1.5 w-1.5 rounded-full bg-cyan-400"></span>
-                  <span>Logistics Route & Clearing Partner:</span>
+                <span class="text-[11px] uppercase tracking-widest text-slate-400 font-bold flex items-center space-x-2">
+                  <TruckIcon class="h-4 w-4 text-button-orange" />
+                  <span>Mode de Livraison:</span>
                 </span>
-                <span class="text-[9.5px] text-cyan-404 font-bold uppercase select-all">
-                  {{ getFretCost(sellerBasket.supplierId) === 0 ? 'FRET OFFERT' : `+ ${formatCFA(getFretCost(sellerBasket.supplierId))}` }}
+                <span class="text-[11px] text-button-orange font-black uppercase bg-button-orange/10 px-2 py-1 rounded">
+                  {{ getFretCost(sellerBasket.supplierId) === 0 ? 'Livraison Gratuite' : `+ ${formatCFA(getFretCost(sellerBasket.supplierId))}` }}
                 </span>
               </div>
 
               <!-- Selection radio buttons -->
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-[10.5px]">
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                 
                 <label 
                   v-for="car in freightOptions" 
                   :key="car.id"
-                  class="p-2.5 rounded-lg border bg-[#05090e]/80 cursor-pointer flex flex-col justify-between hover:border-slate-800 transition"
-                  :class="selectedFreight[sellerBasket.supplierId] === car.id ? 'border-cyan-500/80 bg-cyan-950/10 text-cyan-300' : 'border-slate-900 text-slate-450'"
+                  class="p-3 rounded-xl border bg-light-bg-main dark:bg-[#0a1017] cursor-pointer flex flex-col justify-between hover:border-button-orange/50 transition-all relative overflow-hidden"
+                  :class="selectedFreight[sellerBasket.supplierId] === car.id ? 'border-button-orange shadow-[0_0_15px_rgba(245,158,11,0.1)]' : 'border-divider dark:border-slate-800 text-slate-400'"
                   @click="setFreightRoute(sellerBasket.supplierId, car.id)"
                 >
-                  <div class="font-bold flex justify-between uppercase">
+                  <div v-if="selectedFreight[sellerBasket.supplierId] === car.id" class="absolute inset-0 bg-button-orange/5 pointer-events-none"></div>
+                  <div class="font-black flex justify-between uppercase z-10" :class="selectedFreight[sellerBasket.supplierId] === car.id ? 'text-button-orange' : 'text-text-sec dark:text-slate-300'">
                     <span>{{ car.name }}</span>
-                    <span v-if="selectedFreight[sellerBasket.supplierId] === car.id" class="text-cyan-400 select-none">✔</span>
+                    <span v-if="selectedFreight[sellerBasket.supplierId] === car.id">✔</span>
                   </div>
-                  <div class="text-[8.5px] text-slate-500 mt-1 leading-normal uppercase">
-                    {{ car.service }} &bull; {{ car.route }}
+                  <div class="text-[10px] text-slate-500 mt-2 font-bold z-10">
+                    {{ car.service }} <br> <span class="text-text-sec font-normal">{{ car.route }}</span>
                   </div>
                 </label>
 
@@ -177,73 +181,73 @@
 
         </div>
 
-        <!-- COLUMN 2: ESCROW BILLING BILLBOARD TOTAL CARD -->
-        <aside class="lg:col-span-4 bg-[#091116] border border-[#142732] p-5 rounded-2xl space-y-6 font-mono text-[11px] lg:sticky lg:top-24">
+        <!-- COLUMN 2: TOTAL CARD -->
+        <aside class="lg:col-span-4 bg-light-bg-main dark:bg-[#0a1017] border border-divider dark:border-slate-800 p-6 rounded-3xl space-y-6 font-sans text-sm lg:sticky lg:top-24 shadow-2xl">
           
-          <div class="border-b border-[#12242d] pb-3.5">
-            <span class="text-[9.5px] uppercase tracking-wider text-slate-500 font-bold">SOVEREIGN LEDGER INVOICE</span>
-            <h3 class="text-sm font-bold text-white uppercase mt-0.5">Recapitulatif d'Escrow</h3>
+          <div class="border-b border-divider dark:border-slate-800 pb-4">
+            <span class="text-[10px] uppercase tracking-widest text-button-orange font-bold bg-button-orange/10 px-2 py-1 rounded">RÉSUMÉ DE LA COMMANDE</span>
+            <h3 class="text-xl font-black text-text-main dark:text-white uppercase mt-3">Total à Régler</h3>
           </div>
 
           <!-- Invoice Rows -->
-          <div class="space-y-3.5 text-slate-300">
+          <div class="space-y-4 text-text-sec dark:text-slate-300">
             
-            <div class="flex justify-between">
-              <span class="text-slate-500 uppercase">Subtotal Crops (Lot cost)</span>
-              <span class="font-bold text-slate-200 text-xs">{{ formatCFA(cartStore.totalAmount) }}</span>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-400 font-bold">Total des articles</span>
+              <span class="font-black text-text-main dark:text-white">{{ formatCFA(cartStore.totalAmount) }}</span>
             </div>
 
-            <div class="flex justify-between">
-              <span class="text-slate-500 uppercase">Localized Freight Route Add</span>
-              <span class="font-bold text-cyan-405 text-xs">{{ formatCFA(totalFreightCosts) }}</span>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-400 font-bold">Frais de livraison</span>
+              <span class="font-black text-button-orange">{{ formatCFA(totalFreightCosts) }}</span>
             </div>
 
-            <!-- Tax simulation (African OHADA standard 19.25% or simplified 5.5% B2B) -->
-            <div class="flex justify-between">
-              <span class="text-slate-500 uppercase">Simplified OHADA B2B Tax (5.5%)</span>
-              <span class="font-bold text-slate-200 text-xs">{{ formatCFA(simplifiedTax) }}</span>
+            <!-- Tax simulation -->
+            <div class="flex justify-between items-center">
+              <span class="text-slate-400 font-bold">TVA Estimée (5.5%)</span>
+              <span class="font-black text-text-main dark:text-white">{{ formatCFA(simplifiedTax) }}</span>
             </div>
 
-            <div class="flex justify-between">
-              <span class="text-slate-500 uppercase">Platform Secrow Fee (0.2%)</span>
-              <span class="text-slate-450 font-bold">{{ formatCFA(platformSecrowFee) }}</span>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-400 font-bold">Frais de service (0.2%)</span>
+              <span class="font-bold text-slate-500">{{ formatCFA(platformSecrowFee) }}</span>
             </div>
 
-            <div class="pt-4.5 border-t border-[#12242d] flex justify-between items-end">
+            <div class="pt-5 mt-2 border-t border-divider dark:border-slate-800 flex justify-between items-end">
               <div>
-                <span class="text-[9px] uppercase tracking-wider text-slate-550 block">GRAND TOTAL B2B SÉQUESTRE</span>
-                <span class="text-emerald-404 font-extrabold text-lg">{{ formatCFA(grandTotal) }}</span>
+                <span class="text-[11px] uppercase tracking-wider text-slate-500 font-bold block mb-1">MONTANT FINAL</span>
+                <span class="text-button-orange font-black text-2xl drop-shadow-md">{{ formatCFA(grandTotal) }}</span>
               </div>
-              <span class="text-[8px] bg-emerald-950/40 border border-emerald-900/30 text-emerald-450 px-2 py-0.5 rounded uppercase font-bold">
+              <span class="text-[9px] bg-button-orange/10 border border-button-orange/20 text-button-orange px-2 py-1 rounded uppercase font-black">
                 XAF CFA
               </span>
             </div>
 
           </div>
 
-          <!-- ESCROW DISPATCH TRUST METAPHOR -->
-          <div class="p-3 bg-slate-950 border border-slate-900 rounded-xl space-y-2 text-slate-500">
-            <div class="flex items-center space-x-2 text-[9px] uppercase text-emerald-450 font-extrabold tracking-tight">
-              <span class="animate-pulse h-1.5 w-1.5 rounded-full bg-accent-green"></span>
-              <span>Clearing Guaranty Clause</span>
+          <!-- GUARANTEE BADGE -->
+          <div class="p-4 bg-accent-green/5 border border-accent-green/20 rounded-xl space-y-2 text-accent-green/80 mt-6">
+            <div class="flex items-center space-x-2 text-[10px] uppercase font-black tracking-widest text-accent-green">
+              <ShieldCheckIcon class="h-4 w-4" />
+              <span>Paiement Sécurisé</span>
             </div>
-            <p class="text-[9.5px] leading-normal font-sans">
-              No direct cash is sent to suppliers. Your fund stays fully secure inside KONG Escrow and is only dispatched when you sign-off the customs receipts.
+            <p class="text-[11px] leading-relaxed">
+              Vos paiements sont cryptés et conservés en toute sécurité. Les vendeurs ne sont payés qu'après confirmation de bonne réception de votre commande.
             </p>
           </div>
 
           <!-- Checkout processing CTA -->
           <button 
             @click="processEscrowCheckout"
-            class="w-full py-4 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-450 hover:to-teal-555 text-slate-955 font-bold text-xs uppercase tracking-wider rounded-xl shadow-lg transition"
+            class="w-full py-4 mt-4 bg-button-orange hover:bg-button-orange\/90 text-text-main font-black text-sm uppercase tracking-wider rounded-xl shadow-[0_0_20px_rgba(245,158,11,0.2)] transition-all flex justify-center items-center gap-2"
           >
-            SÉQUESTRER ET COMMANDER &rarr;
+            VALIDER LA COMMANDE <span class="text-lg">&rarr;</span>
           </button>
 
           <!-- Back Actions -->
           <router-link 
             to="/products"
-            class="block w-full text-center py-2.5 bg-[#05090d] border border-slate-900 hover:bg-slate-900 rounded-xl text-slate-400 hover:text-white uppercase text-[10px] tracking-wider transition"
+            class="block w-full text-center py-3 bg-light-bg-sec dark:bg-slate-900 border border-divider dark:border-slate-800 hover:bg-light-bg-sec dark:bg-slate-800 hover:border-slate-700 rounded-xl text-slate-400 hover:text-text-main dark:text-white uppercase font-bold text-xs tracking-wider transition"
           >
             &larr; Continuer mes Achats
           </router-link>
@@ -254,24 +258,21 @@
 
     </main>
 
+    <!-- MAIN PLATFORM FOOTER -->
     <!-- FOOTER -->
-    <footer class="bg-slate-950 border-t border-[#091116] py-12 px-6 text-slate-500 text-xs text-center pb-48 md:pb-40">
-      <div class="max-w-4xl mx-auto space-y-4">
-        <p class="text-[11px] leading-relaxed max-w-xl mx-auto">
-          KONG S.A. est une marque de technologie logistique camerounaise agréée. Tous droits réservés. Conforme CEMAC et règles de l'arbitrage commercial international.
-        </p>
-      </div>
-    </footer>
+    <PublicFooter />
 
   </div>
 </template>
 
 <script setup>
+import PublicFooter from '@/components/PublicFooter.vue';
 import { ref, reactive, computed, onMounted } from 'vue';
 import { useCartStore } from '@/store/modules/cart.js';
 import { useAuthStore } from '@/store/modules/auth.js';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
+import { ShoppingCartIcon, ShoppingBagIcon, BuildingOfficeIcon, TruckIcon, ShieldCheckIcon, TrashIcon } from '@heroicons/vue/24/outline';
 
 // Import components
 import PublicHeader from '@/components/PublicHeader.vue';
@@ -285,9 +286,9 @@ const toast = useToast();
 // FREIGHT MULTI-SUPPLIER TRACKING RULES
 // ----------------------------------------------------
 const freightOptions = [
-  { id: 'camrail', name: 'CAMRAIL FRET Express', service: 'Rail-Cargo', route: 'Axe Douala - Ngaoundéré', price: 18000 },
-  { id: 'soletrans', name: 'SOLETRANS Douala Port', service: 'Road Heavy Duty', route: 'National Corridor', price: 25000 },
-  { id: 'guaranty', name: 'GUARANTY Cargo Van', service: 'Urban Inter-City', price: 9500 }
+  { id: 'express', name: 'Livraison Express', service: 'Colis Rapide', route: '2 à 3 jours ouvrés', price: 15000 },
+  { id: 'standard', name: 'Livraison Standard', service: 'Routier Classique', route: '5 à 7 jours ouvrés', price: 8500 },
+  { id: 'relais', name: 'Point Relais', service: 'Retrait en Agence', route: 'Disponible partout', price: 3000 }
 ];
 
 // Reactive mapping for chosen freight carrier code per supplier ID
@@ -297,20 +298,20 @@ onMounted(() => {
   // Set default freight selector for each unique supplier group in cart
   cartStore.cartGroupedBySupplier.forEach(group => {
     if (!selectedFreight[group.supplierId]) {
-      selectedFreight[group.supplierId] = 'camrail';
+      selectedFreight[group.supplierId] = 'standard';
     }
   });
 });
 
 function setFreightRoute(supplierId, freightId) {
   selectedFreight[supplierId] = freightId;
-  toast.success(`[LOGISTICS] Options de transport modifiées pour ce vendeur.`);
+  toast.success(`Option de livraison mise à jour.`);
 }
 
 function getFretCost(supplierId) {
-  const code = selectedFreight[supplierId] || 'camrail';
+  const code = selectedFreight[supplierId] || 'standard';
   const found = freightOptions.find(o => o.id === code);
-  return found ? found.price : 18000;
+  return found ? found.price : 8500;
 }
 
 // Sum of all custom supplier fret paths
@@ -356,11 +357,11 @@ function onQtyFieldChange(e, item) {
 // ----------------------------------------------------
 function processEscrowCheckout() {
   if (cartStore.items.length === 0) {
-    toast.error('Your cart database is currently empty.');
+    toast.error('Votre panier est actuellement vide.');
     return;
   }
   
-  toast.success('🏗️ Generation of Escrow Ledger codes successful. Redirecting to order checkoff.');
+  toast.success('Préparation de la commande en cours...');
   
   // Navigate instantly to /checkout
   router.push('/checkout');

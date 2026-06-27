@@ -384,29 +384,29 @@ function redirectUser(userRoles) {
 
 function fillPreset(role) {
   if (role === 'admin') {
-    email.value = 'admin@enterprise.local';
-    password.value = 'admin';
+    email.value = 'admin@test.com';
+    password.value = 'password';
     isSupplier.value = true;
     uniqueCode.value = 'ADMIN123';
   } else if (role === 'buyer') {
-    email.value = 'buyer@enterprise.local';
+    email.value = 'buyer@test.com';
     password.value = 'password';
     isSupplier.value = false;
   } else if (role === 'vendor') {
-    email.value = 'vendor@enterprise.local';
+    email.value = 'vendor@test.com';
     password.value = 'password';
     isSupplier.value = true;
     uniqueCode.value = 'VEND123';
   } else if (role === 'distributor') {
-    email.value = 'distributor@enterprise.local';
+    email.value = 'distributor@test.com';
     password.value = 'password';
     isSupplier.value = true;
     uniqueCode.value = 'DIST123';
   } else if (role === 'supplier') {
-    email.value = 'supplier@enterprise.local';
+    email.value = 'vendor2@test.com';
     password.value = 'password';
     isSupplier.value = true;
-    uniqueCode.value = 'SUPP123';
+    uniqueCode.value = 'VEND123';
   }
   showPresets.value = false;
   toast.success(`Identifiants ${role} préremplis avec succès.`);
