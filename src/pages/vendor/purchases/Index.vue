@@ -75,8 +75,17 @@
                   <EyeIcon class="h-4.5 w-4.5" />
                 </router-link>
                 <router-link 
+                  v-if="getDeliveryNoteForPO(po.id)"
+                  :to="'/vendor/purchases/receive/' + getDeliveryNoteForPO(po.id).id"
+                  class="inline-flex items-center justify-center p-2 bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500 hover:text-white rounded-xl border border-emerald-500/20 transition animate-bounce" 
+                  title="Réceptionner la marchandise"
+                >
+                  <CheckIcon class="h-4.5 w-4.5" />
+                </router-link>
+                <router-link 
+                  v-else
                   :to="'/vendor/purchases/track/' + po.id"
-                  class="inline-flex items-center justify-center p-2 bg-[var(--color-primary-muted)] text-[var(--color-primary)] rounded-xl border border-[var(--color-primary-border)] transition animate-pulse" 
+                  class="inline-flex items-center justify-center p-2 bg-[var(--color-primary-muted)] text-[var(--color-primary)] rounded-xl border border-[var(--color-primary-border)] transition" 
                   title="Suivre et émarger"
                 >
                   <TruckIcon class="h-4.5 w-4.5" />
@@ -471,11 +480,22 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
 import { b2b_purchases, b2b_suppliers, products, b2b_deliveries } from '@/utils/vendor_db.js';
-import { PlusIcon, MagnifyingGlassIcon, EyeIcon, XMarkIcon, TruckIcon, CheckCircleIcon, PrinterIcon, InboxArrowDownIcon } from '@heroicons/vue/24/outline';
+import { PlusIcon, MagnifyingGlassIcon, EyeIcon, XMarkIcon, TruckIcon, CheckCircleIcon, PrinterIcon, InboxArrowDownIcon, CheckIcon } from '@heroicons/vue/24/outline';
 import Pagination from '@/components/Pagination.vue';
 import { useToast } from 'vue-toastification';
+import { useOrdersStore } from '@/store/modules/orders.js';
 
 const toast = useToast();
+const ordersStore = useOrdersStore();
+
+const getDeliveryNoteForPO = (poId) => {
+  // Map PO-002 etc to po_002 for matching if necessary
+  const normalizedId = poId.toLowerCase().replace('po-', 'po_').replace('bc-', 'po_');
+  return ordersStore.deliveryNotes.find(dn => 
+    (dn.purchase_order_id === poId || dn.purchase_order_id === normalizedId) && 
+    dn.status !== 'DELIVERED'
+  );
+};
 
 const searchQuery = ref('');
 const currentPage = ref(1);

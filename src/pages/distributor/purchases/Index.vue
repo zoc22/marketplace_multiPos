@@ -66,6 +66,15 @@
                   <EyeIcon class="h-4.5 w-4.5" />
                 </router-link>
                 
+                <router-link 
+                  v-if="getDeliveryNoteForPO(po.id)"
+                  :to="'/distributor/purchases/receive/' + getDeliveryNoteForPO(po.id).id"
+                  class="inline-flex items-center justify-center p-2 bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500 hover:text-white rounded-xl border border-emerald-500/20 transition animate-bounce" 
+                  title="Réceptionner la marchandise"
+                >
+                  <CheckIcon class="h-4.5 w-4.5" />
+                </router-link>
+
                 <button 
                   v-if="po.status === 'PENDING'"
                   @click="cancelPO(po.id)"
@@ -92,10 +101,18 @@
 import { computed, onMounted } from 'vue';
 import { useOrdersStore } from '@/store/modules/orders.js';
 import { useToast } from 'vue-toastification';
-import { PlusIcon, EyeIcon, XMarkIcon } from '@heroicons/vue/24/outline';
+import { PlusIcon, EyeIcon, XMarkIcon, CheckIcon } from '@heroicons/vue/24/outline';
 
 const ordersStore = useOrdersStore();
 const toast = useToast();
+
+const getDeliveryNoteForPO = (poId) => {
+  const normalizedId = poId.toLowerCase().replace('po-', 'po_').replace('bc-', 'po_');
+  return ordersStore.deliveryNotes.find(dn => 
+    (dn.purchase_order_id === poId || dn.purchase_order_id === normalizedId) && 
+    dn.status !== 'DELIVERED'
+  );
+};
 
 const emittedPurchases = computed(() => {
   // Filters purchase orders where we are the emitter (e.g. buyer or distributor buying from other distributor)

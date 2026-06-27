@@ -130,6 +130,12 @@ export const vendorRoutes = [
         meta: { title: 'Suivi Livraison' }
       },
       {
+        path: 'purchases/receive/:id',
+        name: 'VendorPurchasesReceive',
+        component: () => import('@/pages/vendor/purchases/Receive.vue'),
+        meta: { title: 'Réception de livraison B2B' }
+      },
+      {
         path: 'deliveries',
         name: 'VendorDeliveriesIndex',
         component: () => import('@/pages/vendor/deliveries/Index.vue'),

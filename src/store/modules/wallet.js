@@ -14,7 +14,48 @@ const generateUUID = () => {
 export const useWalletStore = defineStore('wallet', {
   state: () => ({
     // Map containing userId -> { balance: Number, transactions: Array }
-    wallets: {}
+    wallets: {
+      'usr_admin': {
+        balance: 100000000,
+        transactions: [{ id: 'tx_init_admin', type: 'CREDIT', amount: 100000000, description: 'Solde initial système', date: new Date('2026-01-10T12:00:00Z') }]
+      },
+      'usr_buyer_1': {
+        balance: 500000,
+        transactions: [
+          { id: 'tx_init_buyer1', type: 'CREDIT', amount: 500000, description: 'Approvisionnement initial MoMo', date: new Date('2026-03-20T10:15:00Z') }
+        ]
+      },
+      'usr_buyer_2': {
+        balance: 500000,
+        transactions: [
+          { id: 'tx_init_buyer2', type: 'CREDIT', amount: 500000, description: 'Approvisionnement initial Orange Money', date: new Date('2026-03-21T11:30:00Z') }
+        ]
+      },
+      'usr_vendor_1': {
+        balance: 2000000,
+        transactions: [
+          { id: 'tx_init_vendor1', type: 'CREDIT', amount: 2000000, description: 'Fonds de roulement de départ', date: new Date('2026-05-10T10:15:00Z') }
+        ]
+      },
+      'usr_vendor_2': {
+        balance: 1500000,
+        transactions: [
+          { id: 'tx_init_vendor2', type: 'CREDIT', amount: 1500000, description: 'Fonds de roulement de départ', date: new Date('2026-05-12T09:40:00Z') }
+        ]
+      },
+      'usr_dist_1': {
+        balance: 5000000,
+        transactions: [
+          { id: 'tx_init_dist1', type: 'CREDIT', amount: 5000000, description: 'Dépôt capital B2B', date: new Date('2026-04-20T08:30:00Z') }
+        ]
+      },
+      'usr_dist_2': {
+        balance: 10000000,
+        transactions: [
+          { id: 'tx_init_dist2', type: 'CREDIT', amount: 10000000, description: 'Dépôt capital B2B', date: new Date('2026-04-22T14:50:00Z') }
+        ]
+      }
+    }
   }),
   actions: {
     ensureWallet(userId) {

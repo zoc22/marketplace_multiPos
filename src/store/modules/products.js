@@ -1,15 +1,23 @@
 import { defineStore } from 'pinia';
-import { products } from '@/utils/seed_data.js';
+import { mockProducts } from '@/utils/mocks/products.js';
 
 export const useProductsStore = defineStore('products', {
   state: () => ({
-    products: [...products],
+    products: [...mockProducts],
     loading: false,
     error: null,
   }),
   actions: {
     setProducts(products) {
       this.products = products;
+    },
+    adjustStock(productId, amount) {
+      const prod = this.products.find(p => p.id === productId);
+      if (prod) {
+        prod.stock = Math.max(0, prod.stock + amount);
+        return prod;
+      }
+      return null;
     }
   }
 });

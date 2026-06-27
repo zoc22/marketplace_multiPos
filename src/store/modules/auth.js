@@ -4,21 +4,9 @@ import { mockUsers } from '@/utils/mocks/seed.js';
 
 export const useAuthStore = defineStore('auth', {
   state: () => {
-    // Attempt loading initial state from local storage or use defaults
-    const savedState = localStorage.getItem('pinia_auth_v5');
-    if (savedState) {
-      try {
-        const parsed = JSON.parse(savedState);
-        // Ensure the new test users exist in the cached state, otherwise force defaults
-        if (!parsed.users || !parsed.users.find(u => u.roles.includes('vendor'))) {
-          console.warn('Outdated state detected. Forcing defaults...');
-          throw new Error('Outdated state');
-        }
-        return parsed;
-      } catch (e) {
-        console.warn('Fallback to defaults', e);
-      }
-    }
+    // Clear stale local storage persistence keys to prevent caching outdated test users
+    localStorage.removeItem('pinia_auth');
+    localStorage.removeItem('pinia_auth_v5');
 
     return {
       token: null,

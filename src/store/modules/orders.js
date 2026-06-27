@@ -2,6 +2,8 @@ import { defineStore } from 'pinia';
 import { orders } from '@/utils/seed_data.js';
 import { mockPurchaseOrders, mockDeliveryNotes } from '@/utils/mocks/seed.js';
 import { useNotificationsStore } from './notifications.js';
+import { useProductsStore } from './products.js';
+import { usePaymentsStore } from './payments.js';
 
 const generateUUID = () => {
   if (typeof crypto !== 'undefined' && crypto.randomUUID) {
@@ -117,6 +119,7 @@ export const useOrdersStore = defineStore('orders', {
 
     generateDeliveryNote(poId, deliveryNoteData) {
       const notificationsStore = useNotificationsStore();
+      const productsStore = useProductsStore();
       const po = this.purchaseOrders.find(o => o.id === poId);
       if (po) {
         po.status = 'PROCESSING';
@@ -130,7 +133,7 @@ export const useOrdersStore = defineStore('orders', {
           receiver_type: deliveryNoteData.receiver_type || po.emitter_type,
           date_emission: new Date(),
           date_livraison: deliveryNoteData.date_livraison ? new Date(deliveryNoteData.date_livraison) : null,
-          status: 'PREPARED',
+          status: 'IN_TRANSIT',
           products: deliveryNoteData.products || po.products.map(p => ({
             product_id: p.product_id,
             quantity_delivered: p.quantity,
@@ -138,13 +141,18 @@ export const useOrdersStore = defineStore('orders', {
             total: p.total || (p.quantity * p.unit_price),
             lot_number: deliveryNoteData.lot_number || `LOT-${Date.now().toString().slice(-4)}`
           })),
-          carrier: deliveryNoteData.carrier || '',
-          tracking_number: deliveryNoteData.tracking_number || '',
-          shipping_mode: deliveryNoteData.shipping_mode || po.shipping_mode || '',
+          carrier: deliveryNoteData.carrier || 'Logistique Express',
+          tracking_number: deliveryNoteData.tracking_number || `TRK-${Math.floor(Math.random() * 900000 + 100000)}`,
+          shipping_mode: deliveryNoteData.shipping_mode || po.shipping_mode || 'Routier Pro',
           signature: deliveryNoteData.signature || '',
           photo_proof: deliveryNoteData.photo_proof || ''
         };
         this.deliveryNotes.push(newDN);
+
+        // Decrease seller's stock
+        newDN.products.forEach(p => {
+          productsStore.adjustStock(p.product_id, -p.quantity_delivered);
+        });
 
         notificationsStore.sendNotification({
           type: 'DELIVERY_GENERATED',
@@ -161,6 +169,7 @@ export const useOrdersStore = defineStore('orders', {
 
     confirmDelivery(deliveryNoteId) {
       const notificationsStore = useNotificationsStore();
+      const productsStore = useProductsStore();
       const dn = this.deliveryNotes.find(n => n.id === deliveryNoteId);
       if (dn) {
         dn.status = 'DELIVERED';
@@ -168,6 +177,34 @@ export const useOrdersStore = defineStore('orders', {
         const po = this.purchaseOrders.find(o => o.id === dn.purchase_order_id);
         if (po) {
           po.status = 'DELIVERED';
+          
+          // Increase buyer's stock if they are a vendor or distributor
+          if (po.emitter_type === 'vendor' || po.emitter_type === 'distributor') {
+            dn.products.forEach(item => {
+              // Find buyer's own product with same name/category or matching id
+              const sourceProduct = productsStore.products.find(p => p.id === item.product_id);
+              if (sourceProduct) {
+                // Find if the buyer already has a product with similar name
+                const buyerProduct = productsStore.products.find(p => 
+                  p.supplierId === po.emitter_id && 
+                  (p.name.toLowerCase() === sourceProduct.name.toLowerCase() || p.category === sourceProduct.category)
+                );
+                if (buyerProduct) {
+                  productsStore.adjustStock(buyerProduct.id, item.quantity_delivered);
+                } else {
+                  // Fallback: increase stock of original or copy it
+                  productsStore.adjustStock(item.product_id, item.quantity_delivered);
+                }
+              }
+            });
+          }
+
+          // Trigger Payment status update to PENDING (EN_ATTENTE)
+          const paymentsStore = usePaymentsStore();
+          const payment = paymentsStore.escrowPayments.find(p => p.purchase_order_id === po.id || p.order_id === po.id);
+          if (payment) {
+            payment.status = 'PENDING';
+          }
         }
         notificationsStore.sendNotification({
           type: 'DELIVERY_CONFIRMED',
