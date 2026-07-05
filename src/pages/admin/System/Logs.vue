@@ -2,93 +2,93 @@
   <div class="space-y-6">
 
     <!-- HEADER BLOCK -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-900 pb-5 shrink-0">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[var(--color-border)] pb-5 shrink-0">
       <div>
-        <h1 class="text-xl font-bold font-mono text-slate-100 flex items-center gap-2">
-          <CommandLineIcon class="w-5 h-5 text-indigo-400" />
-          <span>System telemetry & Audit Loggers</span>
+        <h1 class="text-xl font-bold font-mono text-[var(--color-text-primary)] flex items-center gap-2">
+          <CommandLineIcon class="w-5 h-5 text-[var(--color-primary)]" />
+          <span>Télémétrie Système & Journaux d'Audit</span>
         </h1>
-        <p class="text-xs text-slate-400 font-sans">Live security audit logging of admin configuration overrides, catalog moderation, and tenant integrations.</p>
+        <p class="text-xs text-[var(--color-text-secondary)] font-sans">Journalisation d'audit de sécurité en direct pour les modifications de configuration de l'administrateur, la modération du catalogue et l'intégration des locataires.</p>
       </div>
 
       <button 
         @click="clearPlatformLogs"
-        class="px-3.5 py-2.5 bg-slate-900 hover:bg-red-950 text-slate-400 hover:text-red-400 border border-slate-800 transition rounded-lg text-xs font-mono uppercase font-bold shrink-0 flex items-center space-x-1.5"
+        class="px-3.5 py-2.5 bg-[var(--color-surface-elevated)] hover:bg-red-500/10 text-[var(--color-text-secondary)] hover:text-red-500 border border-[var(--color-border)] transition rounded-lg text-xs font-mono uppercase font-bold shrink-0 flex items-center space-x-1.5 cursor-pointer"
       >
         <TrashIcon class="w-4 h-4" />
-        <span>Clear Logs Block</span>
+        <span>Effacer les Journaux</span>
       </button>
     </div>
 
     <!-- LOG CONTROLS AND SEARCH -->
-    <div class="flex flex-col sm:flex-row items-center gap-3 bg-[#14141E] p-4 rounded-xl border border-slate-800">
+    <div class="flex flex-col sm:flex-row items-center gap-3 bg-[var(--color-surface)] p-4 rounded-xl border border-[var(--color-border)]">
       <div class="relative flex-1 w-full font-mono text-xs">
         <input 
           type="text" 
           v-model="searchQuery"
-          placeholder="Grep specific system logs, actions, authors..."
-          class="w-full bg-slate-950 border border-slate-850 focus:border-indigo-500 rounded-lg p-2.5 pl-8 text-xs text-slate-100 placeholder-slate-700"
+          placeholder="Rechercher des journaux système, actions, auteurs..."
+          class="w-full bg-[var(--color-background)] border border-[var(--color-border)] focus:border-[var(--color-primary)] rounded-lg p-2.5 pl-8 text-xs text-[var(--color-text-primary)] placeholder-[var(--color-text-secondary)] focus:outline-none"
         />
-        <span class="absolute left-3 top-3.5 text-slate-500">
-          <MagnifyingGlassIcon class="w-4 h-4 text-slate-500" />
+        <span class="absolute left-3 top-3.5 text-[var(--color-text-secondary)]">
+          <MagnifyingGlassIcon class="w-4 h-4" />
         </span>
       </div>
 
       <select 
         v-model="filterLevel"
-        class="bg-slate-950 text-xs text-slate-400 rounded-lg p-2.5 font-mono border border-slate-800 focus:outline-none focus:border-indigo-500 w-full sm:w-48"
+        class="bg-[var(--color-background)] text-xs text-[var(--color-text-secondary)] rounded-lg p-2.5 font-mono border border-[var(--color-border)] focus:outline-none focus:border-[var(--color-primary)] w-full sm:w-48"
       >
-        <option value="">All Log Levels</option>
+        <option value="">Tous les Niveaux</option>
         <option value="info">Info</option>
-        <option value="debug">Debug</option>
-        <option value="security">Security</option>
-        <option value="warning">Warning / Alert</option>
-        <option value="danger">Danger Override</option>
+        <option value="debug">Débogage</option>
+        <option value="security">Sécurité</option>
+        <option value="warning">Avertissement</option>
+        <option value="danger">Danger</option>
       </select>
     </div>
 
     <!-- MAIN syslog CONSOLE SCREEN -->
-    <div class="bg-slate-950 rounded-2xl border border-slate-800 overflow-hidden flex flex-col">
+    <div class="bg-[var(--color-background)] rounded-2xl border border-[var(--color-border)] overflow-hidden flex flex-col">
       <!-- Console Top Bar -->
-      <div class="px-4 py-3 bg-[#14141E] border-b border-slate-900 flex items-center justify-between shrink-0 select-none">
+      <div class="px-4 py-3 bg-[var(--color-surface-elevated)] border-b border-[var(--color-border)] flex items-center justify-between shrink-0 select-none">
         <div class="flex items-center space-x-2">
           <span class="h-2.5 w-2.5 rounded-full bg-red-500"></span>
           <span class="h-2.5 w-2.5 rounded-full bg-yellow-500"></span>
           <span class="h-2.5 w-2.5 rounded-full bg-green-500"></span>
-          <span class="pl-2 font-mono text-[10px] text-slate-400 uppercase tracking-widest leading-none">ROOT@AFRI_CENTRAL_B2B_SYS_STDOUT</span>
+          <span class="pl-2 font-mono text-[10px] text-[var(--color-text-secondary)] uppercase tracking-widest leading-none">ROOT@AFRI_CENTRAL_B2B_SYS_STDOUT</span>
         </div>
-        <span class="text-[9px] font-mono text-emerald-450 uppercase tracking-widest font-semibold animate-pulse mr-1">● live feed</span>
+        <span class="text-[9px] font-mono text-emerald-500 uppercase tracking-widest font-semibold animate-pulse mr-1">&bull; Flux en Direct</span>
       </div>
 
       <!-- Live logs console list -->
-      <div class="p-6 font-mono text-xs space-y-3 max-h-[500px] overflow-y-auto bg-[#01040f] scrollbar-thin scroll-smooth text-slate-300">
-        <div v-if="filteredLogs.length === 0" class="text-slate-600 italic text-center p-6">
-          &lt;&lt; No syslog records matching the grep directives found &gt;&gt;
+      <div class="p-6 font-mono text-xs space-y-3 max-h-[500px] overflow-y-auto bg-[var(--color-background)] scrollbar-thin scroll-smooth text-[var(--color-text-primary)]">
+        <div v-if="filteredLogs.length === 0" class="text-[var(--color-text-secondary)] italic text-center p-6">
+          &lt;&lt; Aucun journal ne correspond aux critères de recherche &gt;&gt;
         </div>
         <div 
           v-else
           v-for="log in filteredLogs" 
           :key="log.id"
-          class="flex flex-col sm:flex-row sm:items-start text-left gap-1 sm:gap-4 hover:bg-slate-900/40 p-1.5 rounded transition"
+          class="flex flex-col sm:flex-row sm:items-start text-left gap-1 sm:gap-4 hover:bg-[var(--color-surface-hover)] p-1.5 rounded transition"
         >
           <!-- Timestamp segment -->
-          <span class="text-slate-600 shrink-0 select-none">[{{ formatDateTime(log.date) }}]</span>
+          <span class="text-[var(--color-text-secondary)] shrink-0 select-none">[{{ formatDateTime(log.date) }}]</span>
           
           <div class="flex-1 space-y-0.5">
             <div class="flex flex-wrap items-center gap-1.5">
               <!-- Action Badge -->
-              <span class="px-1.5 py-0.5 bg-slate-900 border border-slate-800 rounded font-bold text-[8px] uppercase tracking-wider text-slate-400 select-none">
+              <span class="px-1.5 py-0.5 bg-[var(--color-surface-elevated)] border border-[var(--color-border)] rounded font-bold text-[8px] uppercase tracking-wider text-[var(--color-text-secondary)] select-none">
                 {{ log.action }}
               </span>
               <!-- Author -->
-              <span class="text-[9px] text-indigo-400 font-bold">@{{ log.author }}</span>
+              <span class="text-[9px] text-[var(--color-primary)] font-bold">@{{ log.author }}</span>
               <!-- Level badge -->
               <span :class="getLevelColor(log.level || 'info')" class="text-[8.5px] font-extrabold uppercase ml-auto">
-                {{ log.level || 'info' }}
+                {{ log.level === 'info' ? 'Info' : log.level === 'debug' ? 'Débogage' : log.level === 'security' ? 'Sécurité' : log.level === 'warning' ? 'Avertissement' : 'Danger' }}
               </span>
             </div>
             <!-- Message line -->
-            <p class="text-slate-300 font-sans text-xs pt-1 leading-snug">
+            <p class="text-[var(--color-text-primary)] font-sans text-xs pt-1 leading-snug">
               {{ log.details }}
             </p>
           </div>
@@ -97,9 +97,9 @@
     </div>
 
     <!-- TERMINAL METRIC FOOTER -->
-    <div class="text-[10px] text-slate-500 font-mono flex items-center justify-between px-1 select-none">
-      <span>Active Nodes Sync: OK</span>
-      <span>Total grepped entries: {{ filteredLogs.length }} syslog blocks</span>
+    <div class="text-[10px] text-[var(--color-text-secondary)] font-mono flex items-center justify-between px-1 select-none">
+      <span>Synchronisation des Nœuds : OK</span>
+      <span>Entrées filtrées : {{ filteredLogs.length }} lignes</span>
     </div>
 
   </div>
@@ -141,18 +141,18 @@ function formatDateTime(isoStr) {
 
 function getLevelColor(lvl) {
   const map = {
-    info: 'text-indigo-400',
-    debug: 'text-slate-500',
-    security: 'text-red-400 font-bold',
-    warning: 'text-orange-400',
-    danger: 'text-red-500 font-extrabold'
+    info: 'text-[var(--color-primary)]',
+    debug: 'text-[var(--color-text-secondary)]',
+    security: 'text-red-500 font-bold',
+    warning: 'text-orange-500',
+    danger: 'text-red-600 font-extrabold'
   };
-  return map[lvl] || 'text-slate-400';
+  return map[lvl] || 'text-[var(--color-text-secondary)]';
 }
 
 function clearPlatformLogs() {
   systemLogs.value = [
-    { id: 'log_clear', action: 'LOGS_CLEARED', details: 'System logs buffer manually cleared by Supervisor credentials.', author: 'Admin Supervisor', date: new Date().toISOString(), level: 'security' }
+    { id: 'log_clear', action: 'LOGS_CLEARED', details: 'Mémoire tampon des journaux effacée manuellement par le Superviseur.', author: 'Superviseur Admin', date: new Date().toISOString(), level: 'security' }
   ];
 }
 </script>
@@ -165,10 +165,7 @@ function clearPlatformLogs() {
   background: transparent;
 }
 .scrollbar-thin::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(var(--color-text-primary), 0.1);
   border-radius: 2px;
-}
-.scrollbar-thin::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.25);
 }
 </style>

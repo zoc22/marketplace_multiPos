@@ -278,7 +278,7 @@ header a svg.h-6.w-6 {
 
 /* --- TENANT SWITCHER --- */
 header .text-xs.font-mono.uppercase.text-slate-500,
-aside .text-[10px].uppercase.font-mono.text-accent-green {
+aside .text-\[10px\].uppercase.font-mono.text-accent-green {
   font-size: 14px !important;
 }
 
@@ -555,6 +555,7 @@ a, button {
   html, 
   body, 
   #app, 
+  .app-container,
   main, 
   .workspace-layout, 
   .page-container, 

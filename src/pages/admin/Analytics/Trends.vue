@@ -1,11 +1,11 @@
 <template>
   <div class="space-y-6">
-    <div class="p-6 bg-slate-900 border border-slate-800 rounded-xl space-y-4">
-      <h1 class="text-sm font-bold uppercase tracking-wider text-slate-200 font-mono">B2B Regional Market Trends & Pricing</h1>
-      <p class="text-xs text-slate-400">Track raw cocoa (cacao), coffee, palm oil, and grains price trends across central African hub coordinates.</p>
+    <div class="p-6 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl space-y-4 shadow-sm">
+      <h1 class="text-sm font-bold uppercase tracking-wider text-[var(--color-text-primary)] font-mono">Tendances du Marché Régional & Tarification B2B</h1>
+      <p class="text-xs text-[var(--color-text-secondary)]">Suivez l'évolution des prix du cacao brut, du café, de l'huile de palme et des céréales à travers l'Afrique centrale.</p>
 
-      <div class="p-4 bg-slate-950 rounded-lg text-slate-300 text-xs font-mono">
-        Pricing trends and regional weather parameters synchronized with direct CAMEX market feeds.
+      <div class="p-4 bg-[var(--color-background)] rounded-xl text-[var(--color-text-primary)] text-xs font-mono border border-[var(--color-border)]">
+        Tendances des prix et paramètres météorologiques régionaux synchronisés avec les flux de marché directs de la CAMEX.
       </div>
     </div>
   </div>

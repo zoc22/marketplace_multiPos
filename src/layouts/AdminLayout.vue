@@ -1,110 +1,97 @@
 <template>
-  <div class="app-container h-screen overflow-hidden bg-slate-950 text-slate-100 flex flex-col lg:flex-row font-sans relative select-none">
+  <div class="app-container h-screen overflow-hidden bg-[var(--color-background)] text-[var(--color-text-primary)] flex flex-col lg:flex-row font-sans relative select-none">
     
-    <!-- MOBILE/TABLET HEADER PANEL -->
-    <header class="lg:hidden flex items-center justify-between bg-[#0b132c] border-b border-slate-900 px-6 py-3.5 shrink-0 z-40 sticky top-0">
+    <!-- PANNEAU D'EN-TÊTE MOBILE/TABLETTE -->
+    <header class="lg:hidden flex items-center justify-between bg-[var(--color-surface)] border-b border-[var(--color-border)] px-6 py-3.5 shrink-0 z-40 sticky top-0 bg-opacity-95 backdrop-blur">
       <div class="flex items-center space-x-2">
         <KeyIcon class="h-6 w-6 text-red-500 animate-pulse" aria-hidden="true" />
-        <span class="font-mono font-bold uppercase tracking-wider text-xs text-red-405">ADMIN CONTROL</span>
+        <span class="font-mono font-bold uppercase tracking-wider text-xs text-red-500">CONTRÔLE ADMIN</span>
       </div>
       <button 
         @click="isMobileMenuOpen = !isMobileMenuOpen"
-        class="p-2 bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-805 transition flex items-center justify-center"
-        :aria-label="isMobileMenuOpen ? 'Close menu' : 'Open menu'"
+        class="p-2 bg-[var(--color-surface-elevated)] hover:bg-[var(--color-surface-hover)] text-[var(--color-text-secondary)] border border-[var(--color-border)] transition flex items-center justify-center rounded-md"
+        :aria-label="isMobileMenuOpen ? 'Fermer le menu' : 'Ouvrir le menu'"
       >
         <Bars3Icon v-if="!isMobileMenuOpen" class="h-6 w-6" aria-hidden="true" />
         <XMarkIcon v-else class="h-6 w-6" aria-hidden="true" />
       </button>
     </header>
 
-    <!-- MOBILE & TABLET NAVIGATION SIDEBAR DRAWER OVERLAY -->
+    <!-- ASSOCIER UNE COUVERTURE FLASHE DE NAVIGATION POUR MOBILES -->
     <div 
       v-if="isMobileMenuOpen" 
       @click="isMobileMenuOpen = false"
-      class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-40 lg:hidden"
+      class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
     ></div>
 
-    <!-- MAIN SIDEBAR PANELS (DESKTOP + MOBILE/TABLET DOCK) -->
+    <!-- BARRE LATÉRALE PRINCIPALE (SIDEBAR) -->
     <aside 
-      class="sidebar-container fixed inset-y-0 left-0 z-40 bg-[#090f23] border-r border-[#121c3b] flex flex-col transition-all duration-250 ease-in-out shrink-0 lg:transform-none lg:relative"
+      class="sidebar-container fixed inset-y-0 left-0 z-40 bg-[var(--color-surface)] border-r border-[var(--color-border)] flex flex-col transition-all duration-250 ease-in-out shrink-0 lg:transform-none lg:relative"
       :class="[
-        isCollapsed ? 'lg:w-[72px]' : 'lg:w-[280px]',
-        isMobileMenuOpen ? 'translate-x-0 w-full sm:w-[280px]' : '-translate-x-full lg:translate-x-0'
+        isCollapsed ? 'lg:w-[80px]' : 'lg:w-[320px]',
+        isMobileMenuOpen ? 'translate-x-0 w-full sm:w-[320px]' : '-translate-x-full lg:translate-x-0'
       ]"
       role="navigation"
-      aria-label="Administrator main navigation"
+      aria-label="Navigation principale administrateur"
     >
-      <!-- BRAND TERMINAL IDENTITY -->
-      <div class="h-16 border-b border-[#121c3b] px-4 flex items-center justify-between shrink-0 select-none bg-[#050814]">
+      <!-- IDENTITÉ DU PORTAIL CENTRAL -->
+      <div class="h-16 border-b border-[var(--color-border)] px-4 flex items-center justify-between shrink-0 select-none bg-[var(--color-surface-elevated)]">
         <div class="flex items-center space-x-2.5 truncate" v-show="!isCollapsed || isMobileMenuOpen">
           <KeyIcon class="h-6 w-6 text-red-500 shrink-0" aria-hidden="true" />
-          <span class="font-bold text-slate-200 uppercase text-xs tracking-wider font-mono">ROOT CENTRAL</span>
+          <span class="font-bold text-[var(--color-text-primary)] uppercase text-xs tracking-wider font-mono">PORTAIL CENTRAL</span>
         </div>
         <div class="flex justify-center w-full" v-show="isCollapsed && !isMobileMenuOpen">
           <KeyIcon class="h-6 w-6 text-red-500" aria-hidden="true" />
         </div>
         
-        <!-- COLLAPSE TOGGLER -->
+        <!-- COMMUTATEUR COLLAPSE -->
         <button 
           @click="isCollapsed = !isCollapsed"
-          class="hidden lg:block p-1.5 bg-slate-900/60 hover:bg-slate-800 text-slate-400 hover:text-white transition"
-          :aria-label="isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'"
+          class="hidden lg:block p-1.5 bg-[var(--color-surface-hover)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] rounded-md border border-[var(--color-border)] transition"
+          :aria-label="isCollapsed ? 'Agrandir la barre latérale' : 'Réduire la barre latérale'"
         >
-          <span class="text-xs font-mono">{{ isCollapsed ? '&rarr;' : '&larr;' }}</span>
+          <span class="text-xs font-mono font-bold">{{ isCollapsed ? '→' : '←' }}</span>
         </button>
       </div>
 
-      <!-- ACTIVE SECURITY HUDS -->
+      <!-- AVATAR DU PROFIL EN ÉTAT RÉDUIT -->
       <div 
-        class="m-4 p-4 bg-[#05091a] border border-red-950/45 text-sm shrink-0 select-none"
-        v-show="!isCollapsed || isMobileMenuOpen"
-      >
-        <div class="text-[10px] uppercase font-mono text-[#FF5F00] tracking-wider font-bold mb-1">ROOT AUTH STATUS</div>
-        <p class="font-semibold text-slate-200 truncate leading-tight">{{ authStore.user?.name || 'Supervisor' }}</p>
-        <p class="text-xs font-mono text-red-400 mt-1.5 uppercase flex items-center space-x-1.5">
-          <span class="h-2 w-2 rounded-full bg-emerald-500 inline-block animate-ping"></span>
-          <span>SYSTEM TERMINAL ROOT</span>
-        </p>
-      </div>
-
-      <!-- COLLAPSED PROFILE AVATAR SHORTCUT -->
-      <div 
-        class="my-4 py-2 flex flex-col items-center border-b border-[#121c3b]/50 select-none group relative"
+        class="my-4 py-2 flex flex-col items-center border-b border-[var(--color-border)]/50 select-none group relative"
         v-show="isCollapsed && !isMobileMenuOpen"
       >
-        <div class="h-10 w-10 bg-red-950 text-red-400 border border-red-900 flex items-center justify-center font-bold font-sans text-sm uppercase shadow">
-          {{ authStore.user?.name ? authStore.user.name[0] : 'S' }}
+        <div class="h-10 w-10 bg-red-500/10 text-red-500 border border-red-500/20 flex items-center justify-center font-bold font-sans text-sm uppercase shadow-sm rounded-xl">
+          {{ authStore.user?.name ? authStore.user.name[0] : 'A' }}
         </div>
-        <!-- Tooltip -->
-        <div class="hidden group-hover:block absolute left-16 bg-slate-950 text-slate-205 font-mono text-xs uppercase border border-slate-800 p-2.5 shadow-xl z-50 whitespace-nowrap">
-          Role: Platform Administrator
+        <!-- Info-bulle -->
+        <div class="hidden group-hover:block absolute left-16 bg-[var(--color-surface-elevated)] text-[var(--color-text-primary)] font-mono text-xs uppercase border border-[var(--color-border)] p-2.5 shadow-xl z-50 whitespace-nowrap rounded-lg">
+          Rôle : Administrateur Général
         </div>
       </div>
 
-      <!-- SIDEBAR COMPILATION CONTAINER -->
+      <!-- COMPILATION DE LA NAVIGATION -->
       <nav class="flex-1 overflow-y-auto px-4 py-3 space-y-5 scrollbar-thin select-none">
         
-        <!-- Foreach Side Menu Categories Group -->
+        <!-- Groupes de catégories -->
         <div v-for="group in menuGroups" :key="group.label" class="space-y-2">
           
-          <!-- Category Title -->
+          <!-- Titre du groupe -->
           <div 
-            class="px-2 pb-1.5 text-xs uppercase font-mono tracking-widest text-slate-500 font-bold"
+            class="px-2 pb-1.5 text-xs uppercase font-mono tracking-widest text-[var(--color-text-tertiary)] font-bold"
             v-show="!isCollapsed || isMobileMenuOpen"
           >
             {{ group.label }}
           </div>
 
-          <!-- Category Division Dot when collapsed -->
+          <!-- Ligne de séparation si réduit -->
           <div 
-            class="h-px bg-slate-800/40 my-2 mx-1" 
+            class="h-px bg-[var(--color-border)] my-2 mx-1" 
             v-show="isCollapsed && !isMobileMenuOpen"
           ></div>
 
-          <!-- Loop Items -->
+          <!-- Boucle des éléments du menu -->
           <div v-for="item in group.items" :key="item.name" class="space-y-1">
             
-            <!-- Standard link without kids -->
+            <!-- Lien standard sans sous-menu -->
             <router-link 
               v-slot="{ href, navigate }"
               v-if="!item.children"
@@ -113,68 +100,70 @@
             >
               <a 
                 :href="href"
-                @click="[navigate(), isMobileMenuOpen = false]"
-                class="flex items-center px-3 py-2.5 text-base font-mono transition group relative cursor-pointer font-bold"
-                :class="isRouteActive(item.to) ? 'bg-indigo-650 text-white font-bold border-l-2 border-indigo-400' : 'text-slate-400 hover:bg-slate-900/60 hover:text-white font-bold'"
+                @click="(e) => { navigate(e); isMobileMenuOpen = false; }"
+                class="flex items-center px-3 py-2.5 text-sm font-sans transition-all duration-200 group relative cursor-pointer rounded-lg font-bold"
+                :class="isRouteActive(item.to) ? 'bg-[var(--color-primary-muted)] text-[var(--color-primary)] font-bold translate-x-2 pl-2 border-l-4 border-[var(--color-primary)] shadow-sm' : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text-primary)] hover:translate-x-1 font-bold'"
               >
-                <component :is="item.icon" class="h-6 w-6 mr-3 text-slate-400 group-hover:text-white shrink-0" aria-hidden="true" />
+                <component :is="item.icon" class="h-5.5 w-5.5 mr-3 shrink-0 font-bold" :class="item.iconColor || 'text-[var(--color-text-secondary)] group-hover:text-[var(--color-text-primary)]'" aria-hidden="true" />
                 <span v-show="!isCollapsed || isMobileMenuOpen" class="truncate font-bold">{{ item.name }}</span>
 
-                <!-- Hover Tooltip if Collapsed -->
+                <!-- Info-bulle si réduit -->
                 <div 
                   v-show="isCollapsed && !isMobileMenuOpen" 
-                  class="hidden group-hover:block absolute left-16 bg-slate-950 text-slate-350 border border-slate-800 p-2.5 shadow-xl font-mono text-xs uppercase z-50 whitespace-nowrap"
+                  class="hidden group-hover:block absolute left-16 bg-[var(--color-surface-elevated)] text-[var(--color-text-primary)] border border-[var(--color-border)] p-2.5 shadow-xl font-mono text-xs uppercase z-50 whitespace-nowrap rounded-lg"
                 >
                   {{ item.name }}
                 </div>
               </a>
             </router-link>
 
-            <!-- Interactive Dropdown parent block style -->
+            <!-- Parent de sous-menu interactif -->
             <div v-else class="space-y-1">
               <button 
                 @click="toggleDropdown(item.id)"
-                class="w-full flex items-center justify-between px-3 py-2.5 text-base font-mono transition group relative text-left font-bold"
+                class="w-full flex items-center justify-between px-3 py-2.5 text-sm font-sans transition-all duration-200 group relative text-left rounded-lg font-bold cursor-pointer"
                 :class="[
-                  isDropdownContainingActive(item) ? 'text-indigo-400 font-bold bg-slate-900/20' : 'text-slate-400 hover:bg-slate-900/40 hover:text-white font-bold',
+                  isDropdownContainingActive(item) ? 'text-[var(--color-primary)] font-bold bg-[var(--color-primary-muted)] border-l-4 border-[var(--color-primary)] pl-4 translate-x-1 shadow-sm' : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text-primary)] font-bold',
                 ]"
                 :aria-expanded="openDropdowns[item.id]"
               >
                 <div class="flex items-center truncate">
-                  <component :is="item.icon" class="h-6 w-6 mr-3 text-slate-400 group-hover:text-white shrink-0" aria-hidden="true" />
+                  <component :is="item.icon" class="h-5.5 w-5.5 mr-3 shrink-0 font-bold" :class="item.iconColor || 'text-[var(--color-text-secondary)] group-hover:text-[var(--color-text-primary)]'" aria-hidden="true" />
                   <span v-show="!isCollapsed || isMobileMenuOpen" class="truncate font-bold">{{ item.name }}</span>
                 </div>
 
                 <ChevronDownIcon 
                   v-show="!isCollapsed || isMobileMenuOpen" 
-                  class="h-4 w-4 text-slate-500 transition-transform duration-250 shrink-0"
-                  :class="openDropdowns[item.id] ? 'rotate-180' : ''"
+                  class="h-4 w-4 text-[var(--color-text-secondary)] transition-transform duration-250 shrink-0 font-bold"
+                  :class="openDropdowns[item.id] ? 'rotate-180 text-[var(--color-primary)]' : ''"
                   aria-hidden="true"
                 />
 
-                <!-- Hover Tooltip if Collapsed -->
+                <!-- Info-bulle si réduit -->
                 <div 
                   v-show="isCollapsed && !isMobileMenuOpen" 
-                  class="hidden group-hover:block absolute left-16 bg-slate-950 text-slate-350 border border-slate-800 p-2.5 shadow-xl font-mono text-xs uppercase z-50 whitespace-nowrap"
+                  class="hidden group-hover:block absolute left-16 bg-[var(--color-surface-elevated)] text-[var(--color-text-primary)] border border-[var(--color-border)] p-2.5 shadow-xl font-mono text-xs uppercase z-50 whitespace-nowrap rounded-lg"
                 >
-                  {{ item.name }} (Submenu)
+                  {{ item.name }} (Sous-menu)
                 </div>
               </button>
 
-              <!-- Dropdown Children segment -->
+              <!-- Segments des enfants du sous-menu -->
               <div 
                 v-show="openDropdowns[item.id] && (!isCollapsed || isMobileMenuOpen)" 
-                class="pl-6 space-y-1 border-l border-[#121c3b]/50 ml-6 pr-1 py-1"
+                class="pl-6 space-y-1 border-l border-[var(--color-border)] ml-5 py-1"
               >
                 <router-link 
                   v-for="sub in item.children" 
                   :key="sub.name"
                   :to="sub.to"
-                  class="block px-3 py-2 text-sm font-mono text-slate-400 hover:text-white hover:bg-slate-900/40 transition truncate font-bold"
-                  :class="isRouteActive(sub.to) ? 'text-indigo-405 font-bold bg-[#0d1633] border-r border-indigo-500' : 'font-bold'"
+                  class="flex items-center px-3 py-2 text-sm transition-all duration-200 truncate rounded-lg font-bold"
+                  :class="isRouteActive(sub.to) ? 'text-[var(--color-primary)] font-bold bg-[var(--color-primary-muted)] translate-x-2 pl-2 shadow-sm border-l-4 border-[var(--color-primary)]' : 'text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] hover:bg-[var(--color-surface-hover)] pl-3 hover:translate-x-1 font-bold'"
                   @click="isMobileMenuOpen = false"
                 >
-                  <span class="font-bold">{{ sub.name }}</span>
+                  <!-- Icon vectoriel de couleur pour le sous-onglet -->
+                  <component :is="sub.icon || ChevronRightIcon" class="h-4 w-4 mr-2 shrink-0 font-bold" :class="sub.iconColor || 'text-[var(--color-text-tertiary)]'" aria-hidden="true" />
+                  <span>{{ sub.name }}</span>
                 </router-link>
               </div>
 
@@ -186,80 +175,69 @@
 
       </nav>
 
-      <!-- COLLAPSE RECOVERY TOGGLE AT LOWER ROW (Collapsed state only) -->
-      <div class="p-4 border-t border-[#121c3b] shrink-0" v-show="isCollapsed && !isMobileMenuOpen">
-        <button 
-          @click="isCollapsed = false"
-          class="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white font-mono text-sm text-center block transition"
-          aria-label="Expand menu"
-        >
-          &rarr;
-        </button>
-      </div>
-
-      <!-- DISCONNECT CORE TERMINAL BUTTON -->
-      <div class="p-4 border-t border-[#121c3b] shrink-0" v-show="!isCollapsed || isMobileMenuOpen">
+      <!-- BOUTON DÉCONNEXION CONSOLE -->
+      <div class="p-4 border-t border-[var(--color-border)] shrink-0" v-show="!isCollapsed || isMobileMenuOpen">
         <button 
           @click="logoutSession"
-          class="w-full py-2.5 bg-red-950/20 text-red-405 hover:bg-red-900 hover:text-slate-950 rounded-xl text-xs font-mono uppercase font-bold tracking-wider transition border border-red-900/30 flex justify-center items-center space-x-2"
-          aria-label="Disconnect platform central portal"
+          class="w-full py-2.5 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white rounded-xl text-xs font-sans uppercase font-extrabold tracking-wider transition border border-red-500/20 flex justify-center items-center space-x-2 shadow-sm"
+          aria-label="Fermer la session de la console"
         >
           <ArrowRightOnRectangleIcon class="h-5 w-5" aria-hidden="true" />
-          <span>Disengage Console</span>
+          <span>Déconnexion Sécurisée</span>
         </button>
       </div>
 
     </aside>
 
-    <!-- CONTENT WORKSPACE WRAPPER -->
+    <!-- ESPACE DE TRAVAIL DE CONTENU DYNAMIQUE -->
     <div class="page-container flex-1 flex flex-col min-w-0 overflow-y-auto max-h-screen">
       
-      <!-- TOP STATUS NAVIGATION HEADER -->
-      <header class="h-16 border-b border-[#121c3b] bg-[#070b19]/80 backdrop-blur px-6 flex items-center justify-between shrink-0 sticky top-0 z-10 select-none">
+      <!-- ENTÊTE DE NAVIGATION ET DE STATUT -->
+      <header class="h-16 border-b border-[var(--color-border)] bg-[var(--color-surface)]/80 backdrop-blur px-6 flex items-center justify-between shrink-0 sticky top-0 z-10 select-none">
         
-        <!-- BREADCRUMBS BAR (DYNAMIC) -->
-        <div class="flex items-center space-x-2.5 text-base text-slate-455 font-mono tracking-tight font-medium truncate">
-          <router-link to="/admin/dashboard" class="hover:text-indigo-400 transition uppercase">ROOT</router-link>
+        <!-- BARRE DE BREADCRUMBS DYNAMIQUE -->
+        <div class="flex items-center space-x-2.5 text-sm text-[var(--color-text-secondary)] font-sans tracking-tight font-semibold truncate">
+          <router-link to="/admin/dashboard" class="hover:text-[var(--color-primary)] transition uppercase font-extrabold">ROOT</router-link>
           
           <template v-for="(crumb, idx) in breadcrumbs" :key="crumb.to">
-            <ChevronRightIcon class="h-4 w-4 text-slate-600 inline shrink-0" aria-hidden="true" />
+            <ChevronRightIcon class="h-4 w-4 text-[var(--color-text-tertiary)] inline shrink-0" aria-hidden="true" />
             <span 
               v-if="crumb.current" 
-              class="text-indigo-400 font-bold uppercase truncate"
+              class="text-[var(--color-primary)] font-black uppercase truncate"
             >
               {{ crumb.text }}
             </span>
             <router-link 
               v-else 
               :to="crumb.to" 
-              class="hover:text-indigo-400 transition uppercase truncate max-w-[120px]"
+              class="hover:text-[var(--color-primary)] transition uppercase truncate max-w-[150px] font-extrabold"
             >
               {{ crumb.text }}
             </router-link>
           </template>
         </div>
 
-        <!-- SEARCH BAR AND UTILITIES -->
+        <!-- UTILS ET BARRE D'OUTILS -->
         <div class="flex items-center space-x-4">
-          <!-- Notification Bell -->
+          <!-- Cloche de Notification -->
           <NotificationBell />
 
-          <!-- Mode Toggle & Keyboard Shortcuts -->
-          <div class="flex items-center space-x-2 border-r border-[#121c3b] pr-4">
-            <!-- Theme Toggle Button -->
+          <!-- Commutateurs thèmes & Raccourcis -->
+          <div class="flex items-center space-x-2 border-r border-[var(--color-border)] pr-4">
+            <!-- Commutateur de mode -->
             <button 
               @click="toggleTheme" 
-              class="p-2 text-slate-400 hover:text-indigo-400 transition rounded flex items-center justify-center"
+              class="p-2 text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] transition rounded-lg flex items-center justify-center hover:bg-[var(--color-surface-hover)]"
               :title="isLightTheme ? 'Passer en mode sombre (T)' : 'Passer en mode clair (T)'"
             >
               <SunIcon v-if="!isLightTheme" class="h-5 w-5 stroke-[2px]" aria-hidden="true" />
               <MoonIcon v-else class="h-5 w-5 stroke-[2px]" aria-hidden="true" />
             </button>
 
-            <!-- Keyboard Shortcuts Button -->
+            <!-- Diagnostics Raccourcis clavier -->
             <button 
               @click="isHelpDrawerOpen = !isHelpDrawerOpen"
-              class="p-2 text-slate-400 hover:text-indigo-400 transition rounded flex items-center justify-center"
+              class="p-2 text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] transition rounded-lg flex items-center justify-center hover:bg-[var(--color-surface-hover)]"
               title="Raccourcis clavier & Diagnostics (H)"
             >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 stroke-[2.2px]">
@@ -268,26 +246,26 @@
             </button>
           </div>
 
-          <div class="hidden sm:flex items-center space-x-2 bg-slate-950 border border-slate-900 rounded-none px-3 py-1.5 text-xs font-mono text-slate-400">
-            <ShieldCheckIcon class="h-4.5 w-4.5 text-indigo-450" aria-hidden="true" />
-            <span class="text-slate-500 uppercase">AUDIT PORT:</span>
-            <span class="text-slate-300">ACTIVE</span>
+          <div class="hidden sm:flex items-center space-x-2 bg-[var(--color-surface-elevated)] border border-[var(--color-border)] rounded-xl px-3 py-1.5 text-xs text-[var(--color-text-secondary)] font-bold">
+            <ShieldCheckIcon class="h-4.5 w-4.5 text-emerald-500 animate-pulse" aria-hidden="true" />
+            <span class="text-[var(--color-text-tertiary)] uppercase">AUDIT SÉCURITÉ :</span>
+            <span class="text-emerald-500">ACTIF</span>
           </div>
 
-          <!-- Quick Disconnect shortcut -->
+          <!-- Arrêter Session -->
           <button 
             @click="logoutSession"
-            class="text-xs font-mono text-red-400 hover:text-red-300 font-bold tracking-wider uppercase border border-red-905/50 bg-red-905/10 px-3 py-1.5 rounded transition"
-            aria-label="Shutdown console session"
+            class="text-xs font-sans text-red-500 hover:text-white hover:bg-red-500 border border-red-500/20 bg-red-500/10 px-3 py-1.5 rounded-lg transition font-extrabold shadow-sm uppercase tracking-wider"
+            aria-label="Arrêter la session de la console"
           >
-            Terminal shutdown
+            Fermer la Console
           </button>
         </div>
 
       </header>
 
-      <!-- DYNAMIC ROUTER PANEL SPACE -->
-      <main class="flex-1 p-6 md:p-8 pb-44 md:pb-36">
+      <!-- ESPACE DE TRAVAIL DES PANNEAUX -->
+      <main class="flex-1 p-6 md:p-8 pb-44 md:pb-36 bg-[var(--color-background)]">
         <router-view />
       </main>
 
@@ -317,7 +295,28 @@ import {
   CpuChipIcon,
   Cog6ToothIcon,
   SunIcon,
-  MoonIcon
+  MoonIcon,
+  Squares2X2Icon,
+  ChartBarIcon,
+  ClockIcon,
+  UsersIcon,
+  CheckBadgeIcon,
+  UserGroupIcon,
+  ClipboardDocumentCheckIcon,
+  ArchiveBoxIcon,
+  ScaleIcon,
+  BanknotesIcon,
+  ArrowUpRightIcon,
+  ReceiptPercentIcon,
+  LockClosedIcon,
+  DocumentMagnifyingGlassIcon,
+  QueueListIcon,
+  ArrowDownOnSquareIcon,
+  HeartIcon,
+  AdjustmentsHorizontalIcon,
+  GlobeAltIcon,
+  ShieldExclamationIcon,
+  EnvelopeIcon
 } from '@heroicons/vue/24/outline';
 import { useTheme } from '@/composables/useTheme.js';
 import { useKeyboardShortcuts } from '@/composables/useKeyboardShortcuts.js';
@@ -342,87 +341,93 @@ const openDropdowns = ref({
   settings: false
 });
 
-// Sidebar menu structure with Heroicons components
+// Structure du menu latéral traduit en français avec des icônes vectorielles colorées
 const menuGroups = [
   {
-    label: 'Platform Core',
+    label: 'Cœur de Plateforme',
     items: [
       {
         id: 'console',
-        name: 'Console Dashboard',
+        name: 'Tableau de Bord',
         icon: CommandLineIcon,
+        iconColor: 'text-sky-500 group-hover:text-sky-400',
         children: [
-          { name: 'Control Center', to: '/admin/dashboard' },
-          { name: 'Metrics Stats', to: '/admin/stats' },
-          { name: 'Real Time Monitor', to: '/admin/live' }
+          { name: 'Centre de Contrôle', to: '/admin/dashboard', icon: Squares2X2Icon, iconColor: 'text-sky-500' },
+          { name: 'Statistiques & Métriques', to: '/admin/stats', icon: ChartBarIcon, iconColor: 'text-sky-400' },
+          { name: 'Moniteur Temps Réel', to: '/admin/live', icon: ClockIcon, iconColor: 'text-sky-300' }
         ]
       }
     ]
   },
   {
-    label: 'Registries & Audits',
+    label: 'Registres & Audits',
     items: [
       {
         id: 'users',
-        name: 'Identity & KYC',
+        name: 'Identités & KYC',
         icon: UserIcon,
+        iconColor: 'text-amber-500 group-hover:text-amber-400',
         children: [
-          { name: 'All Profiles', to: '/admin/users' },
-          { name: 'Verified Suppliers', to: '/admin/users/suppliers' },
-          { name: 'Standard Buyers', to: '/admin/users/buyers' },
-          { name: 'Dossiers Compliance', to: '/admin/users/verification' }
+          { name: 'Tous les Profils', to: '/admin/users', icon: UsersIcon, iconColor: 'text-amber-500' },
+          { name: 'Fournisseurs Vérifiés', to: '/admin/users/suppliers', icon: CheckBadgeIcon, iconColor: 'text-amber-400' },
+          { name: 'Acheteurs Standards', to: '/admin/users/buyers', icon: UserGroupIcon, iconColor: 'text-amber-300' },
+          { name: 'Dossiers & Conformité', to: '/admin/users/verification', icon: ClipboardDocumentCheckIcon, iconColor: 'text-amber-200' }
         ]
       },
       {
         id: 'catalog',
-        name: 'Inventory Moderation',
+        name: 'Catalogue & Litiges',
         icon: DocumentTextIcon,
+        iconColor: 'text-amber-500 group-hover:text-amber-400',
         children: [
-          { name: 'Global Catalog', to: '/admin/products' },
-          { name: 'Disputes Audit', to: '/admin/disputes' }
+          { name: 'Catalogue Global', to: '/admin/products', icon: ArchiveBoxIcon, iconColor: 'text-amber-500' },
+          { name: 'Litiges & Réclamations', to: '/admin/disputes', icon: ScaleIcon, iconColor: 'text-amber-400' }
         ]
       }
     ]
   },
   {
-    label: 'Finance Escrows',
+    label: 'Finances & Séquestres',
     items: [
       {
         id: 'finance',
-        name: 'Ledgers & Escrows',
+        name: 'Grand Livre & Caisse',
         icon: CreditCardIcon,
+        iconColor: 'text-emerald-500 group-hover:text-emerald-400',
         children: [
-          { name: 'Transactions Ledger', to: '/admin/finance/transactions' },
-          { name: 'Withdrawal Clearance', to: '/admin/finance/withdrawals' },
-          { name: 'Commission Metrics', to: '/admin/finance/commissions' },
-          { name: 'Escrow Holdings', to: '/admin/escrow' }
+          { name: 'Grand Livre de Caisse', to: '/admin/finance/transactions', icon: BanknotesIcon, iconColor: 'text-emerald-500' },
+          { name: 'Demandes de Retraits', to: '/admin/finance/withdrawals', icon: ArrowUpRightIcon, iconColor: 'text-emerald-400' },
+          { name: 'Suivi des Commissions', to: '/admin/finance/commissions', icon: ReceiptPercentIcon, iconColor: 'text-emerald-300' },
+          { name: 'Fonds sous Séquestre', to: '/admin/escrow', icon: LockClosedIcon, iconColor: 'text-emerald-200' }
         ]
       }
     ]
   },
   {
-    label: 'Platform Diagnostics',
+    label: 'Diagnostics Serveur',
     items: [
       {
         id: 'system',
-        name: 'Server Administration',
+        name: 'Administration Serveur',
         icon: CpuChipIcon,
+        iconColor: 'text-pink-500 group-hover:text-pink-400',
         children: [
-          { name: 'Telemetry Loggers', to: '/admin/system/logs' },
-          { name: 'System Queues', to: '/admin/system/queue' },
-          { name: 'Database Backups', to: '/admin/system/backups' },
-          { name: 'Hardware Diagnostics', to: '/admin/system/health' }
+          { name: 'Journaux Système (Logs)', to: '/admin/system/logs', icon: DocumentMagnifyingGlassIcon, iconColor: 'text-pink-500' },
+          { name: 'Files d\'Attente', to: '/admin/system/queue', icon: QueueListIcon, iconColor: 'text-pink-400' },
+          { name: 'Sauvegardes de Base', to: '/admin/system/backups', icon: ArrowDownOnSquareIcon, iconColor: 'text-pink-300' },
+          { name: 'Santé du Matériel', to: '/admin/system/health', icon: HeartIcon, iconColor: 'text-pink-200' }
         ]
       },
       {
         id: 'settings',
-        name: 'Metadata Variables',
+        name: 'Variables Système',
         icon: Cog6ToothIcon,
+        iconColor: 'text-pink-500 group-hover:text-pink-400',
         children: [
-          { name: 'General Parameters', to: '/admin/settings/general' },
-          { name: 'Multi-Tenant Domains', to: '/admin/settings/tenants' },
-          { name: 'Risk Rules Map', to: '/admin/settings/rules' },
-          { name: 'SMTP Configurations', to: '/admin/settings/email' }
+          { name: 'Paramètres Généraux', to: '/admin/settings/general', icon: AdjustmentsHorizontalIcon, iconColor: 'text-pink-500' },
+          { name: 'Multi-Locataires', to: '/admin/settings/tenants', icon: GlobeAltIcon, iconColor: 'text-pink-400' },
+          { name: 'Règles anti-Fraude', to: '/admin/settings/rules', icon: ShieldExclamationIcon, iconColor: 'text-pink-300' },
+          { name: 'Configurations SMTP', to: '/admin/settings/email', icon: EnvelopeIcon, iconColor: 'text-pink-200' }
         ]
       }
     ]
@@ -460,7 +465,7 @@ onMounted(() => {
   autoOpenDropdowns();
 });
 
-// Dynamic Breadcrumbs parsing
+// dynamic French breadcrumbs
 const breadcrumbs = computed(() => {
   const path = route.path;
   const segments = path.split('/').filter(Boolean);
@@ -471,13 +476,27 @@ const breadcrumbs = computed(() => {
     let label = seg.toUpperCase().replace(/-/g, ' ');
     if (label === 'KPI') label = 'KPIs';
     if (label === 'RFQ') label = 'RFQs';
-    if (label === 'POS') label = 'POS TERMINAL';
-    if (label === 'ADMIN') label = 'PLATFORM CENTRAL';
-    if (label === 'SUPPLIER') label = 'MERCHANT DESK';
-    if (label === 'BUYER') label = 'BUYER WORKSPACE';
+    if (label === 'POS') label = 'TERMINAL POS';
+    if (label === 'ADMIN') label = 'ADMINISTRATION';
+    if (label === 'SUPPLIER') label = 'VENDEUR';
+    if (label === 'BUYER') label = 'ACHETEUR';
+    if (label === 'DASHBOARD') label = 'CONTRÔLE';
+    if (label === 'STATS') label = 'STATISTIQUES';
+    if (label === 'LIVE') label = 'TEMPS RÉEL';
+    if (label === 'USERS') label = 'UTILISATEURS';
+    if (label === 'SUPPLIERS') label = 'FOURNISSEURS';
+    if (label === 'BUYERS') label = 'ACHETEURS';
+    if (label === 'VERIFICATION') label = 'CONFORMITÉ KYC';
+    if (label === 'PRODUCTS') label = 'CATALOGUE';
+    if (label === 'ORDERS') label = 'COMMANDES';
+    if (label === 'ESCROW') label = 'SÉQUESTRES';
+    if (label === 'FINANCE') label = 'COMPTABILITÉ';
+    if (label === 'SUPPORT') label = 'SUPPORT';
+    if (label === 'SYSTEM') label = 'SANS FIL';
+    if (label === 'SETTINGS') label = 'PARAMÈTRES';
     
     if (seg.startsWith('usr_') || seg.startsWith('tenant_') || /^\d+$/.test(seg)) {
-      label = `RECORD #${seg.toUpperCase()}`;
+      label = `DOSSIER #${seg.toUpperCase()}`;
     }
 
     return {
@@ -490,7 +509,7 @@ const breadcrumbs = computed(() => {
 
 function logoutSession() {
   authStore.logout();
-  toast.success('Admin session terminated. Root access keys disengaged.');
+  toast.success('Session Admin fermée avec succès. Accès révoqué.');
   router.push({ name: 'Login' });
 }
 </script>
@@ -536,7 +555,7 @@ function logoutSession() {
   background: transparent;
 }
 .page-container::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.15);
+  background: rgba(0,0,0,0.15);
   border-radius: 0;
 }
 
@@ -547,10 +566,120 @@ function logoutSession() {
   background: transparent;
 }
 .scrollbar-thin::-webkit-scrollbar-thumb {
-  background: #111a36;
+  background: rgba(0,0,0,0.1);
   border-radius: 2px;
 }
 .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-  background: #1d2b59;
+  background: rgba(0,0,0,0.2);
+}
+</style>
+
+<style>
+/* CLAIRE MODE OVERRIDES POUR LES PAGES D'ADMINISTRATION */
+[data-theme="light"] .app-container {
+  background-color: var(--color-background) !important;
+  color: var(--color-text-primary) !important;
+}
+
+[data-theme="light"] .sidebar-container {
+  background-color: var(--color-surface) !important;
+  border-color: var(--color-border) !important;
+}
+
+[data-theme="light"] .sidebar-container * {
+  border-color: var(--color-border) !important;
+}
+
+[data-theme="light"] .page-container header {
+  background-color: var(--color-surface) !important;
+  border-color: var(--color-border) !important;
+}
+
+[data-theme="light"] .page-container {
+  background-color: var(--color-background) !important;
+}
+
+/* Surcharge de tous les fonds hardcodés foncés des sous-pages pour s'adapter proprement au mode clair */
+[data-theme="light"] .app-container .bg-slate-900,
+[data-theme="light"] .app-container .bg-slate-950,
+[data-theme="light"] .app-container .bg-slate-950\/80,
+[data-theme="light"] .app-container .bg-slate-950\/40,
+[data-theme="light"] .app-container .bg-slate-900\/60,
+[data-theme="light"] .app-container .bg-slate-900\/20,
+[data-theme="light"] .app-container .bg-slate-900\/30,
+[data-theme="light"] .app-container .bg-slate-900\/40,
+[data-theme="light"] .app-container .bg-\[\#050814\],
+[data-theme="light"] .app-container .bg-\[\#05091a\],
+[data-theme="light"] .app-container .bg-\[\#0b132c\],
+[data-theme="light"] .app-container .bg-\[\#090f23\],
+[data-theme="light"] .app-container .bg-\[\#070b19\]\/80,
+[data-theme="light"] .app-container .bg-\[\#0d1633\],
+[data-theme="light"] .app-container .hover\:bg-slate-900\/40:hover,
+[data-theme="light"] .app-container .hover\:bg-slate-900\/30:hover {
+  background-color: var(--color-surface-elevated) !important;
+}
+
+[data-theme="light"] .app-container .border-slate-800,
+[data-theme="light"] .app-container .border-slate-850,
+[data-theme="light"] .app-container .border-slate-900,
+[data-theme="light"] .app-container .border-\[\#121c3b\] {
+  border-color: var(--color-border) !important;
+}
+
+[data-theme="light"] .app-container .text-slate-100,
+[data-theme="light"] .app-container .text-slate-200,
+[data-theme="light"] .app-container .text-slate-300 {
+  color: var(--color-text-primary) !important;
+}
+
+[data-theme="light"] .app-container .text-slate-400,
+[data-theme="light"] .app-container .text-slate-500 {
+  color: var(--color-text-secondary) !important;
+}
+
+[data-theme="light"] .app-container input,
+[data-theme="light"] .app-container select,
+[data-theme="light"] .app-container textarea {
+  background-color: var(--color-surface) !important;
+  color: var(--color-text-primary) !important;
+  border-color: var(--color-border) !important;
+}
+
+/* Augmentation professionnelle de la taille des écritures dans le module admin */
+.app-container {
+  font-size: 1.05rem !important;
+}
+.app-container h1, 
+.app-container .text-xl {
+  font-size: 1.6rem !important;
+}
+.app-container h2, 
+.app-container .text-lg {
+  font-size: 1.35rem !important;
+}
+.app-container h3, 
+.app-container .text-md {
+  font-size: 1.15rem !important;
+}
+.app-container p, 
+.app-container .text-sm {
+  font-size: 1.0rem !important;
+}
+.app-container td, 
+.app-container th, 
+.app-container .text-xs {
+  font-size: 0.9rem !important;
+}
+.app-container .text-\[10px\] {
+  font-size: 0.85rem !important;
+}
+.app-container .text-\[11px\] {
+  font-size: 0.88rem !important;
+}
+.app-container .text-\[9px\] {
+  font-size: 0.78rem !important;
+}
+.app-container .text-\[8px\] {
+  font-size: 0.75rem !important;
 }
 </style>

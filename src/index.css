@@ -370,8 +370,19 @@ input {
    PRINT MEDIA SYSTEM (ISOLATED DOCUMENT PRINTING)
    ---------------------------------------------------- */
 @media print {
+  html, body, #app, .app-container, main, .layout-content, .layout-main {
+    height: auto !important;
+    overflow: visible !important;
+    position: static !important;
+  }
+
+  body {
+    background-color: white !important;
+    color: black !important;
+  }
+
   body * {
-    visibility: hidden !important;
+    visibility: hidden;
   }
   
   #printable-po-sheet,
@@ -386,13 +397,13 @@ input {
   #printable-po-sheet,
   #invoice-sheet,
   .printable-area {
-    position: fixed !important;
+    position: absolute !important;
     left: 0 !important;
     top: 0 !important;
-    width: 100vw !important;
+    width: 100% !important;
     height: auto !important;
     margin: 0 !important;
-    padding: 15mm !important;
+    padding: 10mm !important;
     background-color: #ffffff !important;
     box-shadow: none !important;
     border: none !important;

@@ -37,7 +37,12 @@
           </div>
 
           <!-- Simulation progress controller -->
-          <div class="p-4 bg-[var(--color-surface-elevated)] border border-[var(--color-border)] rounded-xl mb-6 space-y-3">
+          <div class="p-4 bg-[var(--color-surface-elevated)] border border-[var(--color-border)] rounded-xl mb-6 space-y-3 relative">
+            <div v-if="!isBLEmitted" class="absolute inset-0 bg-[var(--color-background)]/85 backdrop-blur-[1px] flex items-center justify-center rounded-xl p-4 text-center z-10">
+              <span class="text-xs font-bold text-[var(--color-text-secondary)]">
+                🔒 Simulation bloquée : En attente d'émission du Bon de Livraison (BL)
+              </span>
+            </div>
             <div class="flex justify-between items-center">
               <span class="text-xs font-mono text-[var(--color-primary)] uppercase font-black tracking-widest">Console Logistique (Simulation)</span>
               <span class="text-[10px] font-mono text-[var(--color-text-secondary)]">Partenaire Amont</span>
@@ -49,7 +54,8 @@
                 v-for="(lvl, idx) in transitSteps" 
                 :key="idx"
                 @click="setSimulationLevel(idx)"
-                class="px-3 py-1.5 text-[10px] rounded-lg border transition uppercase font-bold"
+                :disabled="!isBLEmitted"
+                class="px-3 py-1.5 text-[10px] rounded-lg border transition uppercase font-bold disabled:opacity-50"
                 :class="currentStepIndex >= idx ? 'bg-[var(--color-primary-muted)] border-[var(--color-primary)] text-[var(--color-primary)]' : 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]'"
               >
                 Étape {{ idx + 1 }}
@@ -177,7 +183,12 @@
           </div>
 
           <!-- IF SHIPPED / IN TRANSIT: LET VENDOR SIGN -->
-          <div v-else class="p-6 space-y-5">
+          <div v-else class="p-6 space-y-5 relative">
+            <div v-if="!isBLEmitted" class="absolute inset-0 bg-[var(--color-background)]/90 backdrop-blur-[1px] flex items-center justify-center p-6 text-center z-10 rounded-b-2xl">
+              <span class="text-xs font-bold text-[var(--color-text-secondary)]">
+                🔒 Émargement bloqué : Le Bon de Livraison n'a pas encore été émis par le fournisseur amont.
+              </span>
+            </div>
             <div class="space-y-2">
               <div class="flex justify-between items-center">
                 <label class="block text-[10px] uppercase font-mono tracking-wider text-[var(--color-primary)] font-bold">Dessiner Signature de Réception</label>
@@ -247,6 +258,11 @@ const purchaseId = route.params.id;
 
 const purchase = computed(() => {
   return purchases.value?.find(p => p.id === purchaseId) || purchases.value?.[0];
+});
+
+const isBLEmitted = computed(() => {
+  if (!purchase.value) return false;
+  return ['In Transit', 'Received', 'PROCESSING', 'DELIVERED'].includes(purchase.value.status);
 });
 
 const receiverName = ref('Responsable Quai Paul');

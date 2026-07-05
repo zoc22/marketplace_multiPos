@@ -18,15 +18,14 @@
       <div class="flex gap-2 shrink-0">
         <button 
           @click="printDocument"
-          class="px-4 py-2 font-mono text-xs border rounded-xl transition flex items-center space-x-2"
-          :class="['In Transit', 'Received'].includes(purchase?.status) ? 'bg-[var(--color-surface)] hover:bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] border-[var(--color-border)]' : 'bg-slate-550/15 text-slate-400 border-slate-500/20 cursor-not-allowed'"
+          class="px-4 py-2 font-mono text-xs border rounded-xl transition flex items-center space-x-2 bg-[var(--color-surface)] hover:bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] border-[var(--color-border)]"
           id="btn-print-po"
-          :title="['In Transit', 'Received'].includes(purchase?.status) ? 'Imprimer Facture / Bon B2B' : 'Impression bloquée : En attente d\'émission du Bon de Livraison (BL)'"
+          title="Imprimer Bon de Commande"
         >
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.821V7.5a3.75 3.75 0 017.5 0v6.321m-7.5 0a3.75 3.75 0 013.75-3.75h3.75a3.75 3.75 0 013.75 3.75m-11.25 0H18M9.75 16.5h4.5m-4.5 3h4.5M3 18.75a2.25 2.25 0 002.25 2.25h13.5a2.25 2.25 0 002.25-2.25V16.5a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 16.5v2.25z" />
           </svg>
-          <span>Imprimer Facture</span>
+          <span>Imprimer Bon de Commande</span>
         </button>
 
         <router-link
@@ -285,10 +284,6 @@ function getProductName(id) {
 }
 
 function printDocument() {
-  if (!['In Transit', 'Received'].includes(purchase.value?.status)) {
-    toast.error("Impression impossible : En attente d'émission du Bon de Livraison (BL)");
-    return;
-  }
   window.print();
   toast.info('Impression du document lancée.');
 }

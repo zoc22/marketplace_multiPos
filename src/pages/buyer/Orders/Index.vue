@@ -140,13 +140,13 @@ function formatDate(dateVal) {
 
 function getStatusClasses(stat) {
   const classes = {
-    'PENDING': 'bg-amber-500/10 text-amber-500 border border-amber-500/20',
-    'VALIDATED': 'bg-indigo-500/10 text-indigo-500 border border-indigo-500/20',
-    'PROCESSING': 'bg-blue-500/10 text-blue-500 border border-blue-500/20',
-    'DELIVERED': 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20',
-    'CANCELLED': 'bg-red-500/10 text-red-500 border border-red-500/20',
-    'REFUSED': 'bg-red-500/10 text-red-500 border border-red-500/20'
+    'PENDING': 'bg-amber-100 text-amber-800 border border-amber-200 dark:bg-amber-950/20 dark:text-amber-400 dark:border-amber-500/20',
+    'VALIDATED': 'bg-indigo-100 text-indigo-800 border border-indigo-200 dark:bg-indigo-950/20 dark:text-indigo-400 dark:border-indigo-500/20',
+    'PROCESSING': 'bg-blue-100 text-blue-800 border border-blue-200 dark:bg-blue-950/20 dark:text-blue-400 dark:border-blue-500/20',
+    'DELIVERED': 'bg-emerald-100 text-emerald-800 border border-emerald-200 dark:bg-emerald-950/20 dark:text-emerald-400 dark:border-emerald-500/20',
+    'CANCELLED': 'bg-red-100 text-red-800 border border-red-200 dark:bg-red-950/20 dark:text-red-400 dark:border-red-500/20',
+    'REFUSED': 'bg-red-100 text-red-800 border border-red-200 dark:bg-red-950/20 dark:text-red-400 dark:border-red-500/20'
   };
-  return classes[stat] || 'bg-slate-500/10 text-slate-500 border border-slate-500/20';
+  return classes[stat] || 'bg-slate-100 text-slate-800 border border-slate-200 dark:bg-slate-950/20 dark:text-slate-400 dark:border-slate-500/20';
 }
 </script>

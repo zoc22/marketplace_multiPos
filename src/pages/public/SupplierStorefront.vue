@@ -40,18 +40,32 @@
             </div>
           </div>
 
-          <div class="bg-light-bg-sec dark:bg-slate-900/80 backdrop-blur-md border border-divider dark:border-slate-800 rounded-xl p-4 flex gap-6 shadow-xl w-full md:w-auto">
-            <div class="text-center">
-              <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Produits</p>
-              <p class="text-xl text-text-main dark:text-white font-black">{{ supplierProducts.length }}</p>
-            </div>
-            <div class="text-center">
-              <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Évaluation</p>
-              <p class="text-xl text-button-orange font-black">{{ supplier.rating }} <span class="text-xs">/5</span></p>
-            </div>
-            <div class="text-center">
-              <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Ventes</p>
-              <p class="text-xl text-accent-green font-black">+{{ Math.floor(Math.random() * 500) + 50 }}</p>
+          <div class="flex flex-col items-end gap-3 shrink-0 w-full md:w-auto">
+            <!-- Boutique favorite action for logged-in buyers -->
+            <button 
+              v-if="isBuyer"
+              @click="toggleSaveStore"
+              class="px-4 py-2.5 rounded-xl text-xs font-sans font-bold uppercase transition flex items-center justify-center gap-2 border shadow-md w-full md:w-auto"
+              :class="isStoreSaved ? 'bg-rose-600 border-rose-500 text-white hover:bg-rose-700' : 'bg-slate-900/80 backdrop-blur-md text-white border-slate-700 hover:bg-slate-800'"
+            >
+              <HeartIcon class="h-4.5 w-4.5" :class="isStoreSaved ? 'fill-current text-white' : 'text-slate-300'" />
+              <span>{{ isStoreSaved ? 'Boutique Enregistrée' : 'Enregistrer Boutique' }}</span>
+            </button>
+
+            <!-- STATS CARD -->
+            <div class="bg-light-bg-sec dark:bg-slate-900/80 backdrop-blur-md border border-divider dark:border-slate-800 rounded-xl p-4 flex gap-6 shadow-xl w-full md:w-auto justify-around">
+              <div class="text-center">
+                <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Produits</p>
+                <p class="text-xl text-text-main dark:text-white font-black">{{ supplierProducts.length }}</p>
+              </div>
+              <div class="text-center">
+                <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Évaluation</p>
+                <p class="text-xl text-button-orange font-black">{{ supplier.rating }} <span class="text-xs">/5</span></p>
+              </div>
+              <div class="text-center">
+                <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Ventes</p>
+                <p class="text-xl text-accent-green font-black">+{{ Math.floor(Math.random() * 500) + 50 }}</p>
+              </div>
             </div>
           </div>
         </div>
@@ -239,6 +253,7 @@ import { suppliers } from '@/utils/seed_data.js';
 import { useProductsStore } from '@/store/modules/products.js';
 import { useCartStore } from '@/store/modules/cart.js';
 import { useToast } from 'vue-toastification';
+import { useAuthStore } from '@/store/modules/auth.js';
 import PublicHeader from '@/components/PublicHeader.vue';
 import { 
   UserGroupIcon, 
@@ -258,12 +273,49 @@ const router = useRouter();
 const productsStore = useProductsStore();
 const cartStore = useCartStore();
 const toast = useToast();
+const authStore = useAuthStore();
 
 const supplierId = ref(route.params.id);
 const supplier = ref(null);
 const supplierProducts = ref([]);
 const searchQuery = ref('');
 const activeTab = ref('products');
+
+const isBuyer = computed(() => authStore.user?.role === 'buyer');
+const savedShops = ref([]);
+
+const defaultSavedShops = [
+  {
+    id: 'store_dist_1_main',
+    name: 'AgroDistrib Centre-Sud',
+    description: 'Boutique officielle AgroDistrib Cameroun pour la livraison en gros de maïs blanc séché et cacao brut.'
+  },
+  {
+    id: 'store_vendor_1_main',
+    name: 'TechSupplies Cameroun Shop',
+    description: 'Boutique officielle TechSupplies SARL pour la vente d\'ordinateurs HP ProBook, souris sans fil et accessoires informatiques.'
+  }
+];
+
+const isStoreSaved = computed(() => {
+  return savedShops.value.some(s => s.id === supplierId.value);
+});
+
+function toggleSaveStore() {
+  if (!supplier.value) return;
+  if (isStoreSaved.value) {
+    savedShops.value = savedShops.value.filter(s => s.id !== supplierId.value);
+    toast.success("Boutique retirée de vos favoris.");
+  } else {
+    savedShops.value.push({
+      id: supplier.value.id,
+      name: supplier.value.name,
+      description: getSupplierSlogan(supplier.value)
+    });
+    toast.success("Boutique enregistrée dans vos favoris !");
+  }
+  localStorage.setItem('saved_shops_buyer', JSON.stringify(savedShops.value));
+}
 
 onMounted(() => {
   const found = suppliers.find(s => s.id === supplierId.value);
@@ -276,6 +328,15 @@ onMounted(() => {
   
   // Filter products by this supplier
   supplierProducts.value = productsStore.products.filter(p => p.supplierId === supplierId.value);
+
+  // Load saved shops from localStorage
+  const saved = localStorage.getItem('saved_shops_buyer');
+  if (saved) {
+    savedShops.value = JSON.parse(saved);
+  } else {
+    savedShops.value = defaultSavedShops;
+    localStorage.setItem('saved_shops_buyer', JSON.stringify(defaultSavedShops));
+  }
 });
 
 const filteredProducts = computed(() => {

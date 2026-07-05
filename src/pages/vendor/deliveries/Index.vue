@@ -118,33 +118,61 @@
 
     <!-- Delivery Details Modal -->
     <div v-if="isDetailsModalOpen && selectedDelivery" @click.self="isDetailsModalOpen = false" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm cursor-pointer">
-      <div class="bg-[var(--color-surface)] rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden border border-[var(--color-border)] flex flex-col cursor-default">
+      <div class="bg-[var(--color-surface)] rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden border border-[var(--color-border)] flex flex-col cursor-default">
         <div class="p-6 border-b border-[var(--color-border)] flex justify-between items-center bg-[var(--color-surface-elevated)]">
           <div>
             <h3 class="text-xl font-bold text-[var(--color-text-primary)]">Bon de Livraison {{ selectedDelivery.id }}</h3>
             <p class="text-xs text-[var(--color-text-secondary)] mt-1">Fournisseur : {{ getSupplierName(selectedDelivery.supplierId) }}</p>
           </div>
-          <button @click="isDetailsModalOpen = false" class="text-[var(--color-text-muted)] hover:text-red-500"><XMarkIcon class="h-6 w-6"/></button>
+          <div class="flex items-center space-x-2">
+            <button @click="printDelivery" class="p-2 bg-[var(--color-surface)] hover:bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] border border-[var(--color-border)] rounded-lg transition cursor-pointer" title="Imprimer le bon">
+              <PrinterIcon class="h-5 w-5" />
+            </button>
+            <button @click="isDetailsModalOpen = false" class="text-[var(--color-text-muted)] hover:text-red-500 cursor-pointer">
+              <XMarkIcon class="h-6 w-6"/>
+            </button>
+          </div>
         </div>
 
-        <div class="p-6 bg-[var(--color-background)] space-y-4">
-          <div class="text-sm space-y-1 bg-[var(--color-surface)] p-3 border border-[var(--color-border)] rounded-xl">
-            <div><span class="text-[var(--color-text-secondary)]">Date de réception :</span> <span class="font-bold">{{ formatDate(selectedDelivery.date) }}</span></div>
-            <div><span class="text-[var(--color-text-secondary)]">Bon de Commande lié :</span> <span class="font-mono font-bold">{{ selectedDelivery.purchaseId }}</span></div>
+        <div class="p-6 bg-[var(--color-background)] space-y-4 overflow-y-auto max-h-[70vh]" id="printable-delivery-sheet">
+          <div class="grid grid-cols-2 gap-4 text-sm bg-[var(--color-surface)] p-4 border border-[var(--color-border)] rounded-xl">
+            <div>
+              <span class="text-xs text-[var(--color-text-secondary)] block">Date de réception :</span> 
+              <span class="font-bold text-[var(--color-text-primary)]">{{ formatDate(selectedDelivery.date) }}</span>
+            </div>
+            <div>
+              <span class="text-xs text-[var(--color-text-secondary)] block">Bon de Commande lié :</span> 
+              <router-link :to="'/vendor/purchases/' + selectedDelivery.purchaseId" class="text-[var(--color-primary)] hover:underline font-mono font-bold">
+                #{{ selectedDelivery.purchaseId }}
+              </router-link>
+            </div>
           </div>
 
           <h4 class="font-bold text-xs uppercase text-[var(--color-text-secondary)] tracking-wider">Articles Réceptionnés</h4>
-          <div class="space-y-2">
-            <div v-for="(item, idx) in selectedDelivery.items" :key="idx" class="p-3 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl flex justify-between text-sm">
-              <div>
-                <div class="font-bold text-[var(--color-text-primary)]">{{ getProductName(item.productId) }}</div>
-                <div class="text-xs text-[var(--color-text-secondary)]">Code : {{ item.productId }}</div>
-              </div>
-              <div class="text-right">
-                <span class="font-black text-emerald-500">+ {{ item.receivedQuantity }}</span>
-                <span class="text-xs text-slate-400 block">sur {{ item.expectedQuantity }} attendus</span>
-              </div>
-            </div>
+          <div class="border border-[var(--color-border)] rounded-xl overflow-hidden bg-[var(--color-surface)]">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr class="bg-[var(--color-surface-hover)] font-bold text-[var(--color-text-secondary)] border-b border-[var(--color-border)]">
+                  <th class="p-3">Désignation</th>
+                  <th class="p-3 text-center">Attendu</th>
+                  <th class="p-3 text-center">Reçu</th>
+                  <th class="p-3 text-center">Écart</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-[var(--color-border)]">
+                <tr v-for="(item, idx) in selectedDelivery.items" :key="idx" class="text-[var(--color-text-primary)]">
+                  <td class="p-3 font-semibold">
+                    <div>{{ getProductName(item.productId) }}</div>
+                    <div class="text-[10px] text-[var(--color-text-muted)] font-mono">{{ item.productId }}</div>
+                  </td>
+                  <td class="p-3 text-center font-bold">{{ item.expectedQuantity }}</td>
+                  <td class="p-3 text-center font-bold text-emerald-500">{{ item.receivedQuantity }}</td>
+                  <td class="p-3 text-center font-bold" :class="item.receivedQuantity - item.expectedQuantity < 0 ? 'text-red-500' : 'text-slate-400'">
+                    {{ item.receivedQuantity - item.expectedQuantity }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -155,11 +183,15 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
 import { b2b_deliveries, b2b_purchases, b2b_suppliers, products } from '@/utils/vendor_db.js';
-import { PlusIcon, MagnifyingGlassIcon, EyeIcon, XMarkIcon } from '@heroicons/vue/24/outline';
+import { PlusIcon, MagnifyingGlassIcon, EyeIcon, XMarkIcon, PrinterIcon } from '@heroicons/vue/24/outline';
 import Pagination from '@/components/Pagination.vue';
 import { useToast } from 'vue-toastification';
 
 const toast = useToast();
+
+function printDelivery() {
+  window.print();
+}
 
 const searchQuery = ref('');
 const currentPage = ref(1);

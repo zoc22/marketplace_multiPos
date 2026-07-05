@@ -19,6 +19,7 @@
 <script setup>
 import { useRouter } from 'vue-router';
 import { useOrdersStore } from '@/store/modules/orders.js';
+import { useAuthStore } from '@/store/modules/auth.js';
 import { useToast } from 'vue-toastification';
 import { ArrowLeftIcon } from '@heroicons/vue/24/outline';
 import PurchaseOrderForm from '@/components/distributor/PurchaseOrderForm.vue';
@@ -26,19 +27,49 @@ import PurchaseOrderForm from '@/components/distributor/PurchaseOrderForm.vue';
 const router = useRouter();
 const toast = useToast();
 const ordersStore = useOrdersStore();
+const authStore = useAuthStore();
 
 const onSubmit = (formData) => {
-  const newPO = ordersStore.createPurchaseOrder({
-    ...formData,
-    emitter_id: 'dist_1', // Current distributor
-    emitter_type: 'distributor',
-    status: 'PENDING'
+  // Group products by supplier_id
+  const groups = {};
+  formData.products.forEach(p => {
+    if (!groups[p.supplier_id]) {
+      groups[p.supplier_id] = [];
+    }
+    groups[p.supplier_id].push({
+      productId: p.product_id,
+      quantity: p.quantity,
+      price: p.unit_price,
+      total: p.total
+    });
   });
 
-  if (newPO) {
-    toast.success('Bon de commande B2B envoyé avec succès !');
-    router.push('/distributor/purchases');
-  }
+  // Create a separate purchase order for each group
+  Object.keys(groups).forEach(supplierId => {
+    const groupProducts = groups[supplierId];
+    const totalAmount = groupProducts.reduce((sum, p) => sum + p.total, 0);
+    const supplierUser = authStore.users.find(u => u.id === supplierId);
+    const receiverType = supplierUser ? supplierUser.roles[0] : 'distributor';
+
+    ordersStore.createPurchaseOrder({
+      emitter_id: authStore.user?.id || 'usr_dist_1',
+      emitter_type: 'distributor',
+      receiver_id: supplierId,
+      receiver_type: receiverType,
+      date_emission: new Date().toISOString(),
+      date_livraison_souhaitee: formData.date_livraison_souhaitee,
+      shipping_mode: formData.shipping_mode,
+      payment_method: formData.payment_method,
+      shipping_address: formData.shipping_address,
+      notes: formData.notes,
+      products: groupProducts,
+      total: totalAmount,
+      status: 'PENDING'
+    });
+  });
+
+  toast.success('Bons de commande B2B créés et envoyés aux fournisseurs concernés !');
+  router.push('/distributor/purchases');
 };
 
 const onCancel = () => {

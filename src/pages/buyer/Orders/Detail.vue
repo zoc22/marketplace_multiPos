@@ -219,6 +219,7 @@ import { useOrdersStore } from '@/store/modules/orders.js';
 import { useDisputesStore } from '@/store/modules/disputes.js';
 import { usePaymentsStore } from '@/store/modules/payments.js';
 import { useToast } from 'vue-toastification';
+import { orders as dbOrders } from '@/utils/supplier_db.js';
 import StatusBadge from '@/components/common/StatusBadge.vue';
 import OrderTimeline from '@/components/common/OrderTimeline.vue';
 import PrintButton from '@/components/print/PrintButton.vue';
@@ -239,7 +240,47 @@ const disputeForm = ref({
 });
 
 const order = computed(() => {
-  return ordersStore.purchaseOrders.find(o => o.id === orderId);
+  const rawOrder = ordersStore.purchaseOrders.find(o => o.id === orderId) || 
+                   ordersStore.orders.find(o => o.id === orderId) ||
+                   dbOrders.value.find(o => o.id === orderId);
+  
+  if (!rawOrder) return null;
+
+  // Normalize items / products array
+  const rawProducts = rawOrder.products || rawOrder.items || [];
+  const normalizedProducts = rawProducts.map(item => ({
+    product_id: item.productName || item.product_id || 'Produit',
+    quantity: item.quantity || item.qty || 0,
+    unit_price: item.unitPrice || item.unit_price || 0,
+  }));
+
+  // Resolve status translation / mapping if necessary
+  let normalizedStatus = rawOrder.status;
+  const statusMap = {
+    'Submitted': 'PENDING',
+    'Draft': 'PENDING',
+    'Approved': 'PROCESSING',
+    'Preparing': 'PROCESSING',
+    'Packed': 'PROCESSING',
+    'Shipped': 'PROCESSING',
+    'Delivered': 'DELIVERED',
+    'Completed': 'DELIVERED'
+  };
+  if (statusMap[rawOrder.status]) {
+    normalizedStatus = statusMap[rawOrder.status];
+  }
+
+  return {
+    ...rawOrder,
+    reference: rawOrder.reference || rawOrder.id || 'N/A',
+    date_emission: rawOrder.date_emission || rawOrder.created_at || new Date().toISOString(),
+    receiver_id: rawOrder.supplierName || rawOrder.receiver_id || 'N/A',
+    receiver_type: rawOrder.receiver_type || 'Fournisseur',
+    shipping_address: rawOrder.shipping_address || rawOrder.deliveryMode || 'Non spécifiée',
+    status: normalizedStatus,
+    products: normalizedProducts,
+    total: rawOrder.total || 0
+  };
 });
 
 const existingDispute = computed(() => {

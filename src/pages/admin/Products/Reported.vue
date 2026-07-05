@@ -1,7 +1,9 @@
 <template>
   <div class="space-y-4">
-    <h1 class="text-sm font-bold uppercase tracking-wider text-slate-400 font-mono">Defective / Reported Items</h1>
-    <p class="text-xs text-slate-500">Review consumer complaints and quality warnings on B2B catalog parts.</p>
+    <div class="p-6 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl space-y-2 shadow-sm">
+      <h1 class="text-sm font-bold uppercase tracking-wider text-[var(--color-text-primary)] font-mono">Articles Défectueux / Signalés</h1>
+      <p class="text-xs text-[var(--color-text-secondary)]">Examinez les plaintes des acheteurs et les avertissements de qualité sur les articles du catalogue B2B.</p>
+    </div>
   </div>
 </template>
 

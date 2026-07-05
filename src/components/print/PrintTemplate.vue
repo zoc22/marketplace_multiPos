@@ -1,5 +1,5 @@
 <template>
-  <div class="print-document bg-white text-slate-900 font-sans p-8 max-w-4xl mx-auto shadow-sm rounded-none border border-slate-100 print:border-none print:p-0 print:shadow-none">
+  <div class="print-document printable-area bg-white text-slate-900 font-sans p-8 max-w-4xl mx-auto shadow-sm rounded-none border border-slate-100 print:border-none print:p-0 print:shadow-none">
     
     <!-- Printable Header (Visible only when printing or in print preview) -->
     <div class="flex justify-between items-start border-b-2 border-emerald-600 pb-6 mb-6">
@@ -59,6 +59,14 @@ function formatDate(val) {
 <style>
 /* CSS rules targeting browser print view layout styling */
 @media print {
+  html, body, #app, .app-container, .layout-wrapper, main, .page-container, .layout-content, .layout-main {
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    position: static !important;
+    display: block !important;
+  }
   body {
     background-color: white !important;
     color: black !important;
@@ -73,6 +81,8 @@ function formatDate(val) {
   .sticky,
   .toast,
   footer,
+  .sidebar,
+  .navbar,
   .page-container > header {
     display: none !important;
   }
@@ -86,6 +96,10 @@ function formatDate(val) {
     max-width: 100% !important;
     box-shadow: none !important;
     background: transparent !important;
+  }
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 }
 </style>

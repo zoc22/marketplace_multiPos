@@ -2,17 +2,17 @@
   <div class="space-y-6">
 
     <!-- HEADER BLOCK -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-900 pb-5 shrink-0">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[var(--color-border)] pb-5 shrink-0">
       <div>
-        <h1 class="text-xl font-bold font-mono text-slate-100 flex items-center gap-2">
-          Corporate Support Desk Tickets
+        <h1 class="text-xl font-bold font-mono text-[var(--color-text-primary)] flex items-center gap-2">
+          Tickets de Support Clientèle Corporate
         </h1>
-        <p class="text-xs text-slate-400">Manage client issues, assign engineers, and resolve technical bugs on billing networks.</p>
+        <p class="text-xs text-[var(--color-text-secondary)]">Gérez les tickets d'assistance, affectez les techniciens et résolvez les bugs techniques.</p>
       </div>
 
       <div class="flex items-center space-x-3 text-xs font-mono">
-        <span class="px-2.5 py-1 bg-indigo-950/40 text-indigo-400 border border-indigo-900/40 rounded-lg">
-          Open Case folders: <strong class="text-indigo-200">{{ unassignedCount }}</strong>
+        <span class="px-2.5 py-1 bg-[var(--color-primary-muted)] text-[var(--color-primary)] border border-[var(--color-border)] rounded-lg">
+          Dossiers ouverts : <strong class="text-[var(--color-text-primary)]">{{ unassignedCount }}</strong>
         </span>
       </div>
     </div>
@@ -24,22 +24,22 @@
       <div class="xl:col-span-5 space-y-4">
         
         <!-- Search, Priority Filt -->
-        <div class="flex gap-2 bg-slate-90s/30 rounded-xl border border-slate-900 p-2 shrink-0">
+        <div class="flex gap-2 bg-[var(--color-surface-elevated)] rounded-xl border border-[var(--color-border)] p-2 shrink-0">
           <input 
             type="text" 
             v-model="searchQuery"
-            placeholder="Search tickets, names, topics..."
-            class="flex-1 bg-slate-950 border border-slate-850 focus:border-indigo-500 rounded-lg p-2 text-xs text-slate-100 font-mono focus:outline-none"
+            placeholder="Rechercher des tickets, noms, sujets..."
+            class="flex-1 bg-[var(--color-background)] border border-[var(--color-border)] focus:border-[var(--color-primary)] rounded-lg p-2 text-xs text-[var(--color-text-primary)] font-mono focus:outline-none"
           />
           <select 
             v-model="filterPriority"
-            class="bg-slate-950 text-xs text-slate-400 border border-slate-800 rounded-lg p-2 font-mono"
+            class="bg-[var(--color-background)] text-xs text-[var(--color-text-secondary)] border border-[var(--color-border)] rounded-lg p-2 font-mono"
           >
-            <option value="">All Priorities</option>
+            <option value="">Toutes les Priorités</option>
             <option value="urgent">Urgent</option>
-            <option value="high">High</option>
-            <option value="medium">Medium</option>
-            <option value="low">Low</option>
+            <option value="high">Haute</option>
+            <option value="medium">Moyenne</option>
+            <option value="low">Basse</option>
           </select>
         </div>
 
@@ -48,29 +48,29 @@
             v-for="tk in filteredTickets" 
             :key="tk.id"
             @click="selectedTicket = tk"
-            class="p-4 bg-slate-900/50 border rounded-2xl cursor-pointer text-left hover:border-slate-750 transition"
-            :class="selectedTicket?.id === tk.id ? 'border-indigo-650 bg-indigo-950/20' : 'border-slate-850'"
+            class="p-4 bg-[var(--color-surface)] border rounded-2xl cursor-pointer text-left hover:border-[var(--color-primary)] transition"
+            :class="selectedTicket?.id === tk.id ? 'border-[var(--color-primary)] bg-[var(--color-primary-muted)]/20' : 'border-[var(--color-border)]'"
           >
             <div class="flex items-center justify-between font-mono text-[9px] mb-2">
-              <span class="text-indigo-400 font-bold uppercase">{{ tk.ticketRef }}</span>
+              <span class="text-[var(--color-primary)] font-bold uppercase">{{ tk.ticketRef }}</span>
               <span 
-                class="px-1.5 py-0.5 rounded uppercase font-bold"
+                class="px-1.5 py-0.5 rounded uppercase font-bold text-[9px]"
                 :class="getPriorityClass(tk.priority)"
               >
-                {{ tk.priority }}
+                {{ tk.priority === 'urgent' ? 'Urgent' : tk.priority === 'high' ? 'Haute' : tk.priority === 'medium' ? 'Moyenne' : 'Basse' }}
               </span>
             </div>
 
-            <h3 class="text-xs font-bold text-slate-100 font-sans leading-snug line-clamp-1">{{ tk.subject }}</h3>
-            <p class="text-[11px] text-slate-400 font-sans mt-1 line-clamp-1 italic">{{ tk.message }}</p>
+            <h3 class="text-xs font-bold text-[var(--color-text-primary)] font-sans leading-snug line-clamp-1">{{ tk.subject }}</h3>
+            <p class="text-[11px] text-[var(--color-text-secondary)] font-sans mt-1 line-clamp-1 italic">{{ tk.message }}</p>
 
-            <div class="flex items-center justify-between pt-3 mt-3 border-t border-slate-850/50 text-[10px] font-mono text-slate-500">
-              <span class="truncate max-w-[150px]">{{ tk.user }} ({{ tk.role }})</span>
+            <div class="flex items-center justify-between pt-3 mt-3 border-t border-[var(--color-border)] text-[10px] font-mono text-[var(--color-text-secondary)]">
+              <span class="truncate max-w-[150px]">{{ tk.user }} ({{ tk.role === 'supplier' ? 'Fournisseur' : 'Acheteur' }})</span>
               <span 
                 class="px-1 text-[8px] rounded uppercase font-bold"
                 :class="getStatusClass(tk.status)"
               >
-                {{ tk.status.replace('_',' ') }}
+                {{ tk.status === 'open' ? 'Ouvert' : tk.status === 'in_progress' ? 'En Cours' : tk.status === 'resolved' ? 'Résolu' : 'Fermé' }}
               </span>
             </div>
           </div>
@@ -81,94 +81,94 @@
       <!-- COLUMN 2: RESOLUTION INTERFACE & REPLIES THREAD -->
       <div class="xl:col-span-7">
         
-        <div v-if="selectedTicket" class="p-6 bg-[#040817] border border-[#121c3b] rounded-2xl space-y-6">
+        <div v-if="selectedTicket" class="p-6 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl space-y-6">
           
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#121c3b] pb-4 gap-3">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[var(--color-border)] pb-4 gap-3">
             <div>
               <div class="flex items-center space-x-2 text-[10px] font-mono leading-none mb-1">
-                <span class="text-indigo-400 font-bold uppercase">{{ selectedTicket.ticketRef }}</span>
-                <span class="text-slate-650">&bull;</span>
-                <span class="text-slate-450 uppercase">{{ selectedTicket.category }} Query</span>
+                <span class="text-[var(--color-primary)] font-bold uppercase">{{ selectedTicket.ticketRef }}</span>
+                <span class="text-[var(--color-text-secondary)]">&bull;</span>
+                <span class="text-[var(--color-text-secondary)] uppercase">Catégorie : {{ selectedTicket.category }}</span>
               </div>
-              <h2 class="text-sm font-bold text-slate-100 font-mono uppercase tracking-wider">Ticket Thread Review</h2>
+              <h2 class="text-sm font-bold text-[var(--color-text-primary)] font-mono uppercase tracking-wider">Suivi du Ticket</h2>
             </div>
             
             <div class="flex items-center gap-1.5 self-start">
               <button 
                 @click="assignToMe"
-                class="px-2.5 py-1 bg-slate-90 w bg-slate-900 border border-slate-800 rounded font-mono text-[9px] text-slate-350 hover:text-white uppercase transition"
+                class="px-2.5 py-1 bg-[var(--color-surface-elevated)] border border-[var(--color-border)] rounded font-mono text-[9px] text-[var(--color-text-primary)] hover:bg-[var(--color-primary-muted)] uppercase transition cursor-pointer"
               >
-                {{ selectedTicket.assignedTo ? 'RE-ASSIGN TO ME' : 'CLAIM CASE' }}
+                {{ selectedTicket.assignedTo ? 'Réassigner à moi' : 'Prendre en charge' }}
               </button>
             </div>
           </div>
 
           <!-- Ticket original description -->
-          <div class="p-4 bg-slate-950 border border-slate-900 rounded-xl space-y-1">
-            <span class="text-[9px] font-mono text-slate-500 uppercase tracking-widest block font-bold">Original Query Content:</span>
-            <p class="text-xs text-slate-300 leading-relaxed font-sans font-medium">{{ selectedTicket.message }}</p>
+          <div class="p-4 bg-[var(--color-background)] border border-[var(--color-border)] rounded-xl space-y-1">
+            <span class="text-[9px] font-mono text-[var(--color-text-secondary)] uppercase tracking-widest block font-bold">Message d'Origine :</span>
+            <p class="text-xs text-[var(--color-text-primary)] leading-relaxed font-sans font-medium">{{ selectedTicket.message }}</p>
             
-            <div class="text-[9px] font-mono text-slate-650 pt-2 border-t border-slate-900 flex items-center justify-between">
-              <span>Opened by: {{ selectedTicket.user }} ({{ selectedTicket.email }})</span>
-              <span>Assigned: {{ selectedTicket.assignedTo || 'Unclaimed Queue' }}</span>
+            <div class="text-[9px] font-mono text-[var(--color-text-secondary)] pt-2 border-t border-[var(--color-border)] flex items-center justify-between">
+              <span>Créé par : {{ selectedTicket.user }} ({{ selectedTicket.email }})</span>
+              <span>Assigné à : {{ selectedTicket.assignedTo || 'Non assigné' }}</span>
             </div>
           </div>
 
           <!-- Core replies logs -->
           <div class="space-y-3">
-            <h4 class="text-[10px] font-mono uppercase text-slate-450 tracking-wider font-bold">Dialogue Answers</h4>
-            <div class="space-y-2.5 max-h-[180px] overflow-y-auto bg-slate-950/40 p-3 rounded-xl border border-slate-900">
-              <div v-if="selectedTicket.replies.length === 0" class="text-center p-3 text-[11px] text-slate-600 font-mono italic">
-                No replies posted on this technical thread yet.
+            <h4 class="text-[10px] font-mono uppercase text-[var(--color-text-secondary)] tracking-wider font-bold">Historique des Échanges</h4>
+            <div class="space-y-2.5 max-h-[180px] overflow-y-auto bg-[var(--color-background)] p-3 rounded-xl border border-[var(--color-border)]">
+              <div v-if="selectedTicket.replies.length === 0" class="text-center p-3 text-[11px] text-[var(--color-text-secondary)] font-mono italic">
+                Aucune réponse n'a encore été apportée à ce ticket.
               </div>
               <div 
                 v-else
                 v-for="rep in selectedTicket.replies" 
                 :key="rep.id"
-                class="p-3 bg-slate-950 rounded-xl border border-slate-900 text-xs"
+                class="p-3 bg-[var(--color-surface)] rounded-xl border border-[var(--color-border)] text-xs"
               >
-                <div class="flex items-center justify-between font-mono text-[8.5px] text-slate-500 mb-1 leading-none">
-                  <span class="text-indigo-400 font-bold uppercase">&bull; {{ rep.author }}</span>
+                <div class="flex items-center justify-between font-mono text-[8.5px] text-[var(--color-text-secondary)] mb-1 leading-none">
+                  <span class="text-[var(--color-primary)] font-bold uppercase">&bull; {{ rep.author }}</span>
                   <span>{{ formatDateTime(rep.date) }}</span>
                 </div>
-                <p class="text-slate-300 leading-normal">{{ rep.text }}</p>
+                <p class="text-[var(--color-text-primary)] leading-normal">{{ rep.text }}</p>
               </div>
             </div>
           </div>
 
           <!-- Answer submission input -->
           <div class="space-y-2 pt-1 font-mono text-xs">
-            <label class="block text-slate-450 font-bold uppercase text-[9px]">Post Support Resolution Instruction</label>
+            <label class="block text-[var(--color-text-secondary)] font-bold uppercase text-[9px]">Ajouter une réponse de support</label>
             <div class="flex gap-2">
               <input 
                 type="text" 
                 v-model="replyInput" 
-                placeholder="Post instructional reply..."
-                class="flex-1 bg-slate-950 border border-slate-850 rounded-xl p-2.5 text-xs text-slate-100 placeholder-slate-700 focus:outline-none focus:border-indigo-500"
+                placeholder="Saisir votre réponse..."
+                class="flex-1 bg-[var(--color-background)] border border-[var(--color-border)] rounded-xl p-2.5 text-xs text-[var(--color-text-primary)] placeholder-[var(--color-text-secondary)] focus:outline-none focus:border-[var(--color-primary)]"
               />
               <button 
                 @click="postSupportAnswer"
-                class="px-4 py-2 bg-indigo-600 hover:bg-indigo-750 text-white rounded-xl font-bold uppercase"
+                class="px-4 py-2 bg-[var(--color-primary)] hover:opacity-90 text-[var(--color-text-primary)] rounded-xl font-bold uppercase cursor-pointer"
               >
-                SEND
+                Envoyer
               </button>
             </div>
           </div>
 
           <!-- Close tickets actions -->
-          <div v-if="selectedTicket.status !== 'closed' && selectedTicket.status !== 'resolved'" class="pt-4 border-t border-[#121c3b] flex justify-end shrink-0">
+          <div v-if="selectedTicket.status !== 'closed' && selectedTicket.status !== 'resolved'" class="pt-4 border-t border-[var(--color-border)] flex justify-end shrink-0">
             <button 
               @click="closeTicketFinal"
-              class="px-3.5 py-1.5 bg-slate-950 hover:bg-[#1a0f0d] text-slate-400 hover:text-red-400 border border-slate-850 rounded-xl font-mono text-[10px] uppercase font-bold transition"
+              class="px-3.5 py-1.5 bg-[var(--color-background)] hover:bg-red-500/10 text-[var(--color-text-secondary)] hover:text-red-500 border border-[var(--color-border)] rounded-xl font-mono text-[10px] uppercase font-bold transition cursor-pointer"
             >
-              RESOLVE & CLOSE CASE FILE [ &times; ]
+              Résoudre & Fermer le ticket [ &times; ]
             </button>
           </div>
 
         </div>
 
-        <div v-else class="p-12 text-center bg-slate-9s/10 border border-slate-900 rounded-2xl">
-          <p class="text-xs text-slate-500 font-mono">Select a technical help ticket from list.</p>
+        <div v-else class="p-12 text-center bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl">
+          <p class="text-xs text-[var(--color-text-secondary)] font-mono">Veuillez sélectionner un ticket dans la liste.</p>
         </div>
 
       </div>
@@ -219,46 +219,46 @@ function formatDateTime(isoStr) {
 
 function getPriorityClass(prio) {
   const map = {
-    urgent: 'bg-red-950 text-red-500 border border-red-900/40 animate-pulse',
-    high: 'bg-orange-950 text-orange-400 border border-orange-900/40',
-    medium: 'bg-indigo-950 text-indigo-400 border border-indigo-900/40',
-    low: 'bg-slate-900 text-slate-400 border border-slate-850'
+    urgent: 'bg-red-500/10 text-red-500 border border-red-500/20',
+    high: 'bg-orange-500/10 text-orange-500 border border-orange-500/20',
+    medium: 'bg-indigo-500/10 text-indigo-500 border border-indigo-500/20',
+    low: 'bg-[var(--color-surface-elevated)] text-[var(--color-text-secondary)] border border-[var(--color-border)]'
   };
-  return map[prio] || 'bg-slate-900 text-slate-400';
+  return map[prio] || 'bg-[var(--color-surface-elevated)] text-[var(--color-text-secondary)]';
 }
 
 function getStatusClass(st) {
   const map = {
-    open: 'bg-[#180b08] text-orange-500 border border-orange-905/40',
-    in_progress: 'bg-indigo-950 text-indigo-400 border border-indigo-900/40 animate-pulse',
-    resolved: 'bg-emerald-950 text-emerald-400 border border-emerald-900/50',
-    closed: 'bg-slate-950 text-slate-550 border border-slate-900'
+    open: 'bg-orange-500/10 text-orange-500 border border-orange-500/20',
+    in_progress: 'bg-indigo-500/10 text-indigo-500 border border-indigo-500/20',
+    resolved: 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20',
+    closed: 'bg-[var(--color-surface-elevated)] text-[var(--color-text-secondary)] border border-[var(--color-border)]'
   };
-  return map[st] || 'bg-slate-900 text-slate-400';
+  return map[st] || 'bg-[var(--color-surface-elevated)] text-[var(--color-text-secondary)]';
 }
 
 // ACTION HANDLERS
 function assignToMe() {
-  const adminName = authStore.user?.name || 'Administrator';
+  const adminName = authStore.user?.name || 'Administrateur';
   selectedTicket.value.assignedTo = adminName;
   selectedTicket.value.status = 'in_progress';
 
   writeAuditLog(
     'TICKET_CLAIMED',
-    `Support ticket ${selectedTicket.value.ticketRef} claimed by ${adminName}.`,
+    `Ticket de support ${selectedTicket.value.ticketRef} pris en charge par ${adminName}.`,
     adminName
   );
 
-  toast.info(`Claimed ticket ${selectedTicket.value.ticketRef}!`);
+  toast.info(`Ticket ${selectedTicket.value.ticketRef} pris en charge !`);
 }
 
 function postSupportAnswer() {
   if (!replyInput.value.trim()) return;
 
-  const currentAuthor = authStore.user?.name || 'ROOT CENTRAL';
+  const currentAuthor = authStore.user?.name || 'CONTRÔLE CENTRAL';
   const newRep = {
     id: `rep_${Date.now()}`,
-    author: `${currentAuthor} (Support Rep)`,
+    author: `${currentAuthor} (Support)`,
     text: replyInput.value.trim(),
     date: new Date().toISOString()
   };
@@ -272,28 +272,28 @@ function postSupportAnswer() {
 
   writeAuditLog(
     'TICKET_REPLIED',
-    `Message response posted to support dossier ${selectedTicket.value.ticketRef} by ${currentAuthor}.`,
+    `Réponse publiée sur le ticket ${selectedTicket.value.ticketRef} par ${currentAuthor}.`,
     currentAuthor
   );
 
-  toast.success('Support reply submitted.');
+  toast.success('Réponse soumise.');
 }
 
 function closeTicketFinal() {
   selectedTicket.value.status = 'closed';
   selectedTicket.value.replies.push({
     id: `sys_${Date.now()}`,
-    author: 'System Admin',
-    text: 'Ticket resolved and docket closed. Further correspondence requires initiating a new compliance dossier.',
+    author: 'Admin Système',
+    text: 'Ticket résolu et dossier fermé.',
     date: new Date().toISOString()
   });
 
   writeAuditLog(
     'TICKET_RESOLVED',
-    `Support case file closed: ${selectedTicket.value.ticketRef}.`,
-    authStore.user?.name || 'System Admin'
+    `Ticket fermé : ${selectedTicket.value.ticketRef}.`,
+    authStore.user?.name || 'Admin Système'
   );
 
-  toast.success(`Dossier resolved and closed.`);
+  toast.success(`Ticket résolu et fermé.`);
 }
 </script>

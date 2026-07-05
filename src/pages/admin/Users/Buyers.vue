@@ -1,16 +1,16 @@
 <template>
   <div class="space-y-6">
-    <div class="p-6 bg-[#040817] border border-[#121c3b] rounded-2xl space-y-4">
-      <h1 class="text-sm font-bold uppercase tracking-wider text-slate-200 font-mono">B2B Verified Buyers</h1>
-      <p class="text-xs text-slate-400">View contact and volume profiles of retail buying chains.</p>
+    <div class="p-6 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl space-y-4 shadow-sm">
+      <h1 class="text-sm font-bold uppercase tracking-wider text-[var(--color-text-primary)] font-mono">Acheteurs B2B Vérifiés</h1>
+      <p class="text-xs text-[var(--color-text-secondary)]">Consultez les profils de contact et de volume des chaînes d'achat au détail.</p>
 
       <div class="space-y-2">
-        <div v-for="u in buyersList" :key="u.id" class="p-3 bg-slate-950 rounded-xl flex items-center justify-between text-xs font-mono text-slate-350">
+        <div v-for="u in buyersList" :key="u.id" class="p-3 bg-[var(--color-background)] rounded-xl flex items-center justify-between text-xs font-mono text-[var(--color-text-secondary)] border border-[var(--color-border)]">
           <div>
-            <strong class="text-slate-200">{{ u.company || u.name }}</strong>
-            <span class="block text-[10px] text-slate-500">{{ u.email }} &bull; {{ u.phone || 'No Phone' }}</span>
+            <strong class="text-[var(--color-text-primary)]">{{ u.company || u.name }}</strong>
+            <span class="block text-[10px] text-[var(--color-text-secondary)]">{{ u.email }} &bull; {{ u.phone || 'Pas de téléphone' }}</span>
           </div>
-          <span class="px-2 py-0.5 bg-sky-950 text-sky-400 text-[9px] rounded font-bold">BUYER</span>
+          <span class="px-2 py-0.5 bg-sky-500/10 text-sky-500 text-[9px] rounded font-bold border border-sky-500/20">ACHETEUR</span>
         </div>
       </div>
     </div>

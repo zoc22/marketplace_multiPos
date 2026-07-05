@@ -304,7 +304,8 @@ import {
   GiftIcon,
   UserCircleIcon,
   KeyIcon,
-  BellIcon
+  BellIcon,
+  BuildingStorefrontIcon
 } from '@heroicons/vue/24/outline';
 import { useTheme } from '@/composables/useTheme.js';
 import { useKeyboardShortcuts } from '@/composables/useKeyboardShortcuts.js';
@@ -353,7 +354,8 @@ const menuStructure = [
           { name: 'Achat & Réappro', to: '/buyer/purchases', icon: ShoppingCartIcon },
           { name: 'Bons de livraison', to: '/buyer/delivery-notes', icon: DocumentTextIcon },
           { name: 'Factures d\'achat', to: '/buyer/invoices', icon: CreditCardIcon },
-          { name: 'Liste d\'Envies', to: '/buyer/wishlist', icon: HeartIcon }
+          { name: 'Liste d\'Envies', to: '/buyer/wishlist', icon: HeartIcon },
+          { name: 'Boutiques Enregistrées', to: '/buyer/saved-stores', icon: BuildingStorefrontIcon }
         ]
       }
     ]

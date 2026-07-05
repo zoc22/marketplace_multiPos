@@ -72,6 +72,13 @@ export const vendorRoutes = [
         component: () => import('@/pages/vendor/products/Stock.vue'),
         meta: { title: 'Gestion des Stocks' }
       },
+      // Storefront
+      {
+        path: 'storefront',
+        name: 'VendorStorefront',
+        component: () => import('@/pages/vendor/store/StorefrontManager.vue'),
+        meta: { title: 'Ma Boutique Marketplace' }
+      },
       // Orders
       {
         path: 'orders',
@@ -90,6 +97,30 @@ export const vendorRoutes = [
         name: 'VendorOrdersPrepare',
         component: () => import('@/pages/vendor/orders/Prepare.vue'),
         meta: { title: 'Préparation Commande' }
+      },
+      {
+        path: 'orders/b2b/:id',
+        name: 'VendorB2BOrdersDetail',
+        component: () => import('@/pages/vendor/orders/B2BDetail.vue'),
+        meta: { title: 'Détail Commande B2B' }
+      },
+      {
+        path: 'orders/b2b/:id/prepare',
+        name: 'VendorB2BOrdersPrepare',
+        component: () => import('@/pages/vendor/orders/B2BPrepare.vue'),
+        meta: { title: 'Préparation & BL B2B' }
+      },
+      {
+        path: 'orders/delivery-notes',
+        name: 'VendorOrdersDeliveryNotes',
+        component: () => import('@/pages/vendor/orders/DeliveryNotes.vue'),
+        meta: { title: 'Bons de livraison émis' }
+      },
+      {
+        path: 'orders/delivery-notes/:id',
+        name: 'VendorOrdersDeliveryNoteDetail',
+        component: () => import('@/pages/vendor/orders/DeliveryNoteDetail.vue'),
+        meta: { title: 'Détail Bon de livraison émis' }
       },
       // Returns
       {
@@ -128,6 +159,12 @@ export const vendorRoutes = [
         name: 'VendorPurchasesTrack',
         component: () => import('@/pages/vendor/purchases/Track.vue'),
         meta: { title: 'Suivi Livraison' }
+      },
+      {
+        path: 'purchases/receive/select',
+        name: 'VendorPurchasesReceiveSelect',
+        component: () => import('@/pages/vendor/purchases/ReceiveSelect.vue'),
+        meta: { title: 'Sélectionner livraison B2B' }
       },
       {
         path: 'purchases/receive/:id',

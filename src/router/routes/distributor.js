@@ -103,6 +103,13 @@ export const distributorRoutes = [
         component: () => import('@/pages/distributor/products/Create.vue'),
         meta: { title: 'Nouveau Produit' }
       },
+      // Storefront
+      {
+        path: 'storefront',
+        name: 'DistributorStorefront',
+        component: () => import('@/pages/distributor/store/StorefrontManager.vue'),
+        meta: { title: 'Ma Boutique Marketplace' }
+      },
       // Clients
       {
         path: 'clients',
@@ -171,6 +178,12 @@ export const distributorRoutes = [
         name: 'DistributorPurchasesTrack',
         component: () => import('@/pages/distributor/purchases/Track.vue'),
         meta: { title: 'Suivi Fret & Livraison' }
+      },
+      {
+        path: 'purchases/receive/select',
+        name: 'DistributorPurchasesReceiveSelect',
+        component: () => import('@/pages/distributor/purchases/ReceiveSelect.vue'),
+        meta: { title: 'Sélectionner livraison B2B' }
       },
       {
         path: 'purchases/receive/:id',

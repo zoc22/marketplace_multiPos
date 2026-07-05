@@ -50,6 +50,11 @@ export const buyerRoutes = [
         component: () => import('@/pages/buyer/Dashboard/TrackDelivery.vue'),
       },
       {
+        path: 'saved-stores',
+        name: 'BuyerSavedStores',
+        component: () => import('@/pages/buyer/SavedStores/Index.vue'),
+      },
+      {
         path: 'wishlist',
         name: 'Wishlist',
         component: () => import('@/pages/buyer/Dashboard/Wishlist.vue'),

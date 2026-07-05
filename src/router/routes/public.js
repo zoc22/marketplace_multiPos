@@ -35,6 +35,12 @@ export const publicRoutes = [
     component: () => import('@/pages/public/SupplierStorefront.vue'),
   },
   {
+    path: '/store/external/:id',
+    name: 'ExternalStorefrontPreview',
+    component: () => import('@/pages/shared/ExternalStorefront.vue'),
+    meta: { title: 'Site Vitrine Hors-ERP' }
+  },
+  {
     path: '/cart',
     name: 'Cart',
     component: () => import('@/pages/public/Cart.vue'),

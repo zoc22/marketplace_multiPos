@@ -384,6 +384,7 @@ const isMobileMenuOpen = ref(false);
 
 const openDropdowns = ref({
   dashboard: true,
+  orders: false,
   settings: false
 });
 
@@ -426,10 +427,19 @@ const rawMenuStructure = [
         to: '/vendor/products'
       },
       {
+        id: 'storefront',
+        name: 'Ma Boutique Marketplace',
+        icon: BuildingStorefrontIcon,
+        to: '/vendor/storefront'
+      },
+      {
         id: 'orders',
         name: 'Commandes',
         icon: ShoppingCartIcon,
-        to: '/vendor/orders'
+        children: [
+          { name: 'Toutes les Commandes', to: '/vendor/orders' },
+          { name: 'Bons de livraison émis', to: '/vendor/orders/delivery-notes' }
+        ]
       },
       {
         id: 'returns',
@@ -450,9 +460,15 @@ const rawMenuStructure = [
       },
       {
         id: 'deliveries',
-        name: 'Bons de livraison',
+        name: 'Bons de livraison reçus',
         icon: TruckIcon,
         to: '/vendor/deliveries'
+      },
+      {
+        id: 'receive_goods',
+        name: 'Réception Marchandises',
+        icon: ArrowRightOnRectangleIcon,
+        to: '/vendor/purchases/receive/select'
       }
     ]
   },

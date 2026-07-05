@@ -1,29 +1,29 @@
 <template>
-  <div class="space-y-6 max-w-2xl mx-auto text-slate-300" id="admin-escrow-refund">
+  <div class="space-y-6 max-w-2xl mx-auto text-[var(--color-text-secondary)] font-sans" id="admin-escrow-refund">
     <!-- PANEL HEADER -->
-    <div class="border-b border-slate-800 pb-4">
-      <router-link :to="'/admin/escrow/' + paymentId" class="text-sm text-indigo-405 font-mono hover:underline flex items-center space-x-2">
+    <div class="border-b border-[var(--color-border)] pb-4">
+      <router-link :to="'/admin/escrow/' + paymentId" class="text-sm text-[var(--color-primary)] font-mono hover:underline flex items-center space-x-2">
         <span>&larr; Retour aux détails</span>
       </router-link>
-      <h1 class="text-xl font-bold text-slate-100 mt-2">Rembourser l'Acheteur</h1>
-      <p class="text-xs text-slate-400">Reverser tout ou partie des fonds séquestrés au compte de l'acheteur.</p>
+      <h1 class="text-xl font-bold text-[var(--color-text-primary)] mt-2">Rembourser l'Acheteur</h1>
+      <p class="text-xs text-[var(--color-text-secondary)]">Reverser tout ou partie des fonds séquestrés au compte de l'acheteur.</p>
     </div>
 
     <!-- SPEC CARD -->
-    <div class="bg-[#14141E] border border-slate-800 rounded-2xl p-6 space-y-4">
-      <h3 class="font-bold text-sm text-slate-100 font-mono uppercase">Options de Remboursement</h3>
+    <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-6 space-y-4 shadow-sm">
+      <h3 class="font-bold text-sm text-[var(--color-text-primary)] font-mono uppercase">Options de Remboursement</h3>
       
       <div class="space-y-4">
         <!-- Choices -->
         <div class="space-y-2">
-          <span class="block text-xs font-mono text-slate-500 uppercase">Type de remboursement :</span>
+          <span class="block text-xs font-mono text-[var(--color-text-secondary)] uppercase">Type de remboursement :</span>
           <div class="flex gap-4">
-            <label class="flex items-center space-x-2 text-xs cursor-pointer">
-              <input type="radio" value="FULL" v-model="refundType" class="text-indigo-650 bg-slate-950 border-slate-800 focus:ring-indigo-500" />
+            <label class="flex items-center space-x-2 text-xs cursor-pointer text-[var(--color-text-primary)]">
+              <input type="radio" value="FULL" v-model="refundType" class="text-[var(--color-primary)] bg-[var(--color-background)] border-[var(--color-border)] focus:ring-[var(--color-primary)]" />
               <span>Remboursement Total ({{ formatMoney(payment?.amount) }})</span>
             </label>
-            <label class="flex items-center space-x-2 text-xs cursor-pointer">
-              <input type="radio" value="PARTIAL" v-model="refundType" class="text-indigo-650 bg-slate-950 border-slate-800 focus:ring-indigo-500" />
+            <label class="flex items-center space-x-2 text-xs cursor-pointer text-[var(--color-text-primary)]">
+              <input type="radio" value="PARTIAL" v-model="refundType" class="text-[var(--color-primary)] bg-[var(--color-background)] border-[var(--color-border)] focus:ring-[var(--color-primary)]" />
               <span>Remboursement Partiel (50%)</span>
             </label>
           </div>
@@ -31,12 +31,12 @@
 
         <!-- Justification -->
         <label class="block">
-          <span class="block text-xs font-mono text-slate-500 uppercase mb-1">Justification Administrative :</span>
+          <span class="block text-xs font-mono text-[var(--color-text-secondary)] uppercase mb-1">Justification Administrative :</span>
           <textarea 
             v-model="justification"
             placeholder="Ex: Défaut qualité constaté et validé par l'expert, retour de lot autorisé."
             rows="3"
-            class="w-full bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl p-3 text-xs text-slate-100 focus:outline-none"
+            class="w-full bg-[var(--color-background)] border border-[var(--color-border)] focus:border-[var(--color-primary)] rounded-xl p-3 text-xs text-[var(--color-text-primary)] placeholder-[var(--color-text-secondary)] focus:outline-none"
           ></textarea>
         </label>
       </div>
@@ -46,7 +46,7 @@
     <button 
       @click="triggerRefundConfirmation"
       :disabled="!justification.trim()"
-      class="w-full py-2.5 bg-red-650 hover:bg-red-700 disabled:opacity-40 disabled:cursor-not-allowed text-white font-mono font-bold uppercase rounded-xl text-xs tracking-wider transition shadow-lg text-center"
+      class="w-full py-2.5 bg-red-600 hover:bg-red-700 disabled:opacity-40 disabled:cursor-not-allowed text-white font-mono font-bold uppercase rounded-xl text-xs tracking-wider transition shadow-lg text-center cursor-pointer"
       id="btn-refund-escrow"
     >
       Procéder au remboursement
@@ -92,7 +92,7 @@ function triggerRefundConfirmation() {
 function executeRefund() {
   paymentsStore.refundPayment(paymentId);
   toast.success('Le remboursement a été initié avec succès.');
-  router.push('/admin/finance/escrow');
+  router.push('/admin/escrow');
 }
 
 function formatMoney(val) {

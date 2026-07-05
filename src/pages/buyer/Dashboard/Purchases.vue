@@ -425,16 +425,16 @@ function translateStatus(stat) {
 
 function getStatusClasses(stat) {
   const classes = {
-    'Draft': 'bg-slate-500/20 text-slate-300 border border-slate-500/30',
-    'Submitted': 'bg-amber-500/20 text-amber-300 border border-amber-500/40',
-    'Approved': 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/40',
-    'Preparing': 'bg-pink-500/20 text-pink-300 border border-pink-500/40',
-    'Packed': 'bg-blue-500/20 text-blue-300 border border-blue-500/40',
-    'Shipped': 'bg-sky-500/20 text-sky-300 border border-sky-500/40',
-    'Delivered': 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40',
-    'Completed': 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+    'Draft': 'bg-slate-100 text-slate-600 border border-slate-200 dark:bg-slate-800/40 dark:text-slate-400 dark:border-slate-700/40',
+    'Submitted': 'bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-950/20 dark:text-amber-400 dark:border-amber-900/30',
+    'Approved': 'bg-indigo-50 text-indigo-700 border border-indigo-200 dark:bg-indigo-950/20 dark:text-indigo-400 dark:border-indigo-900/30',
+    'Preparing': 'bg-fuchsia-50 text-fuchsia-700 border border-fuchsia-200 dark:bg-fuchsia-950/20 dark:text-fuchsia-400 dark:border-fuchsia-900/30',
+    'Packed': 'bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-950/20 dark:text-blue-400 dark:border-blue-900/30',
+    'Shipped': 'bg-sky-50 text-sky-700 border border-sky-200 dark:bg-sky-950/20 dark:text-sky-400 dark:border-sky-900/30',
+    'Delivered': 'bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/20 dark:text-emerald-400 dark:border-emerald-900/30',
+    'Completed': 'bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/20 dark:text-emerald-400 dark:border-emerald-900/30'
   };
-  return classes[stat] || 'bg-slate-500/20 text-slate-300 border border-slate-500/40';
+  return classes[stat] || 'bg-slate-100 text-slate-600 border border-slate-200 dark:bg-slate-800/40 dark:text-slate-400 dark:border-slate-700/40';
 }
 
 function translatePaymentStatus(pStat) {
@@ -448,10 +448,10 @@ function translatePaymentStatus(pStat) {
 
 function getPaymentStatusClasses(pStat) {
   const classes = {
-    'Settled': 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40',
-    'Escrow_Held': 'bg-amber-500/20 text-amber-300 border border-amber-500/40',
-    'Refunded': 'bg-red-500/20 text-red-300 border border-red-500/40'
+    'Settled': 'bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/20 dark:text-emerald-400 dark:border-emerald-900/30',
+    'Escrow_Held': 'bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-950/20 dark:text-amber-400 dark:border-amber-900/30',
+    'Refunded': 'bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-950/20 dark:text-rose-400 dark:border-rose-900/30'
   };
-  return classes[pStat] || 'bg-slate-500/20 text-slate-300 border border-slate-500/40';
+  return classes[pStat] || 'bg-slate-100 text-slate-600 border border-slate-200 dark:bg-slate-800/40 dark:text-slate-400 dark:border-slate-700/40';
 }
 </script>

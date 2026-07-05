@@ -1,204 +1,204 @@
 <template>
   <div class="space-y-6">
     
-    <!-- TOP BANNER & CONSOLE WELCOME -->
-    <div class="p-6 bg-slate-900 border border-slate-800 rounded-2xl relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+    <!-- BANNIÈRE SUPÉRIEURE & BIENVENUE -->
+    <div class="p-6 bg-[var(--color-surface-elevated)] border border-[var(--color-border)] rounded-2xl relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
       <div class="absolute top-0 right-0 p-8 opacity-5 select-none pointer-events-none">
-        <CpuChipIcon class="h-40 w-40 text-indigo-400" />
+        <CpuChipIcon class="h-40 w-40 text-[var(--color-primary)]" />
       </div>
       <div>
         <div class="flex items-center space-x-3">
-          <span class="px-2.5 py-0.5 bg-red-950 text-red-400 font-mono text-[9px] uppercase font-bold border border-red-900 rounded-md flex items-center space-x-1">
-            <span class="h-1.5 w-1.5 bg-red-400 rounded-full animate-ping"></span>
-            <span>CORE ENGINE STATUS: NOMINAL</span>
+          <span class="px-2.5 py-0.5 bg-red-500/10 text-red-500 font-mono text-[9px] uppercase font-bold border border-red-500/20 rounded-md flex items-center space-x-1">
+            <span class="h-1.5 w-1.5 bg-red-500 rounded-full animate-ping"></span>
+            <span>STATUT DU MOTEUR : NOMINAL</span>
           </span>
-          <span class="font-mono text-xs text-slate-500">v3.5L-Stable</span>
+          <span class="font-mono text-xs text-[var(--color-text-secondary)]">v3.5L-Stable</span>
         </div>
-        <h1 class="text-xl font-bold font-mono text-slate-100 mt-2">B2B Core Administration Hub</h1>
-        <p class="text-xs text-slate-400 max-w-xl mt-1">
-          Simulated node system governing multi-tenant merchant approvals, product safety queues, disputes settlements, internal access permissions, and continuous log audits.
+        <h1 class="text-xl font-bold font-mono text-[var(--color-text-primary)] mt-2">Centre d'Administration Central B2B</h1>
+        <p class="text-xs text-[var(--color-text-secondary)] max-w-xl mt-1">
+          Système de contrôle gérant les approbations des commerçants, la modération du catalogue, la résolution des litiges financiers et les audits système continus.
         </p>
       </div>
 
-      <!-- SIMULATED ADMINISTRATOR SUB-ROLE ACTUATOR (DYNAMIC BACKOFFICE DEMO) -->
-      <div class="bg-slate-950 p-4 rounded-xl border border-slate-850 shrink-0 w-full md:w-auto z-10">
-        <div class="text-[9px] font-mono uppercase font-bold text-indigo-400 tracking-wider mb-2 flex items-center space-x-1">
+      <!-- SÉLECTEUR DE RÔLE ADMIN -->
+      <div class="bg-[var(--color-surface)] p-4 rounded-xl border border-[var(--color-border)] shrink-0 w-full md:w-auto z-10">
+        <div class="text-[9px] font-mono uppercase font-bold text-[var(--color-primary)] tracking-wider mb-2 flex items-center space-x-1">
           <ShieldCheckIcon class="w-3.5 h-3.5" />
-          <span>Security Persona Switcher</span>
+          <span>Sélecteur de Rôle de Sécurité</span>
         </div>
         <div class="flex flex-col gap-1.5 min-w-[200px]">
-          <label class="text-[10px] font-mono text-slate-400">Active Admin Persona:</label>
+          <label class="text-[10px] font-mono text-[var(--color-text-secondary)]">Rôle d'administration actif :</label>
           <select 
             v-model="activeAdminSubRole"
             @change="updateActivePersona"
-            class="bg-slate-900 border border-slate-800 text-xs font-mono text-slate-100 rounded-lg p-2 focus:outline-none focus:border-indigo-500"
+            class="bg-[var(--color-background)] border border-[var(--color-border)] text-xs font-mono text-[var(--color-text-primary)] rounded-lg p-2 focus:outline-none focus:border-[var(--color-primary)]"
           >
-            <option value="supervisor">Supervisor (Full Privilege)</option>
-            <option value="finance_officer">Finance Officer (Ledger & Escrow)</option>
-            <option value="moderator">Product Moderator (Safety & Stores)</option>
-            <option value="support_rep">Support Representative (Disputes & Tickets)</option>
+            <option value="supervisor">Superviseur (Tous les droits)</option>
+            <option value="finance_officer">Responsable Financier (Séquestres & Livret)</option>
+            <option value="moderator">Modérateur Catalogue (Produits & Boutiques)</option>
+            <option value="support_rep">Agent du Support (Litiges & Tickets)</option>
           </select>
-          <p class="text-[9px] text-slate-500 italic mt-1 leading-tight">
-            Swaps workspace menus & visible UI modules instantly.
+          <p class="text-[9px] text-[var(--color-text-tertiary)] italic mt-1 leading-tight">
+            Modifie instantanément vos droits et menus visibles.
           </p>
         </div>
       </div>
     </div>
 
-    <!-- DYNAMIC ALERTS ACCORDING TO ROLE RESTRICIONS / CLARANCES -->
-    <div v-if="activeAdminSubRole !== 'supervisor'" class="p-3 bg-indigo-950/40 border border-indigo-900/60 rounded-xl flex items-center space-x-3 text-xs">
-      <div class="h-6 w-6 rounded-full bg-indigo-900 text-indigo-400 flex items-center justify-center">
+    <!-- ALERTES DYNAMIQUES SELON LE RÔLE -->
+    <div v-if="activeAdminSubRole !== 'supervisor'" class="p-3 bg-[var(--color-primary-muted)] border border-[var(--color-primary-border)] rounded-xl flex items-center space-x-3 text-xs">
+      <div class="h-6 w-6 rounded-full bg-[var(--color-primary)] text-white flex items-center justify-center">
         <InformationCircleIcon class="w-4 h-4" />
       </div>
-      <p class="text-slate-350">
-        You are navigating under <span class="font-bold text-indigo-400 font-mono">{{ (activeAdminSubRole || '').toUpperCase().replace('_', ' ') }}</span> clearance details. Certain settings are locked or filtered based on role boundaries.
+      <p class="text-[var(--color-text-primary)]">
+        Vous naviguez actuellement en tant que <span class="font-bold text-[var(--color-primary)] font-mono">{{ (activeAdminSubRole || '').toUpperCase().replace('_', ' ') }}</span>. Certaines configurations et actions sont restreintes selon vos habilitations.
       </p>
     </div>
 
-    <!-- THE STATUS METRICS BENTO GRID -->
+    <!-- GRILLE DES STATUT ET MÉTRIQUES -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       
-      <!-- Suppliers compliant dossiers -->
-      <router-link to="/admin/users/verification" class="p-4 bg-[#14141E] hover:bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl transition group flex flex-col justify-between">
+      <!-- Conformité KYC -->
+      <router-link to="/admin/users/verification" class="p-4 bg-[var(--color-surface)] hover:bg-[var(--color-surface-hover)] border border-[var(--color-border)] rounded-2xl transition group flex flex-col justify-between shadow-sm">
         <div class="flex items-center justify-between">
-          <span class="text-[15px] text-slate-400 uppercase tracking-wider">KYC Compliance</span>
-          <span class="h-[24px] w-[24px] rounded-full bg-amber-500 animate-pulse flex items-center justify-center text-white text-xs">!</span>
+          <span class="text-xs font-bold text-[var(--color-text-secondary)] uppercase tracking-wider">Conformité KYC</span>
+          <span class="h-[24px] w-[24px] rounded-full bg-amber-500 animate-pulse flex items-center justify-center text-white text-xs font-bold">!</span>
         </div>
-        <div class="text-[28px] font-bold font-mono text-[#C8A96E] mt-2">
-          {{ pendingKYCCount }} <span class="text-[14px] text-red-400 font-normal">pending</span>
+        <div class="text-[28px] font-bold font-mono text-[var(--color-text-primary)] mt-2">
+          {{ pendingKYCCount }} <span class="text-xs text-red-500 font-normal">en attente</span>
         </div>
-        <p class="text-[10px] text-indigo-400 mt-1 transition group-hover:text-indigo-305 flex items-center space-x-1">
-          <span>Verify corporate registrations</span>
+        <p class="text-[10px] text-[var(--color-primary)] mt-1 transition flex items-center space-x-1">
+          <span>Vérifier les dossiers marchands</span>
           <span>&rarr;</span>
         </p>
       </router-link>
 
-      <!-- Shops compliant dossiers -->
-      <router-link to="/admin/users/verification" class="p-4 bg-[#14141E] hover:bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl transition group flex flex-col justify-between">
+      <!-- Boutiques Approvals -->
+      <router-link to="/admin/users/verification" class="p-4 bg-[var(--color-surface)] hover:bg-[var(--color-surface-hover)] border border-[var(--color-border)] rounded-2xl transition group flex flex-col justify-between shadow-sm">
         <div class="flex items-center justify-between">
-          <span class="text-[15px] text-slate-400 uppercase tracking-wider">Boutiques Approvals</span>
-          <span class="h-[24px] w-[24px] rounded-full bg-indigo-400 animate-pulse flex items-center justify-center text-white text-xs">i</span>
+          <span class="text-xs font-bold text-[var(--color-text-secondary)] uppercase tracking-wider">Approbation Boutiques</span>
+          <span class="h-[24px] w-[24px] rounded-full bg-indigo-400 animate-pulse flex items-center justify-center text-white text-xs font-bold">i</span>
         </div>
-        <div class="text-[28px] font-bold font-mono text-[#C8A96E] mt-2">
-          {{ pendingStoresCount }} <span class="text-[14px] text-red-400 font-normal">waiting</span>
+        <div class="text-[28px] font-bold font-mono text-[var(--color-text-primary)] mt-2">
+          {{ pendingStoresCount }} <span class="text-xs text-red-500 font-normal">en attente</span>
         </div>
-        <p class="text-[10px] text-indigo-400 mt-1 transition group-hover:text-indigo-305 flex items-center space-x-1">
-          <span>Store virtual POS checkups</span>
+        <p class="text-[10px] text-[var(--color-primary)] mt-1 transition flex items-center space-x-1">
+          <span>Vérifier les points de vente virtuels</span>
           <span>&rarr;</span>
         </p>
       </router-link>
 
-      <!-- Products moderation -->
-      <router-link to="/admin/products" class="p-4 bg-[#14141E] hover:bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl transition group flex flex-col justify-between">
+      <!-- Modération catalogue -->
+      <router-link to="/admin/products" class="p-4 bg-[var(--color-surface)] hover:bg-[var(--color-surface-hover)] border border-[var(--color-border)] rounded-2xl transition group flex flex-col justify-between shadow-sm">
         <div class="flex items-center justify-between">
-          <span class="text-[15px] text-slate-400 uppercase tracking-wider">Product Catalog</span>
-          <span class="text-[13px] font-mono text-emerald-400 uppercase font-bold border border-emerald-950/60 bg-emerald-950/20 px-3 py-1 rounded">Active Audit</span>
+          <span class="text-xs font-bold text-[var(--color-text-secondary)] uppercase tracking-wider">Catalogue Produits</span>
+          <span class="text-[10px] font-mono text-emerald-500 uppercase font-bold border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 rounded">Audit Actif</span>
         </div>
-        <div class="text-[28px] font-bold font-mono text-[#C8A96E] mt-2">
-          {{ pendingProductsCount }} <span class="text-[14px] text-red-400 font-normal font-mono">under mod</span>
+        <div class="text-[28px] font-bold font-mono text-[var(--color-text-primary)] mt-2">
+          {{ pendingProductsCount }} <span class="text-xs text-red-500 font-normal font-mono">à modérer</span>
         </div>
-        <p class="text-[10px] text-indigo-400 mt-1 transition group-hover:text-indigo-305 flex items-center space-x-1">
-          <span>Enforce catalog safety guidelines</span>
+        <p class="text-[10px] text-[var(--color-primary)] mt-1 transition flex items-center space-x-1">
+          <span>Appliquer les règles du catalogue</span>
           <span>&rarr;</span>
         </p>
       </router-link>
 
-      <!-- Disputes tracker -->
-      <router-link to="/admin/disputes" class="p-4 bg-[#14141E] hover:bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl transition group flex flex-col justify-between">
+      <!-- Litiges actifs -->
+      <router-link to="/admin/disputes" class="p-4 bg-[var(--color-surface)] hover:bg-[var(--color-surface-hover)] border border-[var(--color-border)] rounded-2xl transition group flex flex-col justify-between shadow-sm">
         <div class="flex items-center justify-between">
-          <span class="text-[15px] text-slate-400 uppercase tracking-wider">Active Disputes</span>
-          <span class="h-[24px] w-[24px] rounded-full bg-red-500 animate-pulse flex items-center justify-center text-white text-xs">!</span>
+          <span class="text-xs font-bold text-[var(--color-text-secondary)] uppercase tracking-wider">Litiges Actifs</span>
+          <span class="h-[24px] w-[24px] rounded-full bg-red-500 animate-pulse flex items-center justify-center text-white text-xs font-bold">!</span>
         </div>
-        <div class="text-[28px] font-bold font-mono text-[#C8A96E] mt-2">
-          {{ openDisputesCount }} <span class="text-[14px] text-red-400 font-normal font-mono">active</span>
+        <div class="text-[28px] font-bold font-mono text-[var(--color-text-primary)] mt-2">
+          {{ openDisputesCount }} <span class="text-xs text-red-500 font-normal font-mono">actifs</span>
         </div>
-        <p class="text-[10px] text-red-400 mt-1 transition group-hover:text-red-305 flex items-center space-x-1">
-          <span>Resolution & escrow overrides</span>
+        <p class="text-[10px] text-red-500 mt-1 transition flex items-center space-x-1">
+          <span>Résolution & arbitrages séquestres</span>
           <span>&rarr;</span>
         </p>
       </router-link>
 
     </div>
 
-    <!-- MAIN TWO-COLUMN LAYOUT -->
+    <!-- GRILLE PRINCIPALE DEUX COLONNES -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
       
-      <!-- LEFT WORKSPACE BLOCK (DYNAMIC PANELS BASED ON CURRENT USER ROLE) -->
+      <!-- COLONNE DE GAUCHE : WORKSPACE ACTIONS -->
       <div class="lg:col-span-8 space-y-6">
         
-        <!-- MODULE: USER INTEGRATOR (Roles Management & Creating Internal Accounts) - VISIBLE ONLY FOR SUPERVISORS / MANAGERS -->
+        <!-- PROVISIONNEMENT DES UTILISATEURS INTERNES -->
         <div 
           v-if="hasAccess('user_creation')"
-          class="p-6 bg-[#14141E] border border-slate-800 rounded-2xl space-y-4"
+          class="p-6 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl space-y-4 shadow-sm"
         >
-          <div class="flex items-center justify-between border-b border-slate-800 pb-3 shrink-0">
+          <div class="flex items-center justify-between border-b border-[var(--color-border)] pb-3 shrink-0">
             <div>
-              <h2 class="text-sm font-bold uppercase tracking-wider text-slate-205 font-mono flex items-center space-x-2">
-                <UserGroupIcon class="w-4 h-4 text-indigo-400" />
-                <span>Colleague & Internal User Provisioning</span>
+              <h2 class="text-sm font-bold uppercase tracking-wider text-[var(--color-text-primary)] font-sans flex items-center space-x-2">
+                <UserGroupIcon class="w-4 h-4 text-[var(--color-primary)]" />
+                <span>Création de Comptes Administrateurs / Agents</span>
               </h2>
-              <p class="text-xs text-slate-400">Add team profiles with direct administrative clearances.</p>
+              <p class="text-xs text-[var(--color-text-secondary)]">Ajoutez des collaborateurs avec des habilitations d'accès spécifiques.</p>
             </div>
-            <span class="px-2 py-0.5 bg-indigo-950 text-indigo-400 rounded text-[9px] font-mono font-bold uppercase">
-              Management Clearances Only
+            <span class="px-2 py-0.5 bg-[var(--color-primary-muted)] text-[var(--color-primary)] rounded text-[9px] font-mono font-bold uppercase">
+              Droits de Gestion Uniquement
             </span>
           </div>
 
-          <!-- USER CREATION FORM FORMULATED -->
+          <!-- FORMULAIRE COMPTE COLLABORATEUR -->
           <form @submit.prevent="createInternalColleague" class="space-y-4 pt-1">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div class="space-y-1">
-                <label class="block text-[10px] font-mono uppercase text-slate-400 font-bold mb-1">Full Legal Name</label>
+                <label class="block text-[10px] font-mono uppercase text-[var(--color-text-secondary)] font-bold mb-1">Nom Complet Légal</label>
                 <input 
                   type="text" 
                   v-model="newColleague.name" 
                   required
-                  placeholder="e.g. Marie-Therese Kamga"
-                  class="w-full bg-slate-950 border border-slate-850 focus:border-indigo-500 rounded-lg p-2.5 text-xs text-slate-100 font-mono placeholder-slate-700 focus:outline-none transition"
+                  placeholder="Ex : Marie-Thérèse Kamga"
+                  class="w-full bg-[var(--color-background)] border border-[var(--color-border)] focus:border-[var(--color-primary)] rounded-lg p-2.5 text-xs text-[var(--color-text-primary)] focus:outline-none transition"
                 />
               </div>
               <div class="space-y-1">
-                <label class="block text-[10px] font-mono uppercase text-slate-400 font-bold mb-1">Institutional Email</label>
+                <label class="block text-[10px] font-mono uppercase text-[var(--color-text-secondary)] font-bold mb-1">Adresse E-mail Institutionnelle</label>
                 <input 
                   type="email" 
                   v-model="newColleague.email" 
                   required
-                  placeholder="e.g. kamga@enterprise.local"
-                  class="w-full bg-slate-950 border border-slate-850 focus:border-indigo-500 rounded-lg p-2.5 text-xs text-slate-100 font-mono placeholder-slate-700 focus:outline-none transition"
+                  placeholder="Ex : kamga@plateforme.local"
+                  class="w-full bg-[var(--color-background)] border border-[var(--color-border)] focus:border-[var(--color-primary)] rounded-lg p-2.5 text-xs text-[var(--color-text-primary)] focus:outline-none transition"
                 />
               </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div class="space-y-1">
-                <label class="block text-[10px] font-mono uppercase text-slate-400 font-bold mb-1">Temporary Security Code</label>
+                <label class="block text-[10px] font-mono uppercase text-[var(--color-text-secondary)] font-bold mb-1">Code Temporaire de Connexion</label>
                 <input 
                   type="password" 
                   v-model="newColleague.password" 
                   required
-                  placeholder="Passcode password"
-                  class="w-full bg-slate-950 border border-slate-850 focus:border-indigo-500 rounded-lg p-2.5 text-xs text-slate-100 font-mono placeholder-slate-700 focus:outline-none transition"
+                  placeholder="Mot de passe temporaire"
+                  class="w-full bg-[var(--color-background)] border border-[var(--color-border)] focus:border-[var(--color-primary)] rounded-lg p-2.5 text-xs text-[var(--color-text-primary)] focus:outline-none transition"
                 />
               </div>
               <div class="space-y-1">
-                <label class="block text-[10px] font-mono uppercase text-slate-400 font-bold mb-1">Active Security Clearance Tag</label>
+                <label class="block text-[10px] font-mono uppercase text-[var(--color-text-secondary)] font-bold mb-1">Habilitation de Sécurité</label>
                 <select 
                   v-model="newColleague.subRole"
-                  class="w-full bg-slate-950 border border-slate-850 focus:border-indigo-500 text-xs text-slate-100 rounded-lg p-2.5 focus:outline-none font-mono transition"
+                  class="w-full bg-[var(--color-background)] border border-[var(--color-border)] focus:border-[var(--color-primary)] text-xs text-[var(--color-text-primary)] rounded-lg p-2.5 focus:outline-none transition"
                 >
-                  <option value="supervisor">Supervisor (Global Vault access)</option>
-                  <option value="finance_officer">Finance Officer (Escrow holding & Ledger)</option>
-                  <option value="moderator">Product Moderator (Safety review queue)</option>
-                  <option value="support_rep">Support Agent (Disputes triage)</option>
+                  <option value="supervisor">Superviseur (Contrôle total)</option>
+                  <option value="finance_officer">Financier (Grand Livre & Séquestres)</option>
+                  <option value="moderator">Modérateur (Validation catalogue)</option>
+                  <option value="support_rep">Agent Support (Traitement litiges)</option>
                 </select>
               </div>
               <div class="space-y-1">
-                <label class="block text-[10px] font-mono uppercase text-slate-400 font-bold mb-1">Assigned Department</label>
+                <label class="block text-[10px] font-mono uppercase text-[var(--color-text-secondary)] font-bold mb-1">Département Assigné</label>
                 <input 
                   type="text" 
                   v-model="newColleague.department" 
-                  placeholder="e.g. Legal Compliance"
-                  class="w-full bg-slate-950 border border-slate-850 focus:border-indigo-500 rounded-lg p-2.5 text-xs text-slate-100 font-mono placeholder-slate-700 focus:outline-none transition"
+                  placeholder="Ex : Département Conformité"
+                  class="w-full bg-[var(--color-background)] border border-[var(--color-border)] focus:border-[var(--color-primary)] rounded-lg p-2.5 text-xs text-[var(--color-text-primary)] focus:outline-none transition"
                 />
               </div>
             </div>
@@ -206,47 +206,47 @@
             <div class="flex justify-end pt-2">
               <button 
                 type="submit"
-                class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-xs font-mono font-bold uppercase rounded-lg text-white transition flex items-center space-x-1.5"
+                class="px-4 py-2.5 bg-[var(--color-primary)] hover:opacity-90 text-xs font-mono font-bold uppercase rounded-lg text-white transition flex items-center space-x-1.5"
               >
                 <PlusIcon class="w-4 h-4" />
-                <span>Provision Account</span>
+                <span>Créer le Compte</span>
               </button>
             </div>
           </form>
 
-          <!-- INTERNAL LIST OF ACTIVE ADMINISTRATIVE SYSTEM COLLEAGUES -->
-          <div class="mt-4 pt-3 border-t border-slate-850">
-            <h3 class="text-[10px] font-mono uppercase text-slate-400 font-bold mb-2">Platform Internal Cadre (System Team)</h3>
+          <!-- LISTE DES COLLABORATEURS INTERNES DE LA PLATEFORME -->
+          <div class="mt-4 pt-3 border-t border-[var(--color-border)]">
+            <h3 class="text-[10px] font-mono uppercase text-[var(--color-text-secondary)] font-bold mb-2">Membres de l'Équipe Système Active</h3>
             <div class="overflow-x-auto">
-              <table class="w-full text-left border-collapse font-sans text-xs">
+              <table class="w-full text-left border-collapse text-xs">
                 <thead>
-                  <tr class="text-[10px] font-mono text-slate-500 uppercase border-b border-slate-800">
-                    <th class="pb-2">Colleague</th>
-                    <th class="pb-2">Electronic ID / Email</th>
-                    <th class="pb-2">Clearance Duty</th>
-                    <th class="pb-2">Status</th>
-                    <th class="pb-2 text-right">Duty Override</th>
+                  <tr class="text-[10px] font-mono text-[var(--color-text-secondary)] uppercase border-b border-[var(--color-border)]">
+                    <th class="pb-2">Collaborateur</th>
+                    <th class="pb-2">Identifiant / E-mail</th>
+                    <th class="pb-2">Habilitation</th>
+                    <th class="pb-2">Statut</th>
+                    <th class="pb-2 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-850">
-                  <tr v-for="cl in platformInternalCadre" :key="cl.id" class="text-slate-350 hover:bg-slate-900/10">
-                    <td class="py-2.5 font-semibold text-slate-100">{{ cl.name }}</td>
-                    <td class="py-2.5 font-mono text-slate-400">{{ cl.email }}</td>
-                    <td class="py-2.5 font-mono">
-                      <span class="px-2 py-0.5 rounded text-[10px] bg-slate-900 border border-slate-800 text-slate-300 font-semibold">
+                <tbody class="divide-y divide-[var(--color-border)]">
+                  <tr v-for="cl in platformInternalCadre" :key="cl.id" class="text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)]">
+                    <td class="py-2.5 font-semibold text-[var(--color-text-primary)]">{{ cl.name }}</td>
+                    <td class="py-2.5 font-mono text-[var(--color-text-secondary)]">{{ cl.email }}</td>
+                    <td class="py-2.5">
+                      <span class="px-2 py-0.5 rounded text-[10px] bg-[var(--color-background)] border border-[var(--color-border)] text-[var(--color-text-primary)] font-semibold">
                         {{ (cl.subRole || 'supervisor').toUpperCase().replace('_', ' ') }}
                       </span>
                     </td>
-                    <td class="py-2.5 font-mono h-4">
-                      <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 inline-block mr-1"></span> Enabled
+                    <td class="py-2.5 font-mono">
+                      <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 inline-block mr-1"></span> Actif
                     </td>
                     <td class="py-2.5 text-right font-mono">
                       <button 
                         @click="triggerRevokeColleague(cl)"
-                        class="text-[10px] text-red-400 hover:text-red-300 hover:underline"
+                        class="text-[10px] text-red-500 hover:underline"
                         :disabled="cl.id === 'usr_admin'"
                       >
-                        {{ cl.id === 'usr_admin' ? '[ Locked ]' : '[ Revoke ]' }}
+                        {{ cl.id === 'usr_admin' ? '[ Verrouillé ]' : '[ Révoquer Access ]' }}
                       </button>
                     </td>
                   </tr>
@@ -257,36 +257,36 @@
 
         </div>
 
-        <!-- MODULE: ROLE MATRIX DICTIONARY -->
-        <div class="p-6 bg-[#14141E] border border-slate-800 rounded-2xl space-y-4">
-          <div class="border-b border-slate-800 pb-3 shrink-0">
-            <h2 class="text-sm font-bold uppercase tracking-wider text-slate-200 font-mono">B2B Core Clearance Matrix</h2>
-            <p class="text-xs text-slate-400">Dynamic capability checks defining access tiers.</p>
+        <!-- DICTIONNAIRE DE LA MATRICE DES HABILITATIONS -->
+        <div class="p-6 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl space-y-4 shadow-sm">
+          <div class="border-b border-[var(--color-border)] pb-3 shrink-0">
+            <h2 class="text-sm font-bold uppercase tracking-wider text-[var(--color-text-primary)] font-sans">Matrice des Niveaux d'Habilitation B2B</h2>
+            <p class="text-xs text-[var(--color-text-secondary)]">Explication des droits et limitations d'accès par rôle.</p>
           </div>
           
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="p-3 bg-slate-950 border border-slate-900 rounded-xl space-y-2">
-              <span class="px-2 py-0.5 bg-red-950 text-red-450 rounded text-[9px] font-mono font-bold uppercase border border-red-900/40">Supervisor</span>
-              <p class="text-xs text-slate-300 leading-normal">
-                Absolute platform authority. Can create colleagues, adjust commission policies, override dispute escrows, geler vendors, and roll back backups.
+            <div class="p-3 bg-[var(--color-surface-elevated)] border border-[var(--color-border)] rounded-xl space-y-2">
+              <span class="px-2 py-0.5 bg-red-500/10 text-red-500 rounded text-[9px] font-mono font-bold uppercase border border-red-500/20">Superviseur</span>
+              <p class="text-xs text-[var(--color-text-primary)] leading-normal">
+                Contrôle total sur la plateforme. Peut gérer l'équipe, éditer les taux de commission, suspendre/débloquer des comptes et restaurer les sauvegardes.
               </p>
             </div>
-            <div class="p-3 bg-slate-950 border border-slate-900 rounded-xl space-y-2">
-              <span class="px-2 py-0.5 bg-indigo-950 text-indigo-400 rounded text-[9px] font-mono font-bold uppercase border border-indigo-900/40">Finance Officer</span>
-              <p class="text-xs text-slate-300 leading-normal">
-                Escrow operations specialist. Authorized to audit transactions, approve withdrawals, block suspicious pay-routes. Product editing is suspended.
+            <div class="p-3 bg-[var(--color-surface-elevated)] border border-[var(--color-border)] rounded-xl space-y-2">
+              <span class="px-2 py-0.5 bg-indigo-500/10 text-indigo-500 rounded text-[9px] font-mono font-bold uppercase border border-indigo-500/20">Responsable Financier</span>
+              <p class="text-xs text-[var(--color-text-primary)] leading-normal">
+                Spécialiste de la comptabilité. Peut auditer les séquestres et approuver les demandes de retrait de fonds.
               </p>
             </div>
-            <div class="p-3 bg-slate-950 border border-slate-900 rounded-xl space-y-2">
-              <span class="px-2 py-0.5 bg-emerald-950 text-emerald-400 rounded text-[9px] font-mono font-bold uppercase border border-emerald-900/40">Product Moderator</span>
-              <p class="text-xs text-slate-300 leading-normal">
-                Catalog quality specialist. Directly approves, requests amendments, or rejects raw material supplies, certified weights, and merchant storefront KYC.
+            <div class="p-3 bg-[var(--color-surface-elevated)] border border-[var(--color-border)] rounded-xl space-y-2">
+              <span class="px-2 py-0.5 bg-emerald-500/10 text-emerald-500 rounded text-[9px] font-mono font-bold uppercase border border-emerald-500/20">Modérateur Catalogue</span>
+              <p class="text-xs text-[var(--color-text-primary)] leading-normal">
+                Responsable de l'approbation des boutiques et de la modération des fiches produits soumises par les vendeurs.
               </p>
             </div>
-            <div class="p-3 bg-[#111c12]/20 border border-amber-900/40 rounded-xl space-y-2">
-              <span class="px-2 py-0.5 bg-amber-950 text-amber-400 rounded text-[9px] font-mono font-bold uppercase border border-amber-900/40">Support Rep</span>
-              <p class="text-xs text-slate-300 leading-normal">
-                Customer success team. Reads and responds to buyer disputes, modifies technical tickets, assigns cases to operators. Cannot release funding.
+            <div class="p-3 bg-[var(--color-surface-elevated)] border border-[var(--color-border)] rounded-xl space-y-2">
+              <span class="px-2 py-0.5 bg-amber-500/10 text-amber-500 rounded text-[9px] font-mono font-bold uppercase border border-amber-500/20">Support Client</span>
+              <p class="text-xs text-[var(--color-text-primary)] leading-normal">
+                Résolution des réclamations, suivi des litiges entre acheteurs et vendeurs et clôture des tickets de support.
               </p>
             </div>
           </div>
@@ -294,70 +294,70 @@
 
       </div>
 
-      <!-- RIGHT COLUMN: AUDIT LOGS & ACTIONS -->
+      <!-- COLONNE DE DROITE : TÉLÉMÉTRIE & AUDITS -->
       <div class="lg:col-span-4 space-y-6">
         
-        <!-- TELEMETRY PREVIEW / REAL-TIME METRICS STREAM -->
-        <div class="p-5 bg-slate-900 border border-slate-800 rounded-2xl space-y-3">
+        <!-- TÉLÉMÉTRIE SYSTÈME EN DIRECT -->
+        <div class="p-5 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl space-y-3 shadow-sm">
           <div class="flex items-center justify-between">
-            <h3 class="text-xs font-bold uppercase font-mono tracking-wider text-slate-200">System Telemetry</h3>
+            <h3 class="text-xs font-bold uppercase font-mono tracking-wider text-[var(--color-text-primary)]">Télémétrie Système</h3>
             <span class="h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
           </div>
           
           <div class="space-y-2.5 pt-1 text-xs">
             <div class="flex items-center justify-between font-mono">
-              <span class="text-slate-450 uppercase text-[10px]">CPU Stack Load:</span>
-              <span class="text-slate-200">4.12%</span>
+              <span class="text-[var(--color-text-secondary)] uppercase text-[10px]">Charge CPU :</span>
+              <span class="text-[var(--color-text-primary)] font-bold">4.12%</span>
             </div>
-            <div class="w-full bg-slate-950 h-1.5 rounded-full overflow-hidden border border-slate-850">
-              <div class="bg-indigo-500 h-full rounded-full" style="width: 4%"></div>
-            </div>
-
-            <div class="flex items-center justify-between font-mono">
-              <span class="text-slate-450 uppercase text-[10px]">Buffer Allocated:</span>
-              <span class="text-slate-200">2.14 / 8 GB</span>
-            </div>
-            <div class="w-full bg-slate-950 h-1.5 rounded-full overflow-hidden border border-slate-850">
-              <div class="bg-teal-500 h-full rounded-full" style="width: 26%"></div>
+            <div class="w-full bg-[var(--color-background)] h-1.5 rounded-full overflow-hidden border border-[var(--color-border)]">
+              <div class="bg-[var(--color-primary)] h-full rounded-full" style="width: 4%"></div>
             </div>
 
             <div class="flex items-center justify-between font-mono">
-              <span class="text-slate-450 uppercase text-[10px]">API Latency (Douala):</span>
-              <span class="text-slate-200">14 ms</span>
+              <span class="text-[var(--color-text-secondary)] uppercase text-[10px]">RAM Allouée :</span>
+              <span class="text-[var(--color-text-primary)] font-bold">2.14 / 8 Go</span>
+            </div>
+            <div class="w-full bg-[var(--color-background)] h-1.5 rounded-full overflow-hidden border border-[var(--color-border)]">
+              <div class="bg-emerald-500 h-full rounded-full" style="width: 26%"></div>
+            </div>
+
+            <div class="flex items-center justify-between font-mono">
+              <span class="text-[var(--color-text-secondary)] uppercase text-[10px]">Latence API (Douala) :</span>
+              <span class="text-[var(--color-text-primary)] font-bold">14 ms</span>
             </div>
             <div class="flex items-center justify-between font-mono">
-              <span class="text-slate-450 uppercase text-[10px]">Active Sockets Web:</span>
-              <span class="text-slate-200 font-bold">402 live nodes</span>
+              <span class="text-[var(--color-text-secondary)] uppercase text-[10px]">Sockets Actifs :</span>
+              <span class="text-emerald-500 font-bold">402 nœuds actifs</span>
             </div>
           </div>
         </div>
 
-        <!-- RECENT SECURITY AUDIT AUDIENCE LOGS -->
-        <div class="p-5 bg-slate-900 border border-slate-800 rounded-2xl space-y-4">
-          <div class="flex items-center justify-between border-b border-slate-800 pb-2 shrink-0">
-            <h3 class="text-xs font-bold uppercase font-mono tracking-wider text-slate-200">Recent Audit Records</h3>
-            <router-link to="/admin/system/logs" class="text-[10px] font-mono text-indigo-400 hover:underline">Full Log &rarr;</router-link>
+        <!-- DERNIERS RAPPORTS D'AUDIT SÉCURITÉ -->
+        <div class="p-5 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl space-y-4 shadow-sm">
+          <div class="flex items-center justify-between border-b border-[var(--color-border)] pb-2 shrink-0">
+            <h3 class="text-xs font-bold uppercase font-mono tracking-wider text-[var(--color-text-primary)]">Derniers Journaux d'Audit</h3>
+            <router-link to="/admin/system/logs" class="text-[10px] font-mono text-[var(--color-primary)] hover:underline">Voir Tout &rarr;</router-link>
           </div>
 
           <div class="space-y-3">
             <div 
               v-for="lg in systemLogs.slice(0, 5)" 
               :key="lg.id" 
-              class="p-2.5 bg-slate-950 rounded-lg space-y-1 hover:border hover:border-slate-800 border border-transparent transition"
+              class="p-2.5 bg-[var(--color-surface-elevated)] rounded-lg space-y-1 border border-transparent hover:border-[var(--color-border)] transition"
             >
               <div class="flex items-center justify-between">
-                <span class="px-1.5 py-0.5 bg-slate-900 border border-slate-800 text-slate-350 font-mono text-[8px] uppercase tracking-wider font-bold">
+                <span class="px-1.5 py-0.5 bg-[var(--color-background)] border border-[var(--color-border)] text-[var(--color-text-primary)] font-mono text-[8px] uppercase tracking-wider font-bold">
                   {{ lg.action }}
                 </span>
-                <span class="text-[8px] font-mono text-slate-500">
+                <span class="text-[8px] font-mono text-[var(--color-text-tertiary)]">
                   {{ formatTime(lg.date) }}
                 </span>
               </div>
-              <p class="text-[11px] text-slate-300 font-sans leading-relaxed">
+              <p class="text-[11px] text-[var(--color-text-primary)] leading-relaxed">
                 {{ lg.details }}
               </p>
-              <div class="text-[9px] font-mono text-slate-500 flex items-center justify-between pt-0.5">
-                <span>By: {{ lg.author }}</span>
+              <div class="text-[9px] font-mono text-[var(--color-text-tertiary)] flex items-center justify-between pt-0.5">
+                <span>Par : {{ lg.author }}</span>
                 <span :class="getLevelColor(lg.level || 'info')" class="text-[8px] font-bold uppercase">
                   {{ lg.level || 'info' }}
                 </span>
@@ -370,7 +370,7 @@
 
     </div>
 
-    <!-- MANDATORY REJECTION / FREEZE CONFIGURATION SAFETY MODAL -->
+    <!-- MODAL DE SÉCURITÉ DE CONFIRMATION -->
     <ConfirmationModal 
       :show="showSafetyModal"
       :title="safetyTitle"
@@ -409,7 +409,7 @@ const newColleague = ref({
   email: '',
   password: '',
   subRole: 'support_rep',
-  department: 'Main Desk Ops'
+  department: 'Département Support'
 });
 
 // Calculate statistics dynamically
@@ -463,7 +463,7 @@ function updateActivePersona() {
       currentSessionUser.name,
       'security'
     );
-    toast.info(`Swapped clearance to ${(activeAdminSubRole.value || '').toUpperCase().replace('_', ' ')}.`);
+    toast.info(`Habilitation modifiée pour : ${(activeAdminSubRole.value || '').toUpperCase().replace('_', ' ')}.`);
   }
 }
 
@@ -499,7 +499,7 @@ function getLevelColor(lvl) {
 function createInternalColleague() {
   const exists = authStore.value.users.find(u => u.email.toLowerCase() === newColleague.value.email.toLowerCase());
   if (exists) {
-    toast.error('A user with that credential email already exists.');
+    toast.error('Un utilisateur avec cette adresse email existe déjà.');
     return;
   }
 
@@ -529,13 +529,13 @@ function createInternalColleague() {
     'security'
   );
 
-  toast.success(`Account created for ${newColleague.value.name}! Duty: ${(newColleague.value.subRole || '').toUpperCase().replace('_', ' ')}`);
+  toast.success(`Compte créé pour ${newColleague.value.name} ! Rôle : ${(newColleague.value.subRole || '').toUpperCase().replace('_', ' ')}`);
   
   // Clear layout inputs
   newColleague.value.name = '';
   newColleague.value.email = '';
   newColleague.value.password = '';
-  newColleague.value.department = 'Main Desk Ops';
+  newColleague.value.department = 'Département Support';
 }
 
 // MANDATORY SAFETY MODAL HOOK OVERRIDES FOR REJECTIONS/GELS
@@ -573,7 +573,7 @@ function executeSafetyAction(justificationStr) {
         'security'
       );
 
-      toast.warning(`Clearances successfully suspended. Action logged.`);
+      toast.warning(`Accès révoqué avec succès. Événement journalisé.`);
     }
   }
   showSafetyModal.value = false;

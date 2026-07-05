@@ -2,92 +2,92 @@
   <div class="space-y-6">
 
     <!-- HEADER BLOCK -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-900 pb-5 shrink-0">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[var(--color-border)] pb-5 shrink-0">
       <div>
-        <h1 class="text-xl font-bold font-mono text-slate-100 flex items-center gap-2">
-          Withdrawals Clearance & Payout Board
+        <h1 class="text-xl font-bold font-mono text-[var(--color-text-primary)] flex items-center gap-2">
+          <span>Tableau des Règlements & Retraits</span>
         </h1>
-        <p class="text-xs text-slate-400">Validate outbound supplier revenue claims, approve bank wires, or freeze suspicious withdrawal actions.</p>
+        <p class="text-xs text-[var(--color-text-secondary)]">Validez les demandes de retrait des fournisseurs, approuvez les virements bancaires ou gelez les retraits suspects.</p>
       </div>
 
       <!-- BULK TOTALS -->
       <div class="flex items-center space-x-3 text-xs font-mono">
-        <span class="px-2.5 py-1 bg-slate-900 border border-slate-800 rounded-lg text-slate-350">
-          Pending payout files: <strong class="text-amber-400">{{ pendingCount }}</strong>
+        <span class="px-2.5 py-1 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg text-[var(--color-text-secondary)]">
+          Règlements en attente : <strong class="text-amber-500">{{ pendingCount }}</strong>
         </span>
       </div>
     </div>
 
     <!-- MAIN WITHDRAWAL LIST -->
-    <div v-if="withdrawals.length === 0" class="p-12 text-center bg-slate-90s/15 border border-slate-900 rounded-2xl">
-      <p class="text-xs text-slate-500 font-mono">No withdrawal clearance files active in directory.</p>
+    <div v-if="withdrawals.length === 0" class="p-12 text-center bg-[var(--color-surface)]/10 border border-[var(--color-border)] rounded-2xl">
+      <p class="text-xs text-[var(--color-text-secondary)] font-mono">Aucune demande de retrait active.</p>
     </div>
 
     <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <div 
         v-for="wth in withdrawals" 
         :key="wth.id"
-        class="bg-[#05091a] border border-[#121c3b] hover:border-slate-800 rounded-2xl p-5 flex flex-col justify-between space-y-4 transition"
+        class="bg-[var(--color-surface)] border border-[var(--color-border)] hover:border-[var(--color-primary)] rounded-2xl p-5 flex flex-col justify-between space-y-4 transition shadow-sm"
       >
         <div>
-          <div class="flex items-center justify-between font-mono text-[9px] leading-none mb-3">
-            <span class="text-slate-500">ID: {{ wth.id.toUpperCase() }}</span>
+          <div class="flex items-center justify-between font-mono text-[9px] leading-none mb-3 text-[var(--color-text-secondary)]">
+            <span>ID : {{ wth.id.toUpperCase() }}</span>
             <span 
               class="px-2 py-0.5 rounded font-bold uppercase tracking-wide border"
               :class="getStatusClass(wth.status)"
             >
-              {{ wth.status }}
+              {{ wth.status === 'Pending' ? 'En attente' : wth.status === 'Completed' ? 'Complété' : wth.status === 'Rejected' ? 'Rejeté' : 'Suspendu' }}
             </span>
           </div>
 
-          <p class="text-[10px] font-mono text-indigo-400 uppercase tracking-widest leading-none">Claim Amount</p>
-          <h3 class="text-lg font-bold font-mono text-slate-100 mt-1">
-            {{ formatCurrency(wth.amount) }} <span class="text-xs font-sans text-slate-400 font-normal">XAF</span>
+          <p class="text-[10px] font-mono text-[var(--color-primary)] uppercase tracking-widest leading-none">Montant de la Demande</p>
+          <h3 class="text-lg font-bold font-mono text-[var(--color-text-primary)] mt-1">
+            {{ formatCurrency(wth.amount) }} <span class="text-xs font-sans text-[var(--color-text-secondary)] font-normal">FCFA</span>
           </h3>
           
-          <div class="space-y-1.5 text-xs font-mono pt-3 mt-3 border-t border-slate-850/60 leading-tight text-slate-400">
+          <div class="space-y-1.5 text-xs font-mono pt-3 mt-3 border-t border-[var(--color-border)] leading-tight text-[var(--color-text-secondary)]">
             <div class="flex items-center justify-between">
-              <span>Pay-Route:</span>
-              <span class="text-slate-200 uppercase">{{ wth.method }}</span>
+              <span>Mode de Paiement :</span>
+              <span class="text-[var(--color-text-primary)] uppercase">{{ wth.method }}</span>
             </div>
             <div class="flex items-center justify-between">
-              <span>Clearence Ref:</span>
-              <span class="text-slate-200 truncate max-w-[150px]">{{ wth.reference || 'Awaiting Sync' }}</span>
+              <span>Réf. de Règlement :</span>
+              <span class="text-[var(--color-text-primary)] truncate max-w-[150px]">{{ wth.reference || 'En attente de synchro' }}</span>
             </div>
             <div class="flex items-center justify-between">
-              <span>Claim Date:</span>
-              <span class="text-slate-300 font-sans">{{ formatDate(wth.date) }}</span>
+              <span>Date de Demande :</span>
+              <span class="text-[var(--color-text-primary)] font-sans">{{ formatDate(wth.date) }}</span>
             </div>
           </div>
         </div>
 
-        <!-- Action controllers (Denying/Rejecting triggers safety modal) -->
+        <!-- Action controllers -->
         <div class="pt-2 flex items-center justify-end gap-2 font-mono shrink-0">
           <template v-if="wth.status === 'Pending'">
             <button 
               @click="triggerPayoutReject(wth)"
-              class="w-full text-center py-1.5 bg-red-950/25 text-red-400 hover:bg-red-900 hover:text-slate-950 border border-red-900/45 rounded-xl text-[10px] uppercase font-bold transition"
+              class="w-full text-center py-1.5 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white border border-red-500/20 rounded-xl text-[10px] uppercase font-bold transition cursor-pointer"
             >
-              Rejeter / Hold
+              Rejeter / Bloquer
             </button>
             <button 
               @click="approvePayout(wth)"
-              class="w-full text-center py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-[10px] uppercase font-bold transition"
+              class="w-full text-center py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-[10px] uppercase font-bold transition cursor-pointer"
             >
-              Approve Wire
+              Approuver
             </button>
           </template>
-          <div v-else class="text-[10px] text-slate-500 italic flex items-center gap-1">
-            <span class="h-1.5 w-1.5 rounded-full bg-slate-800"></span>
-            <span>Clearence Finalized</span>
+          <div v-else class="text-[10px] text-[var(--color-text-secondary)] italic flex items-center gap-1">
+            <span class="h-1.5 w-1.5 rounded-full bg-slate-400"></span>
+            <span>Règlement Finalisé</span>
           </div>
         </div>
       </div>
     </div>
 
     <!-- PAGINATION ACCESSORY -->
-    <div class="text-xs text-slate-500 font-mono py-2 border-t border-slate-900 shrink-0 select-none">
-      * Outbound clearance registers log automatically via Central Settlement Authority blocks.
+    <div class="text-xs text-[var(--color-text-secondary)] py-2 border-t border-[var(--color-border)] shrink-0 select-none">
+      * Les registres de règlement sortants sont journalisés automatiquement.
     </div>
 
     <!-- MANDATORY REJECTION CONFIRMED SYSTEM CONTROL ROOM POPUP -->
@@ -127,29 +127,27 @@ function formatDate(isoStr) {
 
 function getStatusClass(st) {
   const map = {
-    Completed: 'bg-emerald-950 text-emerald-400 border border-emerald-900/50',
-    Pending: 'bg-amber-950 text-amber-505 border border-amber-900/50 animate-pulse',
-    Rejected: 'bg-red-950 text-red-400 border border-red-900/50',
-    Suspended: 'bg-slate-900 text-slate-350 border border-slate-800'
+    Completed: 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20',
+    Pending: 'bg-amber-500/10 text-amber-500 border border-amber-500/20 animate-pulse',
+    Rejected: 'bg-red-500/10 text-red-500 border border-red-500/20',
+    Suspended: 'bg-[var(--color-surface-elevated)] text-[var(--color-text-secondary)] border border-[var(--color-border)]'
   };
-  return map[st] || 'bg-slate-900 text-slate-400';
+  return map[st] || 'bg-[var(--color-surface-elevated)] text-[var(--color-text-secondary)]';
 }
 
-// APPROVE
 function approvePayout(wth) {
   wth.status = 'Completed';
   wth.reference = `CCA-EFT-${Math.floor(100000 + Math.random() * 900000)}`;
 
   writeAuditLog(
     'PAYOUT_APPROVED',
-    `Supplier withdrawal payout approved & wired for amount ${wth.amount} XAF. Route: ${wth.method}.`,
-    'Treasury Settlement Desk'
+    `Demande de règlement fournisseur approuvée pour un montant de ${wth.amount} FCFA. Mode : ${wth.method}.`,
+    'Service de Trésorerie'
   );
 
-  toast.success('Withdrawal approved. CCA Bank electronic fund wire dispatched.');
+  toast.success('Retrait approuvé. Virement bancaire expédié.');
 }
 
-// FORCE COMPLIANCE REJECTION MODAL
 const showConfirm = ref(false);
 const confirmTitle = ref('');
 const confirmMessage = ref('');
@@ -158,9 +156,9 @@ const targetPayout = ref(null);
 
 function triggerPayoutReject(wth) {
   targetPayout.value = wth;
-  confirmTitle.value = 'REJECT & SUSPEND SECURITIES DISPATCH';
-  confirmMessage.value = `You are about to execute a rejection hold override on payout request ${wth.id} for ${wth.amount} XAF. The capital stays held inside escrow, and the vendor is flagged for regulatory review.`;
-  confirmActionLabel.value = 'EXECUTE REJECTION HOLD';
+  confirmTitle.value = 'REJETER & SUSPENDRE LE PAIEMENT';
+  confirmMessage.value = `Vous êtes sur le point de rejeter la demande de retrait ${wth.id} d'un montant de ${wth.amount} FCFA. Les fonds restent séquestrés et le fournisseur sera signalé.`;
+  confirmActionLabel.value = 'EXÉCUTER LE BLOCAGE';
   showConfirm.value = true;
 }
 
@@ -177,12 +175,12 @@ function executeRejectionOverride(reason) {
 
     writeAuditLog(
       'PAYOUT_REJECTED',
-      `Supplier payout request ${wth.id} has been REJECTED. Reason: ${reason} (Amount: ${wth.amount} XAF)`,
-      'Treasury Settlement Desk',
+      `Demande de règlement fournisseur ${wth.id} REJETÉE. Raison : ${reason} (Montant : ${wth.amount} FCFA)`,
+      'Service de Trésorerie',
       'warning'
     );
 
-    toast.error(`Payout request rejected. Funds are held in escrow for review. Event logger loaded.`);
+    toast.error('Demande de règlement rejetée. Les fonds sont bloqués pour examen.');
   }
 
   showConfirm.value = false;

@@ -2,80 +2,80 @@
   <div class="space-y-6 animate-fade-in">
 
     <!-- HEADER BLOCK -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-900 pb-5 shrink-0">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[var(--color-border)] pb-5 shrink-0">
       <div>
-        <h1 class="text-xl font-bold font-mono text-slate-100 flex items-center gap-2">
-          Platform Snapshot Backups Registry
+        <h1 class="text-xl font-bold font-mono text-[var(--color-text-primary)] flex items-center gap-2">
+          Registre des Sauvegardes de la Plateforme
         </h1>
-        <p class="text-xs text-slate-400">Schedule automatic cloud mirroring, capture hot instant database snapshots, and restore structural files.</p>
+        <p class="text-xs text-[var(--color-text-secondary)]">Planifiez la réplication cloud automatique, effectuez des instantanés de bases de données et restaurez les fichiers de structure.</p>
       </div>
 
       <button 
         @click="triggerHotBackup"
-        class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-xs font-mono font-bold uppercase text-white transition flex items-center space-x-2 shrink-0 animate-bounce custom-tooltip-trigger"
-        data-tooltip="Save real state right now"
+        class="px-4 py-2 bg-[var(--color-primary)] hover:opacity-90 text-xs font-mono font-bold uppercase text-[var(--color-text-primary)] transition flex items-center space-x-2 shrink-0 animate-bounce cursor-pointer"
+        title="Enregistrer l'état réel maintenant"
         id="add-backup-btn"
       >
-        <span>&plus; Hot Snapshot Now</span>
+        <span>+ Nouvel Instantané</span>
       </button>
     </div>
 
     <!-- GENERAL CODES -->
-    <div class="p-4 bg-slate-900/40 border border-slate-900 text-xs text-slate-400 leading-relaxed font-sans">
-      <span class="font-bold text-slate-200 font-mono uppercase text-[9px] block mb-1">State Integrity Note:</span>
-      Incremental cluster backups save local store structures, auth tables, active disputes records, and inventory catalogs dynamically into secure off-site cloud storage.
+    <div class="p-4 bg-[var(--color-surface)] border border-[var(--color-border)] text-xs text-[var(--color-text-secondary)] leading-relaxed font-sans">
+      <span class="font-bold text-[var(--color-text-primary)] font-mono uppercase text-[9px] block mb-1">Note d'Intégrité de l'État :</span>
+      Les sauvegardes incrémentielles du cluster enregistrent dynamiquement les structures des magasins, les tables d'authentification, les litiges actifs et le catalogue d'inventaire sur un stockage cloud externe sécurisé.
     </div>
 
     <!-- SKELETON LOADERS SIMULATION -->
-    <div v-if="isLoading" class="p-6 border border-slate-900 bg-slate-950">
+    <div v-if="isLoading" class="p-6 border border-[var(--color-border)] bg-[var(--color-background)]">
       <SkeletonLoader type="table" :rows="4" />
     </div>
 
     <div v-else class="space-y-4">
       <!-- MAIN BACKUPS LIST ROW -->
-      <div v-if="paginatedBackups.length === 0" class="p-12 text-center border-2 border-dashed border-slate-900 bg-slate-900/10 flex flex-col items-center justify-center space-y-3">
-        <svg class="h-8 w-8 text-slate-650" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <div v-if="paginatedBackups.length === 0" class="p-12 text-center border-2 border-dashed border-var(--color-border) bg-[var(--color-surface)]/10 flex flex-col items-center justify-center space-y-3">
+        <svg class="h-8 w-8 text-[var(--color-text-secondary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
         </svg>
-        <p class="text-xs text-slate-500 font-mono">No available snaps found in system storage catalog.</p>
+        <p class="text-xs text-[var(--color-text-secondary)] font-mono">Aucun instantané disponible dans le catalogue système.</p>
       </div>
 
-      <div v-else class="bg-slate-950 border border-slate-900 overflow-hidden shadow">
+      <div v-else class="bg-[var(--color-surface)] border border-[var(--color-border)] overflow-hidden shadow rounded-2xl">
         <div class="overflow-x-auto">
           <table class="w-full text-left border-collapse text-xs font-sans">
             <thead>
-              <tr class="text-[10px] font-mono text-slate-500 uppercase border-b border-slate-900 bg-slate-900/40">
-                <th class="p-3 pl-5 col-span-2">Backup ID Reference</th>
-                <th class="p-3">Captured By</th>
-                <th class="p-3">File Size</th>
-                <th class="p-3">Status</th>
-                <th class="p-3 text-right pr-5">Restore State</th>
+              <tr class="text-[10px] font-mono text-[var(--color-text-secondary)] uppercase border-b border-[var(--color-border)] bg-[var(--color-surface-elevated)]">
+                <th class="p-3 pl-5">Référence de la Sauvegarde</th>
+                <th class="p-3">Capturé Par</th>
+                <th class="p-3">Taille du Fichier</th>
+                <th class="p-3">Statut</th>
+                <th class="p-3 text-right pr-5">Restaurer l'État</th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-[#121c3b]/30">
+            <tbody class="divide-y divide-[var(--color-border)]">
               <tr 
                 v-for="bk in paginatedBackups" 
                 :key="bk.id"
-                class="hover:bg-slate-900/30 text-slate-300 transition"
+                class="hover:bg-[var(--color-surface-hover)] text-[var(--color-text-secondary)] transition"
               >
                 <td class="p-3 pl-5">
-                  <div class="font-mono text-[10.5px] text-indigo-400 font-bold uppercase">{{ bk.backupName || bk.name }}</div>
-                  <div class="text-[9px] text-slate-450 font-mono">{{ formatDate(bk.date) }}</div>
+                  <div class="font-mono text-[10.5px] text-[var(--color-primary)] font-bold uppercase">{{ bk.backupName || bk.name }}</div>
+                  <div class="text-[9px] text-[var(--color-text-secondary)] font-mono">{{ formatDate(bk.date) }}</div>
                 </td>
-                <td class="p-3 text-slate-300">{{ bk.capturedBy || bk.author }}</td>
-                <td class="p-3 font-mono text-slate-400">{{ bk.size || '3.42 MB' }}</td>
+                <td class="p-3 text-[var(--color-text-primary)]">{{ bk.capturedBy || bk.author }}</td>
+                <td class="p-3 font-mono text-[var(--color-text-secondary)]">{{ bk.size || '3,42 Mo' }}</td>
                 <td class="p-3">
-                  <span class="px-2 py-0.5 text-[8px] font-mono font-bold uppercase bg-emerald-950 text-emerald-450 border border-emerald-900/40">
-                    Completed
+                  <span class="px-2 py-0.5 text-[8px] font-mono font-bold uppercase bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 rounded">
+                    Terminée
                   </span>
                 </td>
                 <td class="p-3 text-right pr-5 font-mono">
                   <button 
                     @click="triggerRestoreBackup(bk)"
-                    class="px-2.5 py-1 bg-red-950/20 text-red-500 hover:bg-red-650 hover:text-white border border-red-900/40 text-[10px] font-bold uppercase transition custom-tooltip-trigger"
-                    data-tooltip="DANGER: Rollback whole DB to this state"
+                    class="px-2.5 py-1 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white border border-red-500/20 text-[10px] font-bold uppercase transition cursor-pointer rounded"
+                    title="DANGER : Restaurer toute la base de données à cet état"
                   >
-                    Restore State
+                    Restaurer l'État
                   </button>
                 </td>
               </tr>
@@ -141,7 +141,7 @@ const paginatedBackups = computed(() => {
 
 // CAPTURE NEW SNAPSHOT
 function triggerHotBackup() {
-  const currentAuthor = authStore.user?.name || 'Central Operator';
+  const currentAuthor = authStore.user?.name || 'Opérateur Central';
   const newBackupName = `hot_snapshot_${Date.now().toString().slice(-6)}`;
   
   const snapObj = {
@@ -149,19 +149,19 @@ function triggerHotBackup() {
     backupName: newBackupName.toUpperCase(),
     capturedBy: currentAuthor,
     date: new Date().toISOString(),
-    size: '4.14 MB'
+    size: '4,14 MB'
   };
 
   backups.value.unshift(snapObj);
-  currentPage.value = 1; // back to page 1 to see the new entry
+  currentPage.value = 1;
 
   writeAuditLog(
     'HOT_BACKUP_CREATED',
-    `Hot snapshot structural file generated successfully: ${snapObj.backupName}.`,
+    `Fichier d'instantané structurel généré avec succès : ${snapObj.backupName}.`,
     currentAuthor
   );
 
-  toast.success(`Hot database snapshot saved as ${snapObj.backupName}!`);
+  toast.success(`Instantané de base de données enregistré sous ${snapObj.backupName} !`);
 }
 
 // RESTORE CONFIRM POPUP (CRITICAL ACTIONS)
@@ -173,9 +173,9 @@ const targetBackup = ref(null);
 
 function triggerRestoreBackup(bk) {
   targetBackup.value = bk;
-  confirmTitle.value = 'DESTRUCTIVE STATE RESTORE ROLLBACK';
-  confirmMessage.value = `You are about to ROLLBACK structural platform data to database backup snap "${bk.backupName || bk.name}". Active buyer sessions could terminate, current transaction registers will overwrite, and sync states will restart!`;
-  confirmActionLabel.value = 'ROLLBACK SYSTEM DATA STATE';
+  confirmTitle.value = 'RESTAURATION DÉSTRUCTIVE DE L\'ÉTAT';
+  confirmMessage.value = `Vous êtes sur le point de RESTAURER les données structurelles de la plateforme vers la sauvegarde "${bk.backupName || bk.name}". Les sessions actives seront fermées, les transactions en cours seront écrasées et les états de synchronisation redémarreront !`;
+  confirmActionLabel.value = 'RESTAURER L\'ÉTAT DU SYSTÈME';
   showConfirm.value = true;
 }
 
@@ -190,12 +190,12 @@ function executeRestoreOverride(reason) {
 
     writeAuditLog(
       'DATABASE_SNAPSHOT_RESTORED',
-      `Restored system state directory rollback executed from backup: ${bk.backupName || bk.name}. Reason: ${reason}`,
-      authStore.user?.name || 'Central Operator',
+      `Restauration système exécutée à partir de la sauvegarde : ${bk.backupName || bk.name}. Raison : ${reason}`,
+      authStore.user?.name || 'Opérateur Central',
       'danger'
     );
 
-    toast.warning(`Snapshot rollback executed successfully. Cluster synchronizing records.`);
+    toast.warning(`Restauration de l'instantané effectuée avec succès.`);
     closeConfirm();
   }
 }

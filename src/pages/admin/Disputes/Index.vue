@@ -2,22 +2,22 @@
   <div class="space-y-6">
 
     <!-- HEADER SUMMARY -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-900 pb-5 shrink-0 animate-fade-in">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[var(--color-border)] pb-5 shrink-0 animate-fade-in">
       <div>
-        <h1 class="text-xl font-bold font-mono text-slate-100 flex items-center gap-2">
-          <ScaleIcon class="w-5 h-5 text-indigo-405" />
-          <span>Platform B2B Disputes Resolution Center</span>
+        <h1 class="text-xl font-bold font-mono text-[var(--color-text-primary)] flex items-center gap-2">
+          <ScaleIcon class="w-5 h-5 text-[var(--color-primary)]" />
+          <span>Centre de Résolution des Litiges B2B de la Plateforme</span>
         </h1>
-        <p class="text-xs text-slate-400">Mediate commercial conflicts, authorize refunds, or freeze/release held funding escrows.</p>
+        <p class="text-xs text-[var(--color-text-secondary)]">Médiation des conflits commerciaux, autorisation des remboursements ou gel/libération des fonds séquestrés.</p>
       </div>
 
       <!-- METRIC BADGES -->
       <div class="flex items-center space-x-3 text-xs font-mono">
-        <span class="px-2.5 py-1 bg-slate-900 border border-slate-800 rounded-lg text-slate-350">
-          Unsettled Disputes: <strong class="text-red-400">{{ activeCount }}</strong>
+        <span class="px-2.5 py-1 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg text-[var(--color-text-secondary)]">
+          Litiges non réglés : <strong class="text-red-500">{{ activeCount }}</strong>
         </span>
-        <span class="px-2.5 py-1 bg-slate-900 border border-slate-800 rounded-lg text-slate-350">
-          Total Disputed Sum: <strong class="text-indigo-400">{{ formatCurrency(totalDisputedAmount) }}</strong>
+        <span class="px-2.5 py-1 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg text-[var(--color-text-secondary)]">
+          Somme litigieuse : <strong class="text-[var(--color-primary)]">{{ formatCurrency(totalDisputedAmount) }} FCFA</strong>
         </span>
       </div>
     </div>
@@ -33,11 +33,11 @@
           <input 
             type="text" 
             v-model="searchQuery"
-            placeholder="Search dispute refs, companies..."
-            class="w-full bg-slate-950 border border-slate-850 focus:border-indigo-500 rounded-lg p-2.5 pl-8 text-xs text-slate-100 placeholder-slate-700 font-mono transition focus:outline-none"
+            placeholder="Rechercher par réf., entreprise..."
+            class="w-full bg-[var(--color-background)] border border-[var(--color-border)] focus:border-[var(--color-primary)] rounded-lg p-2.5 pl-8 text-xs text-[var(--color-text-primary)] placeholder-[var(--color-text-secondary)] font-mono focus:outline-none"
           />
-          <span class="absolute left-2.5 top-3 text-slate-500 font-mono text-[11px]">
-            <MagnifyingGlassIcon class="w-4 h-4 text-slate-500" />
+          <span class="absolute left-2.5 top-3 text-[var(--color-text-secondary)] font-mono text-[11px]">
+            <MagnifyingGlassIcon class="w-4 h-4" />
           </span>
         </div>
 
@@ -46,31 +46,31 @@
             v-for="d in filteredDisputes" 
             :key="d.id"
             @click="selectedDispute = d"
-            class="p-4 bg-[#14141E] border rounded-2xl cursor-pointer text-left transition relative"
-            :class="selectedDispute?.id === d.id ? 'border-indigo-500 bg-indigo-950/20' : 'border-slate-800 hover:border-slate-700'"
+            class="p-4 bg-[var(--color-surface)] border rounded-2xl cursor-pointer text-left transition relative"
+            :class="selectedDispute?.id === d.id ? 'border-[var(--color-primary)] bg-[var(--color-primary-muted)]/20' : 'border-[var(--color-border)] hover:border-[var(--color-primary)]'"
           >
             <!-- Badge indicators -->
             <div class="flex items-center justify-between font-mono text-[9px] mb-2 leading-none">
-              <span class="text-indigo-400 font-bold uppercase tracking-wider">{{ d.disputeRef }}</span>
+              <span class="text-[var(--color-primary)] font-bold uppercase tracking-wider">{{ d.disputeRef }}</span>
               <span 
                 class="px-1.5 py-0.5 rounded font-bold uppercase text-[8px]"
                 :class="getStatusClass(d.status)"
               >
-                {{ d.status.toUpperCase().replace('_', ' ') }}
+                {{ d.status === 'open' ? 'Ouvert' : d.status === 'under_review' ? 'En Cours' : d.status === 'resolved' ? 'Résolu' : d.status === 'frozen' ? 'Gelé' : 'Rejeté' }}
               </span>
             </div>
 
-            <h3 class="text-xs font-bold text-slate-105 font-sans leading-snug line-clamp-1">{{ d.product }}</h3>
-            <div class="text-[11px] text-slate-400 mt-1">
-              Buyer: <span class="text-slate-300 font-semibold">{{ d.buyer }}</span>
+            <h3 class="text-xs font-bold text-[var(--color-text-primary)] font-sans leading-snug line-clamp-1">{{ d.product }}</h3>
+            <div class="text-[11px] text-[var(--color-text-secondary)] mt-1">
+              Acheteur : <span class="text-[var(--color-text-primary)] font-semibold">{{ d.buyer }}</span>
             </div>
-            <div class="text-[11px] text-slate-400">
-              Supplier: <span class="text-slate-300">{{ d.supplier }}</span>
+            <div class="text-[11px] text-[var(--color-text-secondary)]">
+              Fournisseur : <span class="text-[var(--color-text-primary)]">{{ d.supplier }}</span>
             </div>
 
-            <div class="flex items-center justify-between pt-3.5 mt-2.5 border-t border-slate-800 font-mono text-[10px]">
-              <span class="text-slate-500">{{ formatDate(d.createdAt) }}</span>
-              <span class="text-slate-200 font-bold">{{ formatCurrency(d.amount) }} XAF</span>
+            <div class="flex items-center justify-between pt-3.5 mt-2.5 border-t border-[var(--color-border)] font-mono text-[10px]">
+              <span class="text-[var(--color-text-secondary)]">{{ formatDate(d.createdAt) }}</span>
+              <span class="text-[var(--color-text-primary)] font-bold">{{ formatCurrency(d.amount) }} FCFA</span>
             </div>
           </div>
         </div>
@@ -80,17 +80,17 @@
       <!-- RIGHT HAND PANEL: RESOLUTION DESK & DIALOGUE FLUX -->
       <div class="xl:col-span-8">
         
-        <div v-if="selectedDispute" class="p-6 bg-[#14141E] border border-slate-800 rounded-2xl space-y-6">
+        <div v-if="selectedDispute" class="p-6 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl space-y-6">
           
           <!-- Dispute detail header -->
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800 pb-4 gap-3">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[var(--color-border)] pb-4 gap-3">
             <div>
               <div class="flex items-center space-x-2 text-[10px] font-mono leading-none mb-1">
-                <span class="text-indigo-400 font-bold uppercase">{{ selectedDispute.disputeRef }}</span>
-                <span class="text-slate-600">&bull;</span>
-                <span class="text-slate-400">Order: {{ selectedDispute.orderRef }}</span>
+                <span class="text-[var(--color-primary)] font-bold uppercase">{{ selectedDispute.disputeRef }}</span>
+                <span class="text-[var(--color-text-secondary)]">&bull;</span>
+                <span class="text-[var(--color-text-secondary)]">Commande : {{ selectedDispute.orderRef }}</span>
               </div>
-              <h2 class="text-sm font-bold text-slate-100 font-mono uppercase tracking-wider">Claims Case Review</h2>
+              <h2 class="text-sm font-bold text-[var(--color-text-primary)] font-mono uppercase tracking-wider">Examen du Dossier de Réclamation</h2>
             </div>
 
             <!-- Current action status badge -->
@@ -98,50 +98,50 @@
               class="px-2.5 py-1 rounded text-xs font-mono font-bold uppercase border self-start"
               :class="getStatusClass(selectedDispute.status)"
             >
-              {{ selectedDispute.status.toUpperCase().replace('_', ' ') }}
+              {{ selectedDispute.status === 'open' ? 'Ouvert' : selectedDispute.status === 'under_review' ? 'En Cours' : selectedDispute.status === 'resolved' ? 'Résolu' : selectedDispute.status === 'frozen' ? 'Gelé' : 'Rejeté' }}
             </span>
           </div>
 
           <!-- Product / Parties row -->
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs font-sans">
-            <div class="p-3 bg-slate-950 rounded-xl border border-slate-850 space-y-1">
-              <span class="text-[9px] font-mono text-slate-500 uppercase block">Disputed Sum</span>
-              <span class="text-[13px] font-bold font-mono text-slate-100">{{ formatCurrency(selectedDispute.amount) }} XAF</span>
+            <div class="p-3 bg-[var(--color-background)] rounded-xl border border-[var(--color-border)] space-y-1">
+              <span class="text-[9px] font-mono text-[var(--color-text-secondary)] uppercase block">Somme en Litige</span>
+              <span class="text-[13px] font-bold font-mono text-[var(--color-text-primary)]">{{ formatCurrency(selectedDispute.amount) }} FCFA</span>
             </div>
-            <div class="p-3 bg-slate-950 rounded-xl border border-slate-850 space-y-1">
-              <span class="text-[9px] font-mono text-slate-500 uppercase block">Affilated Buyer</span>
-              <span class="text-slate-200 font-bold block truncate">{{ selectedDispute.buyer }}</span>
+            <div class="p-3 bg-[var(--color-background)] rounded-xl border border-[var(--color-border)] space-y-1">
+              <span class="text-[9px] font-mono text-[var(--color-text-secondary)] uppercase block">Acheteur Affilié</span>
+              <span class="text-[var(--color-text-primary)] font-bold block truncate">{{ selectedDispute.buyer }}</span>
             </div>
-            <div class="p-3 bg-slate-950 rounded-xl border border-slate-855 space-y-1">
-              <span class="text-[9px] font-mono text-slate-500 uppercase block">Affilated Supplier</span>
-              <span class="text-indigo-400 font-semibold block truncate">{{ selectedDispute.supplier }}</span>
+            <div class="p-3 bg-[var(--color-background)] rounded-xl border border-[var(--color-border)] space-y-1">
+              <span class="text-[9px] font-mono text-[var(--color-text-secondary)] uppercase block">Fournisseur Affilié</span>
+              <span class="text-[var(--color-primary)] font-semibold block truncate">{{ selectedDispute.supplier }}</span>
             </div>
           </div>
 
           <!-- Dispute description message -->
-          <div class="p-4 bg-slate-955 border border-slate-850 rounded-xl space-y-1">
-            <span class="text-[9px] font-mono text-slate-500 uppercase tracking-widest block font-bold">Buyer Declaration Statement:</span>
-            <p class="text-xs text-slate-300 leading-relaxed font-sans">{{ selectedDispute.description }}</p>
+          <div class="p-4 bg-[var(--color-background)] border border-[var(--color-border)] rounded-xl space-y-1">
+            <span class="text-[9px] font-mono text-[var(--color-text-secondary)] uppercase tracking-widest block font-bold">Déclaration de l'Acheteur :</span>
+            <p class="text-xs text-[var(--color-text-primary)] leading-relaxed font-sans">{{ selectedDispute.description }}</p>
           </div>
 
           <!-- Chat dialogue flux -->
           <div class="space-y-3">
-            <h4 class="text-[10px] font-mono uppercase text-slate-400 tracking-wider font-bold">Review Pipeline Statements & Threads</h4>
-            <div class="space-y-2.5 max-h-[220px] overflow-y-auto bg-slate-950/40 p-3 rounded-xl border border-slate-850">
+            <h4 class="text-[10px] font-mono uppercase text-[var(--color-text-secondary)] tracking-wider font-bold">Examen des Déclarations & Échanges</h4>
+            <div class="space-y-2.5 max-h-[220px] overflow-y-auto bg-[var(--color-background)] p-3 rounded-xl border border-[var(--color-border)]">
               
               <div 
                 v-for="cmt in selectedDispute.comments" 
                 :key="cmt.id"
                 class="p-3 rounded-xl space-y-1 text-xs"
-                :class="cmt.author.includes('Platform Rep') || cmt.author === 'System Admin' ? 'bg-indigo-950/20 border border-indigo-900/30' : 'bg-slate-950/80 border border-slate-850'"
+                :class="cmt.author.includes('Platform Rep') || cmt.author === 'System Admin' ? 'bg-[var(--color-primary-muted)]/20 border border-[var(--color-primary-border)]' : 'bg-[var(--color-surface)] border border-[var(--color-border)]'"
               >
                 <div class="flex items-center justify-between font-mono text-[9px]">
-                  <span class="text-slate-200 uppercase font-bold tracking-wider" :class="cmt.author.includes('Platform Rep') || cmt.author === 'System Admin' ? 'text-indigo-400' : ''">
+                  <span class="text-[var(--color-text-primary)] uppercase font-bold tracking-wider" :class="cmt.author.includes('Platform Rep') || cmt.author === 'System Admin' ? 'text-[var(--color-primary)]' : ''">
                     &bull; {{ cmt.author }}
                   </span>
-                  <span class="text-slate-600">{{ formatDateTime(cmt.date) }}</span>
+                  <span class="text-[var(--color-text-secondary)]">{{ formatDateTime(cmt.date) }}</span>
                 </div>
-                <p class="text-slate-300 leading-normal">{{ cmt.text }}</p>
+                <p class="text-[var(--color-text-primary)] leading-normal">{{ cmt.text }}</p>
               </div>
 
             </div>
@@ -149,57 +149,57 @@
 
           <!-- Mediate and input box reply line -->
           <div class="space-y-2">
-            <label class="block text-[10px] font-mono uppercase text-slate-450 tracking-wider font-bold">Write Administrative Arbitrate Statement</label>
+            <label class="block text-[10px] font-mono uppercase text-[var(--color-text-secondary)] tracking-wider font-bold">Saisir la Décision d'Arbitrage Administratif</label>
             <div class="flex gap-2">
               <input 
                 type="text" 
                 v-model="replyText"
-                placeholder="Post message to dispute thread..."
-                class="flex-1 bg-slate-950 border border-slate-850 focus:border-indigo-500 rounded-xl p-2.5 text-xs text-slate-100 font-mono focus:outline-none"
+                placeholder="Publier un message..."
+                class="flex-1 bg-[var(--color-background)] border border-[var(--color-border)] focus:border-[var(--color-primary)] rounded-xl p-2.5 text-xs text-[var(--color-text-primary)] font-mono focus:outline-none"
               />
               <button 
                 @click="postArbitrateReply"
-                class="px-4 py-2 bg-indigo-650 hover:bg-indigo-700 font-mono text-xs uppercase font-bold text-white rounded-xl transition"
+                class="px-4 py-2 bg-[var(--color-primary)] hover:opacity-90 font-mono text-xs uppercase font-bold text-[var(--color-text-primary)] rounded-xl transition cursor-pointer"
               >
-                Post
+                Publier
               </button>
             </div>
           </div>
 
-          <!-- Resolution controllers (Require popping the safety dialog on rejections of claim or freezing values) -->
-          <div v-if="selectedDispute.status === 'open' || selectedDispute.status === 'under_review'" class="pt-4 border-t border-slate-800 flex flex-wrap items-center justify-end gap-3 font-mono">
+          <!-- Resolution controllers -->
+          <div v-if="selectedDispute.status === 'open' || selectedDispute.status === 'under_review'" class="pt-4 border-t border-[var(--color-border)] flex flex-wrap items-center justify-end gap-3 font-mono">
             
             <button 
               @click="triggerDisputeFreeze"
-              class="px-3.5 py-2 bg-red-955/20 text-red-400 hover:bg-red-900 hover:text-slate-950 border border-red-900/40 rounded-xl text-xs uppercase font-bold transition flex items-center space-x-1.5"
+              class="px-3.5 py-2 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white border border-red-500/20 rounded-xl text-xs uppercase font-bold transition flex items-center space-x-1.5 cursor-pointer"
             >
               <LockClosedIcon class="w-3.5 h-3.5" />
-              <span>Geler Escrow Payout</span>
+              <span>Geler le Paiement</span>
             </button>
             <button 
               @click="triggerDisputeDismiss"
-              class="px-3.5 py-2 bg-slate-900 hover:bg-[#1a0f0d] text-slate-400 hover:text-red-405 border border-slate-800 hover:border-red-950/40 rounded-xl text-xs uppercase font-bold transition"
+              class="px-3.5 py-2 bg-[var(--color-background)] hover:bg-red-500/10 text-[var(--color-text-secondary)] hover:text-red-500 border border-[var(--color-border)] rounded-xl text-xs uppercase font-bold transition cursor-pointer"
             >
-              Reject / Dismiss Claims
+              Rejeter la Réclamation
             </button>
             <button 
               @click="approveDisputeRefunding"
-              class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs uppercase font-bold transition flex items-center space-x-1.5"
+              class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs uppercase font-bold transition flex items-center space-x-1.5 cursor-pointer"
             >
               <CheckIcon class="w-3.5 h-3.5" />
-              <span>Approve Buyer Refund</span>
+              <span>Rembourser l'Acheteur</span>
             </button>
 
           </div>
 
-          <div v-else class="p-3 bg-slate-950 border border-slate-850 rounded-xl text-xs text-slate-500 font-mono text-center">
-            Case closed or frozen. Overrides are logged. System has finalized escrow holds.
+          <div v-else class="p-3 bg-[var(--color-background)] border border-[var(--color-border)] rounded-xl text-xs text-[var(--color-text-secondary)] font-mono text-center">
+            Dossier clos ou gelé. Les surcharges sont enregistrées. Le système a finalisé les séquestres.
           </div>
 
         </div>
 
-        <div v-else class="p-12 text-center bg-slate-900/10 border border-slate-800 rounded-2xl">
-          <p class="text-xs text-slate-500 font-mono">Select a claims dossier from the compliance workspace registry.</p>
+        <div v-else class="p-12 text-center bg-[var(--color-surface)]/10 border border-[var(--color-border)] rounded-2xl">
+          <p class="text-xs text-[var(--color-text-secondary)] font-mono">Sélectionnez un dossier de réclamation dans le registre.</p>
         </div>
 
       </div>
@@ -260,7 +260,6 @@ const filteredDisputes = computed(() => {
   });
 });
 
-// Formatting
 function formatCurrency(v) {
   return new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 0 }).format(v);
 }
@@ -277,23 +276,22 @@ function formatDateTime(isoStr) {
 
 function getStatusClass(st) {
   const map = {
-    open: 'bg-red-955 text-red-400 border border-red-900/50',
-    under_review: 'bg-amber-955 text-amber-500 border border-amber-900/50 animate-pulse',
-    resolved: 'bg-emerald-955 text-emerald-400 border border-emerald-900/50',
-    frozen: 'bg-slate-900 text-slate-300 border border-slate-800',
-    dismissed: 'bg-slate-950 text-slate-500 border border-slate-900'
+    open: 'bg-red-500/10 text-red-500 border border-red-500/20',
+    under_review: 'bg-amber-500/10 text-amber-500 border border-amber-500/20 animate-pulse',
+    resolved: 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20',
+    frozen: 'bg-[var(--color-surface-elevated)] text-[var(--color-text-secondary)] border border-[var(--color-border)]',
+    dismissed: 'bg-[var(--color-surface-elevated)] text-[var(--color-text-secondary)] border border-[var(--color-border)]'
   };
-  return map[st] || 'bg-slate-900 text-slate-400';
+  return map[st] || 'bg-[var(--color-surface-elevated)] text-[var(--color-text-secondary)]';
 }
 
-// POST ARBITRATE CHAT COMMENTS
 function postArbitrateReply() {
   if (!replyText.value.trim()) return;
   
-  const currentAuthor = authStore.user?.name || 'ROOT CENTRAL';
+  const currentAuthor = authStore.user?.name || 'CONTRÔLE CENTRAL';
   const newCmt = {
     id: `cmt_${Date.now()}`,
-    author: `${currentAuthor} (Platform Rep)`,
+    author: `${currentAuthor} (Arbitre)`,
     text: replyText.value.trim(),
     date: new Date().toISOString()
   };
@@ -301,62 +299,58 @@ function postArbitrateReply() {
   selectedDispute.value.comments.push(newCmt);
   replyText.value = '';
 
-  // automatically update status to under review if it was open
   if (selectedDispute.value.status === 'open') {
     selectedDispute.value.status = 'under_review';
   }
 
   writeAuditLog(
     'DISPUTE_MEDIATED',
-    `New dialogue comment posted on case ${selectedDispute.value.disputeRef} by ${currentAuthor}.`,
+    `Nouveau commentaire posté sur le litige ${selectedDispute.value.disputeRef} par ${currentAuthor}.`,
     currentAuthor
   );
 
-  toast.success('Arbitration reply submitted.');
+  toast.success('Réponse d\'arbitrage soumise.');
 }
 
-// APPROVE REFUND DIRECT
 function approveDisputeRefunding() {
-  const currentAuthor = authStore.user?.name || 'ROOT CENTRAL';
+  const currentAuthor = authStore.user?.name || 'CONTRÔLE CENTRAL';
   selectedDispute.value.status = 'resolved';
 
-  // release comments
   selectedDispute.value.comments.push({
     id: `sys_${Date.now()}`,
-    author: 'System Admin',
-    text: `Arbitration final report executed. Escrow transaction released for full amount ${selectedDispute.value.amount} XAF to buyer account refund.`,
+    author: 'Admin Système',
+    text: `Décision finale d'arbitrage exécutée. Transaction de séquestre débloquée pour le remboursement total de ${selectedDispute.value.amount} FCFA vers le compte de l'acheteur.`,
     date: new Date().toISOString()
   });
 
   writeAuditLog(
     'DISPUTE_REFUND_APPROVED',
-    `Dispute refund approved for ${selectedDispute.value.buyer}. Resolved sum: ${selectedDispute.value.amount} XAF.`,
+    `Remboursement de litige approuvé pour ${selectedDispute.value.buyer}. Montant résolu : ${selectedDispute.value.amount} FCFA.`,
     currentAuthor
   );
 
-  toast.success(`Claim resolved in buyer's favor. Funds refunded.`);
+  toast.success(`Litige résolu en faveur de l'acheteur. Fonds remboursés.`);
 }
 
-// EXPLICIT LOCKOUT REJECTIONS REQUIRED CONFIRMED BY SAFETY POPUP
 const showConfirm = ref(false);
 const confirmTitle = ref('');
 const confirmMessage = ref('');
 const confirmActionLabel = ref('');
-const pendingType = ref(''); // 'dispute_freeze', 'dispute_dismiss'
+const pendingType = ref('');
 
 function triggerDisputeFreeze() {
   pendingType.value = 'dispute_freeze';
-  confirmTitle.value = 'DESTRUCTIVE OVERRIDE: FREEZE ESCROW PAYOUTS';
-  confirmMessage.value = `You are about to place a full security freeze on the active escrow holdings of ${selectedDispute.value.amount} XAF. Neither party can retrieve the capital until compliance officers lift this lock.`;
-  confirmActionLabel.value = 'FREEZE FUNDING BLOCKS';
+  confirmTitle.value = 'SURCHARGE SÉCURITÉ : GELER LES PAIEMENTS SÉQUESTRES';
+  confirmMessage.value = `Vous êtes sur le point de geler les fonds séquestrés d'un montant de ${selectedDispute.value.amount} FCFA. Aucun parti ne pourra retirer les fonds avant la fin de l'audit.`;
+  confirmActionLabel.value = 'GELER LES FONDS';
   showConfirm.value = true;
 }
 
 function triggerDisputeDismiss() {
   pendingType.value = 'dispute_dismiss';
-  confirmTitle.value = 'REJECT CLAIMS / DISMISS DISPUTE';
-  confirmMessage.value = `You are rejecting the buyer's claims case ${selectedDispute.value.disputeRef} and closing the dispute docket. All escrowed sums of ${selectedDispute.value.amount} XAF will be swept and paid out directly to supplier ${selectedDispute.value.supplier}.`;
-  confirmActionLabel.value = 'REJECT & DISMISS CLAIMS';
+  confirmTitle.value = 'REJETER LA RÉCLAMATION / CLÔTURER LE LITIGE';
+  confirmMessage.value = `Vous rejetez la réclamation de l'acheteur ${selectedDispute.value.disputeRef} et clôturez le litige. Tous les fonds séquestrés de ${selectedDispute.value.amount} FCFA seront reversés directement au fournisseur ${selectedDispute.value.supplier}.`;
+  confirmActionLabel.value = 'REJETER & CLÔTURER LA RÉCLAMATION';
   showConfirm.value = true;
 }
 
@@ -366,44 +360,44 @@ function closeConfirm() {
 }
 
 function executeDisputeOverride(reason) {
-  const currentAuthor = authStore.user?.name || 'ROOT CENTRAL';
+  const currentAuthor = authStore.user?.name || 'CONTRÔLE CENTRAL';
 
   if (pendingType.value === 'dispute_freeze') {
     selectedDispute.value.status = 'frozen';
     selectedDispute.value.comments.push({
       id: `sys_${Date.now()}`,
-      author: 'System Admin',
-      text: `Escrow holdings frozen by arbitration supervisor. Clearance review pending. Reason: ${reason}`,
+      author: 'Admin Système',
+      text: `Fonds séquestrés gelés par l'arbitre. Revue de conformité en cours. Raison : ${reason}`,
       date: new Date().toISOString()
     });
 
     writeAuditLog(
       'DISPUTE_FREEZE_OVERRIDE',
-      `Arbitration block placed on escrow case ${selectedDispute.value.disputeRef}. Reason: ${reason}`,
+      `Blocage d'arbitrage placé sur le litige ${selectedDispute.value.disputeRef}. Raison : ${reason}`,
       currentAuthor,
       'danger'
     );
 
-    toast.error(`Escrow locked and frozen. Event logged to audit.`);
+    toast.error(`Séquestre verrouillé et gelé.`);
   } 
   
   else if (pendingType.value === 'dispute_dismiss') {
     selectedDispute.value.status = 'dismissed';
     selectedDispute.value.comments.push({
       id: `sys_${Date.now()}`,
-      author: 'System Admin',
-      text: `Claims dismissed. Dispute closed. Escrow holding released to supplier. Reason: ${reason}`,
+      author: 'Admin Système',
+      text: `Réclamation rejetée. Litige clos. Fonds débloqués pour le fournisseur. Raison : ${reason}`,
       date: new Date().toISOString()
     });
 
     writeAuditLog(
       'DISPUTE_DISMISSED',
-      `Dispute claims dismissed for case ${selectedDispute.value.disputeRef}. Escrow released to supplier. Reason: ${reason}`,
+      `Réclamation de l'acheteur rejetée pour le litige ${selectedDispute.value.disputeRef}. Séquestre débloqué pour le fournisseur. Raison : ${reason}`,
       currentAuthor,
       'warning'
     );
 
-    toast.warning(`Buyer claims dismissed. Capital cleared for payout.`);
+    toast.warning(`Réclamation de l'acheteur rejetée. Fonds débloqués pour le fournisseur.`);
   }
 
   showConfirm.value = false;

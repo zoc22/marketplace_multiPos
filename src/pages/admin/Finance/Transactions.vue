@@ -2,104 +2,103 @@
   <div class="space-y-6">
 
     <!-- HEADER BLOCK -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-900 pb-5 shrink-0">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[var(--color-border)] pb-5 shrink-0">
       <div>
-        <h1 class="text-xl font-bold font-mono text-slate-100 flex items-center gap-2">
-          <BanknotesIcon class="w-5 h-5 text-indigo-400" />
-          <span>Platform Financial Transactions Ledger</span>
+        <h1 class="text-xl font-bold font-mono text-[var(--color-text-primary)] flex items-center gap-2">
+          <BanknotesIcon class="w-5 h-5 text-[var(--color-primary)]" />
+          <span>Registre des Transactions Financières de la Plateforme</span>
         </h1>
-        <p class="text-xs text-slate-405">Complete immutable record of escrow collections, supplier bank payouts, and payment fees.</p>
+        <p class="text-xs text-[var(--color-text-secondary)]">Registre complet des encaissements sous séquestre, règlements fournisseurs et frais de transaction.</p>
       </div>
 
       <button 
         @click="simulateCSVExport"
-        class="px-3.5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-xs font-mono font-bold uppercase rounded-lg text-white transition flex items-center space-x-2 shrink-0"
+        class="px-3.5 py-2.5 bg-[var(--color-primary)] hover:opacity-90 text-xs font-mono font-bold uppercase rounded-lg text-[var(--color-text-primary)] transition flex items-center space-x-2 shrink-0 cursor-pointer"
       >
         <ArrowDownTrayIcon class="w-4 h-4" />
-        <span>Export Ledger (CSV)</span>
+        <span>Exporter le registre (CSV)</span>
       </button>
     </div>
 
     <!-- LEDGER STATS -->
-    <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 font-mono text-xs">
-      <div class="p-4 bg-[#14141E] border border-slate-800 rounded-xl text-center">
-        <span class="text-slate-500 uppercase tracking-widest block">Gross Total Volume</span>
-        <span class="text-lg font-bold text-slate-100 mt-1 block">{{ formatCurrency(grossVolume) }}</span>
+    <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 font-mono text-xs text-[var(--color-text-secondary)]">
+      <div class="p-4 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl text-center shadow-sm">
+        <span class="text-[var(--color-text-secondary)] uppercase block font-bold">Volume Brut Total</span>
+        <span class="text-lg font-bold text-[var(--color-text-primary)] mt-1 block">{{ formatCurrency(grossVolume) }}</span>
       </div>
-      <div class="p-4 bg-[#14141E] border border-slate-800 rounded-xl text-center">
-        <span class="text-slate-500 uppercase tracking-widest block">Collection Inflows</span>
-        <span class="text-lg font-bold text-emerald-450 mt-1 block">{{ formatCurrency(inflows) }}</span>
+      <div class="p-4 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl text-center shadow-sm">
+        <span class="text-[var(--color-text-secondary)] uppercase block font-bold">Flux d'Entrée</span>
+        <span class="text-lg font-bold text-emerald-500 mt-1 block">{{ formatCurrency(inflows) }}</span>
       </div>
-      <div class="p-4 bg-[#14141E] border border-slate-800 rounded-xl text-center">
-        <span class="text-slate-500 uppercase tracking-widest block">Payout Outflows</span>
-        <span class="text-lg font-bold text-slate-300 mt-1 block">{{ formatCurrency(outflows) }}</span>
+      <div class="p-4 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl text-center shadow-sm">
+        <span class="text-[var(--color-text-secondary)] uppercase block font-bold">Flux de Sortie</span>
+        <span class="text-lg font-bold text-red-500 mt-1 block">{{ formatCurrency(outflows) }}</span>
       </div>
-      <div class="p-4 bg-[#14141E] border border-slate-800 rounded-xl text-center">
-        <span class="text-slate-500 uppercase tracking-widest block">Commission Collected</span>
-        <span class="text-lg font-bold text-indigo-400 mt-1 block">{{ formatCurrency(commissionsCount) }}</span>
+      <div class="p-4 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl text-center shadow-sm">
+        <span class="text-[var(--color-text-secondary)] uppercase block font-bold">Commissions Collectées</span>
+        <span class="text-lg font-bold text-[var(--color-primary)] mt-1 block">{{ formatCurrency(commissionsCount) }}</span>
       </div>
     </div>
 
     <!-- FILTERS AND QUERY CONTROLS -->
-    <div class="flex flex-col sm:flex-row items-center gap-3 bg-slate-900/60 p-4 rounded-xl border border-slate-850">
+    <div class="flex flex-col sm:flex-row items-center gap-3 bg-[var(--color-surface)] p-4 rounded-xl border border-[var(--color-border)] shadow-sm">
       <div class="relative flex-1 w-full">
         <input 
           type="text" 
           v-model="searchQuery"
-          placeholder="Lookup transactional references, recipient organizations..."
-          class="w-full bg-slate-950 border border-slate-850 rounded-lg p-2.5 pl-8 text-xs text-slate-100 placeholder-slate-700 focus:outline-none focus:border-indigo-500 font-mono transition"
+          placeholder="Rechercher par référence, bénéficiaire..."
+          class="w-full bg-[var(--color-background)] border border-[var(--color-border)] rounded-lg p-2.5 pl-8 text-xs text-[var(--color-text-primary)] placeholder-[var(--color-text-secondary)] focus:outline-none focus:border-[var(--color-primary)] font-mono transition"
         />
-        <span class="absolute left-3 top-3.5 text-slate-500">
-          <MagnifyingGlassIcon class="w-4 h-4 text-slate-500" />
+        <span class="absolute left-3 top-3.5 text-[var(--color-text-secondary)]">
+          <MagnifyingGlassIcon class="w-4 h-4" />
         </span>
       </div>
 
       <select 
         v-model="selectedType"
-        class="bg-slate-955 text-xs text-slate-400 rounded-lg p-2.5 font-mono border border-slate-800 focus:outline-none focus:border-indigo-500 w-full sm:w-48"
+        class="bg-[var(--color-background)] text-xs text-[var(--color-text-primary)] rounded-lg p-2.5 font-mono border border-[var(--color-border)] focus:outline-none focus:border-[var(--color-primary)] w-full sm:w-48"
       >
-        <option value="">All Transactions</option>
-        <option value="Collection">Inbound Collection</option>
-        <option value="Payout_Transfer">Outbound Payout</option>
+        <option value="">Toutes les transactions</option>
+        <option value="Collection">Encaissement entrant</option>
+        <option value="Payout_Transfer">Règlement sortant</option>
       </select>
     </div>
 
     <!-- TRANSACTIONS LIST -->
-    <div class="bg-[#14141E] border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+    <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden shadow-sm">
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse text-xs font-sans">
           <thead>
-            <tr class="text-[10px] font-mono text-slate-400 uppercase border-b border-slate-800 bg-slate-900/60">
-              <th class="p-3 pl-5">TX Reference</th>
-              <th class="p-3">Event Date</th>
-              <th class="p-3">Party Institution</th>
-              <th class="p-3">Payment Method</th>
-              <th class="p-3 text-right">Fee (XAF)</th>
-              <th class="p-3 text-right pr-5">Amount (XAF)</th>
+            <tr class="text-[10px] font-mono text-[var(--color-text-secondary)] uppercase border-b border-[var(--color-border)] bg-[var(--color-surface-elevated)]">
+              <th class="p-3 pl-5">Référence TX</th>
+              <th class="p-3">Date de l'Événement</th>
+              <th class="p-3">Partenaire / Institution</th>
+              <th class="p-3">Moyen de Paiement</th>
+              <th class="p-3 text-right">Frais (FCFA)</th>
+              <th class="p-3 text-right pr-5">Montant (FCFA)</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-slate-850">
+          <tbody class="divide-y divide-[var(--color-border)]">
             <tr 
-              v-for="(tx, idx) in paginatedTx" 
+              v-for="tx in paginatedTx" 
               :key="tx.id"
-              class="hover:bg-slate-900/30 text-slate-300 transition"
-              :class="idx % 2 === 0 ? 'bg-[#14141E]' : 'bg-[#181824]'"
+              class="hover:bg-[var(--color-surface-hover)]/40 text-[var(--color-text-primary)] transition"
             >
               <td class="p-3 pl-5">
-                <div class="font-mono text-[10.5px] text-indigo-450 font-semibold truncate max-w-[120px]">{{ tx.reference }}</div>
-                <div class="text-[9px] text-slate-500 font-mono">{{ tx.orderReference || 'BANK_AUTOCLEAR' }}</div>
+                <div class="font-mono text-[10.5px] text-[var(--color-primary)] font-semibold truncate max-w-[120px]">{{ tx.reference }}</div>
+                <div class="text-[9px] text-[var(--color-text-secondary)] font-mono">{{ tx.orderReference || 'TRAITEMENT_AUTO' }}</div>
               </td>
-              <td class="p-3 text-slate-400 font-mono">{{ formatDateTime(tx.processedAt) }}</td>
-              <td class="p-3 font-semibold text-slate-200">
-                {{ tx.recipientInstitution || 'Central Holding' }}
+              <td class="p-3 text-[var(--color-text-secondary)] font-mono">{{ formatDateTime(tx.processedAt) }}</td>
+              <td class="p-3 font-semibold text-[var(--color-text-primary)]">
+                {{ tx.recipientInstitution || 'Compte Central de Règlement' }}
               </td>
-              <td class="p-3 font-mono text-slate-400">
+              <td class="p-3 font-mono text-[var(--color-text-secondary)]">
                 {{ tx.paymentMethod }}
               </td>
-              <td class="p-3 text-right font-mono text-slate-400">
+              <td class="p-3 text-right font-mono text-[var(--color-text-secondary)]">
                 {{ formatCurrency(tx.fee || 0) }}
               </td>
-              <td class="p-3 text-right pr-5 font-mono font-bold" :class="tx.amount > 0 ? 'text-emerald-450' : 'text-slate-350'">
+              <td class="p-3 text-right pr-5 font-mono font-bold" :class="tx.amount > 0 ? 'text-emerald-500' : 'text-red-500'">
                 {{ tx.amount > 0 ? '+' : '' }}{{ formatCurrency(tx.amount) }}
               </td>
             </tr>
@@ -109,25 +108,25 @@
     </div>
 
     <!-- PAGINATION FOOTER -->
-    <div class="flex items-center justify-between text-xs font-mono text-slate-500 py-4 border-t border-slate-900 ml-1 shrink-0">
+    <div class="flex items-center justify-between text-xs font-mono text-[var(--color-text-secondary)] py-4 border-t border-[var(--color-border)] ml-1 shrink-0">
       <div class="flex items-center space-x-2">
         <button 
           @click="page = Math.max(1, page - 1)" 
-          class="px-2.5 py-1 bg-slate-950 hover:bg-slate-900 border border-slate-850 rounded text-[10px] transition"
+          class="px-2.5 py-1 bg-[var(--color-surface)] hover:bg-[var(--color-surface-hover)] border border-[var(--color-border)] rounded text-[10px] transition text-[var(--color-text-primary)] cursor-pointer"
           :disabled="page === 1"
         >
-          &larr; Prev
+          &larr; Précédent
         </button>
-        <span>Page {{ page }} of {{ totalPages }}</span>
+        <span>Page {{ page }} sur {{ totalPages }}</span>
         <button 
           @click="page = Math.min(totalPages, page + 1)" 
-          class="px-2.5 py-1 bg-slate-950 hover:bg-slate-900 border border-slate-850 rounded text-[10px] transition"
+          class="px-2.5 py-1 bg-[var(--color-surface)] hover:bg-[var(--color-surface-hover)] border border-[var(--color-border)] rounded text-[10px] transition text-[var(--color-text-primary)] cursor-pointer"
           :disabled="page === totalPages"
         >
-          Next &rarr;
+          Suivant &rarr;
         </button>
       </div>
-      <span>Listed transactions filtered: {{ filteredTx.length }}</span>
+      <span>Transactions filtrées : {{ filteredTx.length }}</span>
     </div>
 
   </div>
@@ -189,7 +188,7 @@ const paginatedTx = computed(() => {
 });
 
 function formatCurrency(v) {
-  return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XAF', maximumFractionDigits: 0 }).format(v);
+  return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XAF', maximumFractionDigits: 0 }).format(v).replace('XAF', 'FCFA');
 }
 
 function formatDateTime(isoStr) {
@@ -199,6 +198,6 @@ function formatDateTime(isoStr) {
 }
 
 function simulateCSVExport() {
-  toast.success('Compiling transaction ledger blocks... CSV downloaded! (Simulated)');
+  toast.success('Compilation des transactions en cours... Fichier CSV téléchargé ! (Simulé)');
 }
 </script>

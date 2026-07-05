@@ -391,6 +391,12 @@ const rawMenuStructure = [
         to: '/distributor/products'
       },
       {
+        id: 'storefront',
+        name: 'Ma Boutique Marketplace',
+        icon: BuildingStorefrontIcon,
+        to: '/distributor/storefront'
+      },
+      {
         id: 'clients',
         name: 'Clients (Vendeurs)',
         icon: UserGroupIcon,
@@ -426,7 +432,8 @@ const rawMenuStructure = [
         children: [
           { name: 'Bons de Commande', to: '/distributor/purchases', icon: DocumentTextIcon },
           { name: 'Nouveau Bon', to: '/distributor/purchases/create', icon: DocumentPlusIcon },
-          { name: 'Bons de Livraison', to: '/distributor/purchases/delivery-notes', icon: TruckIcon }
+          { name: 'Bons de Livraison', to: '/distributor/purchases/delivery-notes', icon: TruckIcon },
+          { name: 'Réception de Fret', to: '/distributor/purchases/receive/select', icon: ArrowDownTrayIcon }
         ]
       }
     ]

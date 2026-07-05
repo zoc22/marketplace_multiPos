@@ -36,7 +36,7 @@
               <th class="p-4">Date de livraison prévue</th>
               <th class="p-4">Mode Paiement</th>
               <th class="p-4 text-right">Montant Total</th>
-              <th class="p-4 text-center">Statut Logistique</th>
+              <th class="p-4 text-center">Statut</th>
               <th class="p-4 text-right">Actions</th>
             </tr>
           </thead>
@@ -57,11 +57,11 @@
               </td>
               <td class="p-4 text-right font-bold text-[var(--color-text-primary)] font-mono">{{ formatMoney(po.total) }}</td>
               <td class="p-4 text-center">
-                <span class="px-2.5 py-1 rounded-full text-xs font-bold border inline-block" :class="{
-                  'bg-emerald-500/25 text-emerald-300 border-emerald-500/40': po.status === 'Received',
-                  'bg-sky-500/25 text-sky-300 border-sky-500/40': po.status === 'In Transit',
-                  'bg-amber-500/25 text-amber-300 border-amber-500/40': po.status === 'Sent',
-                  'bg-slate-500/25 text-slate-300 border-slate-500/40': po.status === 'Draft'
+                <span class="px-2.5 py-1 rounded-full text-xs font-semibold border inline-block" :class="{
+                  'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20': po.status === 'Received',
+                  'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-500/10 dark:text-blue-400 dark:border-blue-500/20': po.status === 'In Transit',
+                  'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/20': po.status === 'Sent',
+                  'bg-slate-50 text-slate-700 border-slate-200 dark:bg-slate-500/10 dark:text-slate-400 dark:border-slate-500/20': po.status === 'Draft'
                 }">
                   {{ po.status === 'Received' ? 'Reçu (Entré)' : po.status === 'In Transit' ? 'En cours de livraison' : po.status === 'Sent' ? 'Envoyé' : po.status }}
                 </span>
@@ -114,9 +114,9 @@
         <div class="p-6 border-b border-[var(--color-border)] flex justify-between items-center bg-[var(--color-surface-elevated)]">
           <div>
             <h3 class="text-xl font-bold text-[var(--color-text-primary)]">Créer un Approvisionnement Multi-Fournisseurs</h3>
-            <p class="text-xs text-[var(--color-text-secondary)] mt-1">Cochez les fournisseurs et sélectionnez leurs articles pour générer des bons.</p>
+            <p class="text-xs text-[var(--color-text-secondary)] mt-1">Configurez vos bons de commande groupés par fournisseur.</p>
           </div>
-          <button @click="isCreateModalOpen = false" class="text-[var(--color-text-muted)] hover:text-red-500"><XMarkIcon class="h-6 w-6"/></button>
+          <button @click="isCreateModalOpen = false" class="text-[var(--color-text-muted)] hover:text-red-500 cursor-pointer"><XMarkIcon class="h-6 w-6"/></button>
         </div>
 
         <form @submit.prevent="saveMultiPO" class="flex-1 overflow-y-auto p-6 space-y-6 bg-[var(--color-background)]">
@@ -135,111 +135,130 @@
             </div>
           </div>
 
-          <!-- Suppliers Checkboxes -->
-          <div>
-            <label class="block text-xs font-bold text-[var(--color-text-secondary)] uppercase tracking-wider mb-2">Fournisseurs Disponibles</label>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div 
-                v-for="sup in b2b_suppliers" 
-                :key="sup.id" 
-                @click="toggleSupplier(sup)"
-                class="p-4 border rounded-xl cursor-pointer transition flex items-center justify-between"
-                :class="isSupplierSelected(sup.id) ? 'bg-[var(--color-primary-muted)] border-[var(--color-primary-border)] text-[var(--color-primary)]' : 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)]'"
-              >
-                <div class="flex items-center space-x-3">
-                  <input type="checkbox" :checked="isSupplierSelected(sup.id)" class="rounded text-[var(--color-primary)] focus:ring-[var(--color-primary)] h-4 w-4" @click.stop="toggleSupplier(sup)" />
-                  <div>
-                    <span class="font-bold text-sm block">{{ sup.name }}</span>
-                    <span class="text-[10px] uppercase font-bold text-[var(--color-text-muted)]">{{ sup.category }}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Selected Suppliers Blocks -->
-          <div v-if="selectedSuppliersData.length > 0" class="space-y-6">
-            <h4 class="text-xs font-bold text-[var(--color-text-secondary)] uppercase tracking-wider border-b border-[var(--color-border)] pb-1">Détails des articles par fournisseur</h4>
-            
-            <div v-for="sData in selectedSuppliersData" :key="sData.supplierId" class="border border-[var(--color-border)] rounded-xl bg-[var(--color-surface)] overflow-hidden">
+          <!-- Grouped Suppliers Blocks -->
+          <div class="space-y-6">
+            <div v-for="(sData, sIdx) in selectedSuppliersData" :key="sIdx" class="border border-[var(--color-border)] rounded-xl bg-[var(--color-surface)] overflow-hidden shadow-sm">
               <div class="p-4 bg-[var(--color-surface-hover)] border-b border-[var(--color-border)] flex justify-between items-center">
-                <div>
-                  <span class="font-bold text-[var(--color-text-primary)]">{{ getSupplierName(sData.supplierId) }}</span>
-                  <span class="ml-2 px-2 py-0.5 bg-[var(--color-background)] border rounded text-[10px] uppercase font-bold text-[var(--color-text-muted)]">{{ getSupplierCategory(sData.supplierId) }}</span>
+                <div class="flex items-center space-x-3 flex-1 max-w-md">
+                  <span class="text-xs font-black text-[var(--color-text-secondary)]">FOURNISSEUR #{{ sIdx + 1 }}</span>
+                  <select 
+                    v-model="sData.supplierId" 
+                    @change="onSupplierChange(sIdx)"
+                    required
+                    class="flex-1 p-1.5 bg-[var(--color-surface)] border border-[var(--color-border)] rounded text-xs font-bold text-[var(--color-text-primary)]"
+                  >
+                    <option value="" disabled>-- Sélectionner un fournisseur --</option>
+                    <option v-for="sup in b2b_suppliers" :key="sup.id" :value="sup.id">
+                      {{ sup.name }} (Catégorie : {{ sup.category }})
+                    </option>
+                  </select>
                 </div>
-                <button type="button" @click="toggleSupplier({ id: sData.supplierId })" class="text-xs text-red-500 hover:underline">Retirer ce fournisseur</button>
+                <button 
+                  type="button" 
+                  @click="removeSupplierBlock(sIdx)" 
+                  class="text-xs text-red-500 hover:underline cursor-pointer"
+                >
+                  Supprimer ce bloc
+                </button>
               </div>
 
-              <div class="p-4 space-y-4">
-                <label class="block text-[11px] font-bold text-[var(--color-text-secondary)] uppercase">Sélectionnez les articles :</label>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <div 
-                    v-for="p in getProductsBySupplierCategory(sData.supplierId)" 
-                    :key="p.id"
-                    @click="toggleProductInSupplier(sData.supplierId, p)"
-                    class="p-3 border rounded-lg cursor-pointer transition flex items-center justify-between"
-                    :class="isProductSelectedInSupplier(sData.supplierId, p.id) ? 'bg-[var(--color-background)] border-[var(--color-primary-border)]' : 'bg-[var(--color-background)] border-[var(--color-border)] opacity-70 hover:opacity-100'"
-                  >
-                    <div class="flex items-center space-x-2.5">
-                      <input type="checkbox" :checked="isProductSelectedInSupplier(sData.supplierId, p.id)" class="rounded text-[var(--color-primary)]" @click.stop="toggleProductInSupplier(sData.supplierId, p)" />
-                      <div>
-                        <span class="font-semibold text-xs block text-[var(--color-text-primary)]">{{ p.name }}</span>
-                        <span class="text-[10px] text-[var(--color-text-muted)] font-mono">Stock Magasin : {{ p.stock }}</span>
-                      </div>
-                    </div>
-                    <span class="text-xs font-bold text-[var(--color-text-secondary)]">{{ formatMoney(p.price * 0.8) }} <span class="text-[9px] font-normal text-slate-400">gros</span></span>
-                  </div>
-                </div>
+              <!-- Product Lines for this supplier block -->
+              <div class="p-4 space-y-3" v-if="sData.supplierId">
+                <table class="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr class="bg-[var(--color-surface-hover)] text-[10px] font-bold text-[var(--color-text-secondary)] uppercase border-b border-[var(--color-border)]">
+                      <th class="p-2 w-1/2">Produit</th>
+                      <th class="p-2 text-center w-20">Quantité</th>
+                      <th class="p-2 text-right w-32">Coût Unitaire (FCFA)</th>
+                      <th class="p-2 text-right w-36">Total HT</th>
+                      <th class="p-2 text-center w-10"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(item, pIdx) in sData.items" :key="pIdx" class="border-b border-[var(--color-border)]/50">
+                      <td class="p-2">
+                        <select 
+                          v-model="item.productId"
+                          @change="updateProductPrice(sIdx, pIdx)"
+                          required
+                          class="w-full p-1 bg-[var(--color-background)] border border-[var(--color-border)] rounded text-xs text-[var(--color-text-primary)]"
+                        >
+                          <option value="" disabled>-- Sélectionner un produit --</option>
+                          <option v-for="p in getProductsBySupplierCategory(sData.supplierId)" :key="p.id" :value="p.id">
+                            {{ p.name }} (Stock : {{ p.stock }})
+                          </option>
+                        </select>
+                      </td>
+                      <td class="p-2 text-center">
+                        <input 
+                          type="number" 
+                          v-model.number="item.quantity"
+                          min="1"
+                          required
+                          class="w-full p-1 bg-[var(--color-background)] border border-[var(--color-border)] rounded text-xs font-bold text-center text-[var(--color-text-primary)]"
+                        />
+                      </td>
+                      <td class="p-2">
+                        <input 
+                          type="number" 
+                          v-model.number="item.unitCost"
+                          min="0"
+                          required
+                          class="w-full p-1 bg-[var(--color-background)] border border-[var(--color-border)] rounded text-xs font-bold text-right text-[var(--color-text-primary)] font-mono"
+                        />
+                      </td>
+                      <td class="p-2 text-right font-bold text-[var(--color-text-primary)] font-mono">
+                        {{ formatMoney(item.quantity * item.unitCost) }}
+                      </td>
+                      <td class="p-2 text-center">
+                        <button 
+                          type="button" 
+                          @click="removeProductRow(sIdx, pIdx)" 
+                          class="text-red-500 hover:text-red-750 cursor-pointer"
+                        >
+                          ✕
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
 
-                <!-- Quantities and Costs inputs for Checked Products -->
-                <div v-if="sData.items.length > 0" class="mt-4 pt-4 border-t border-[var(--color-border)] space-y-3">
-                  <h5 class="text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">Configuration Quantités &amp; Coûts</h5>
-                  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                    <div v-for="item in sData.items" :key="item.productId" class="p-3 bg-[var(--color-background)] border border-[var(--color-border)] rounded-xl space-y-2 relative">
-                      <button type="button" @click="removeProductFromSupplier(sData.supplierId, item.productId)" class="absolute top-2 right-2 text-slate-400 hover:text-red-500"><XMarkIcon class="h-4.5 w-4.5"/></button>
-                      <div class="font-bold text-xs text-[var(--color-text-primary)] truncate pr-4">{{ getProductName(item.productId) }}</div>
-                      
-                      <div class="grid grid-cols-2 gap-2">
-                        <div>
-                          <label class="block text-[9px] uppercase font-bold text-slate-400">Quantité</label>
-                          <input type="number" v-model.number="item.quantity" min="1" required class="w-full p-1 bg-[var(--color-surface)] border border-[var(--color-border)] rounded text-xs font-bold text-center" />
-                        </div>
-                        <div>
-                          <label class="block text-[9px] uppercase font-bold text-slate-400">Coût U (FCFA)</label>
-                          <input type="number" v-model.number="item.unitCost" min="1" required class="w-full p-1 bg-[var(--color-surface)] border border-[var(--color-border)] rounded text-xs font-bold text-right font-mono" />
-                        </div>
-                      </div>
-                      <div class="text-[10px] text-right font-bold text-[var(--color-primary)]">
-                        S-Total: {{ formatMoney(item.quantity * item.unitCost) }}
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div class="text-right font-bold text-xs text-[var(--color-text-primary)] mt-2">
-                    Total Fournisseur estimé : <span class="text-sm font-black text-[var(--color-primary)]">{{ formatMoney(getSupplierTotal(sData)) }}</span>
+                <div class="flex justify-between items-center pt-2">
+                  <button 
+                    type="button" 
+                    @click="addProductRow(sIdx)"
+                    class="px-3 py-1 bg-[var(--color-primary-muted)] text-[var(--color-primary)] hover:opacity-90 rounded text-xs font-bold transition flex items-center space-x-1 cursor-pointer"
+                  >
+                    <span>+ Ajouter un produit</span>
+                  </button>
+                  <div class="text-right text-xs font-bold text-[var(--color-text-primary)]">
+                    Sous-total Fournisseur : <span class="text-sm font-black text-[var(--color-primary)] font-mono">{{ formatMoney(getSupplierTotal(sData)) }}</span>
                   </div>
                 </div>
-                <div v-else class="text-xs text-[var(--color-text-muted)] italic text-center py-4 bg-[var(--color-background)] rounded-lg">
-                  Aucun article sélectionné pour ce fournisseur.
-                </div>
+              </div>
+              <div v-else class="p-8 text-center text-xs text-[var(--color-text-muted)] italic">
+                Sélectionnez un fournisseur pour configurer ses articles.
               </div>
             </div>
-          </div>
-          <div v-else class="text-center py-12 text-slate-400 bg-[var(--color-surface)] border rounded-2xl border-dashed">
-            <InboxArrowDownIcon class="h-10 w-10 mx-auto opacity-30 mb-2" />
-            <span>Sélectionnez au moins un fournisseur ci-dessus pour composer votre bon.</span>
+            
+            <button 
+              type="button" 
+              @click="addSupplierBlock" 
+              class="w-full py-3 bg-[var(--color-surface-hover)] border-2 border-dashed border-[var(--color-border)] text-xs text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] hover:border-[var(--color-primary-border)] hover:bg-[var(--color-primary-muted)] rounded-xl font-bold transition flex items-center justify-center space-x-2 cursor-pointer"
+            >
+              <span>+ Ajouter un autre fournisseur</span>
+            </button>
           </div>
 
           <!-- Global estimation and controls -->
           <div class="pt-6 border-t border-[var(--color-border)] flex flex-col sm:flex-row justify-between items-center gap-4 bg-[var(--color-surface-elevated)] p-4 rounded-2xl">
             <div>
-              <span class="text-xs font-bold text-[var(--color-text-secondary)] block uppercase">Estimation Globale ({{ totalFormPOToCreate }} Bons de commande)</span>
-              <span class="text-2xl font-black text-[var(--color-primary)]">{{ formatMoney(globalEstimatedTotal) }}</span>
+              <span class="text-xs font-bold text-[var(--color-text-secondary)] block uppercase">Estimation Globale</span>
+              <span class="text-2xl font-black text-[var(--color-primary)] font-mono">{{ formatMoney(globalEstimatedTotal) }}</span>
             </div>
             <div class="flex space-x-3">
-              <button type="button" @click="isCreateModalOpen = false" class="px-5 py-2.5 bg-[var(--color-surface)] border border-[var(--color-border)] text-sm rounded-xl font-bold hover:bg-[var(--color-surface-hover)]">Annuler</button>
-              <button type="submit" :disabled="!isFormPOValid" class="px-6 py-2.5 bg-[var(--color-primary)] text-white font-bold text-sm rounded-xl hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm flex items-center space-x-2">
+              <button type="button" @click="isCreateModalOpen = false" class="px-5 py-2.5 bg-[var(--color-surface)] border border-[var(--color-border)] text-sm rounded-xl font-bold hover:bg-[var(--color-surface-hover)] cursor-pointer">Annuler</button>
+              <button type="submit" :disabled="!isFormPOValid" class="px-6 py-2.5 bg-[var(--color-primary)] text-white font-bold text-sm rounded-xl hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm flex items-center space-x-2 cursor-pointer">
                 <CheckCircleIcon class="h-5 w-5" />
                 <span>Confirmer &amp; Envoyer les bons</span>
               </button>
@@ -546,80 +565,79 @@ const formConfig = ref({
   expectedDate: '',
   paymentMethod: 'Escrow'
 });
-const selectedSuppliers = ref([]); // List of supplierIds
 const selectedSuppliersData = ref([]); // [{ supplierId, items: [{ productId, quantity, unitCost }] }]
 
 function openCreateModal() {
   formConfig.value.expectedDate = '';
   formConfig.value.paymentMethod = 'Escrow';
-  selectedSuppliers.value = [];
-  selectedSuppliersData.value = [];
+  selectedSuppliersData.value = [
+    { supplierId: '', items: [{ productId: '', quantity: 10, unitCost: 0 }] }
+  ];
   isCreateModalOpen.value = true;
 }
 
-function isSupplierSelected(supplierId) {
-  return selectedSuppliers.value.includes(supplierId);
+function addSupplierBlock() {
+  selectedSuppliersData.value.push({
+    supplierId: '',
+    items: [{ productId: '', quantity: 10, unitCost: 0 }]
+  });
 }
 
-function toggleSupplier(sup) {
-  const idx = selectedSuppliers.value.indexOf(sup.id);
-  if (idx > -1) {
-    selectedSuppliers.value.splice(idx, 1);
-    selectedSuppliersData.value = selectedSuppliersData.value.filter(d => d.supplierId !== sup.id);
-  } else {
-    selectedSuppliers.value.push(sup.id);
-    // Initialize supplier data block with a default product if available
-    const possibleProds = getProductsBySupplierCategory(sup.id);
-    const initialItems = [];
-    if (possibleProds.length > 0) {
-      initialItems.push({
-        productId: possibleProds[0].id,
-        quantity: 10,
-        unitCost: Math.round(possibleProds[0].price * 0.8) // wholesale pricing simulation
-      });
-    }
-    selectedSuppliersData.value.push({
-      supplierId: sup.id,
-      items: initialItems
-    });
+function removeSupplierBlock(sIdx) {
+  selectedSuppliersData.value.splice(sIdx, 1);
+  if (selectedSuppliersData.value.length === 0) {
+    addSupplierBlock();
   }
 }
 
-function isProductSelectedInSupplier(supplierId, productId) {
-  const block = selectedSuppliersData.value.find(d => d.supplierId === supplierId);
-  if (!block) return false;
-  return block.items.some(i => i.productId === productId);
+function addProductRow(sIdx) {
+  selectedSuppliersData.value[sIdx].items.push({
+    productId: '',
+    quantity: 10,
+    unitCost: 0
+  });
 }
 
-function toggleProductInSupplier(supplierId, product) {
-  const block = selectedSuppliersData.value.find(d => d.supplierId === supplierId);
-  if (!block) return;
-  
-  const existingIdx = block.items.findIndex(i => i.productId === product.id);
-  if (existingIdx > -1) {
-    block.items.splice(existingIdx, 1);
-  } else {
-    block.items.push({
-      productId: product.id,
+function removeProductRow(sIdx, pIdx) {
+  selectedSuppliersData.value[sIdx].items.splice(pIdx, 1);
+  if (selectedSuppliersData.value[sIdx].items.length === 0) {
+    addProductRow(sIdx);
+  }
+}
+
+function onSupplierChange(sIdx) {
+  const block = selectedSuppliersData.value[sIdx];
+  const prods = getProductsBySupplierCategory(block.supplierId);
+  if (prods.length > 0) {
+    block.items = [{
+      productId: prods[0].id,
       quantity: 10,
-      unitCost: Math.round(product.price * 0.8)
-    });
+      unitCost: Math.round(prods[0].price * 0.8)
+    }];
+  } else {
+    block.items = [{
+      productId: '',
+      quantity: 10,
+      unitCost: 0
+    }];
   }
 }
 
-function removeProductFromSupplier(supplierId, productId) {
-  const block = selectedSuppliersData.value.find(d => d.supplierId === supplierId);
-  if (block) {
-    block.items = block.items.filter(i => i.productId !== productId);
+function updateProductPrice(sIdx, pIdx) {
+  const item = selectedSuppliersData.value[sIdx].items[pIdx];
+  const prod = products.value.find(p => p.id === item.productId);
+  if (prod) {
+    item.unitCost = Math.round(prod.price * 0.8);
   }
 }
 
 const getSupplierTotal = (sData) => {
-  return sData.items.reduce((sum, item) => sum + (item.quantity * item.unitCost), 0);
+  if (!sData.items) return 0;
+  return sData.items.reduce((sum, item) => sum + ((item.quantity || 0) * (item.unitCost || 0)), 0);
 };
 
 const totalFormPOToCreate = computed(() => {
-  return selectedSuppliersData.value.filter(d => d.items.length > 0).length;
+  return selectedSuppliersData.value.filter(d => d.supplierId && d.items.length > 0).length;
 });
 
 const globalEstimatedTotal = computed(() => {
@@ -629,7 +647,7 @@ const globalEstimatedTotal = computed(() => {
 const isFormPOValid = computed(() => {
   return formConfig.value.expectedDate && 
          selectedSuppliersData.value.length > 0 &&
-         selectedSuppliersData.value.every(d => d.items.length > 0 && d.items.every(i => i.quantity > 0 && i.unitCost > 0));
+         selectedSuppliersData.value.every(d => d.supplierId && d.items.length > 0 && d.items.every(i => i.productId && i.quantity > 0 && i.unitCost > 0));
 });
 
 function saveMultiPO() {

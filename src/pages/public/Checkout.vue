@@ -257,8 +257,11 @@ import {
 // Import components
 import PublicHeader from '@/components/PublicHeader.vue';
 
+import { useOrdersStore } from '@/store/modules/orders.js';
+
 const cartStore = useCartStore();
 const authStore = useAuthStore();
+const ordersStore = useOrdersStore();
 const router = useRouter();
 const toast = useToast();
 
@@ -316,6 +319,44 @@ function submitEscrowOrder() {
   setTimeout(() => {
     isProcessing.value = false;
     toast.success('Séquestration Fiduciaire validée! Commande enregistrée.');
+
+    const orderItems = cartStore.items.map(item => ({
+      product_id: item.id,
+      name: item.name,
+      quantity: item.quantity,
+      unit_price: item.price,
+      total: item.quantity * item.price
+    }));
+
+    // Create purchase order for buyer B2C order
+    const newPO = ordersStore.createPurchaseOrder({
+      emitter_id: authStore.user?.id || 'usr_buyer_1',
+      emitter_type: 'buyer',
+      receiver_id: cartStore.items[0]?.supplierId || 'usr_vendor_1',
+      receiver_type: 'vendor',
+      date_emission: new Date().toISOString(),
+      products: orderItems,
+      total: grandTotal.value,
+      status: 'PENDING',
+      payment_method: 'ESCROW',
+      shipping_address: checkoutForm.warehouse === 'douala' ? 'Zone Industrielle Akwa, Douala' : 'Zone Industrielle Mvan, Yaoundé'
+    });
+
+    // Add Escrow Payment entry
+    try {
+      import('@/store/modules/payments.js').then(({ usePaymentsStore }) => {
+        const paymentsStore = usePaymentsStore();
+        paymentsStore.escrowPayments.push({
+          id: `ESC-B2C-${Date.now()}`,
+          purchase_order_id: newPO.id,
+          amount: newPO.total,
+          status: 'ESCROWED',
+          date_created: new Date().toISOString()
+        });
+      });
+    } catch (e) {
+      console.log('Payment registration skipped', e);
+    }
     
     // Purge cart
     cartStore.clearCart();
