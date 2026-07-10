@@ -115,7 +115,7 @@
                       type="number" 
                       v-model="inputReceivedAmount"
                       placeholder="Ex: 5000"
-                      class="w-full bg-slate-900 border border-slate-800 text-emerald-400 px-3 py-2 pl-14 rounded-lg text-xs focus:outline-none focus:border-slate-700 font-bold font-mono"
+                      class="w-full bg-slate-900 border border-slate-800 text-emerald-400 px-3 py-2 pl-16 rounded-lg text-xs focus:outline-none focus:border-slate-700 font-bold font-mono"
                     />
                     <span class="absolute left-3 top-2 text-slate-600 text-[10px]">FCFA</span>
                   </div>

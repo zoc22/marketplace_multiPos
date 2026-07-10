@@ -169,7 +169,7 @@
               <!-- Zone KYC Compliance (Optionnelle) -->
               <div class="bg-[var(--color-surface-elevated)] p-6 rounded-3xl border border-[var(--color-border)] mt-4">
                 <h4 class="text-sm font-black uppercase tracking-wide text-[var(--color-text-primary)] mb-2 flex items-center gap-2">
-                  <DocumentCheckIcon class="h-6 w-6 text-[#C8A96E]" />
+                  <!-- <DocumentCheckIcon class="h-6 w-6 text-[#C8A96E]" /> -->
                   Documents KYC (Optionnel - Pour badge officiel)
                 </h4>
                 <p class="text-xs text-[var(--color-text-tertiary)] mb-6">Ajoutez vos documents (Kbis, Statuts, Pièce d'identité) un par un.</p>
@@ -177,7 +177,8 @@
                 <ul v-if="formData.documents.length > 0" class="mb-6 space-y-3">
                   <li v-for="(doc, index) in formData.documents" :key="index" class="flex items-center justify-between bg-[var(--color-background)] p-4 rounded-xl border border-[var(--color-border)] text-sm shadow-sm">
                     <span class="flex items-center gap-3 truncate text-[var(--color-text-secondary)] font-medium">
-                      <DocumentIcon class="h-5 w-5 text-[#C8A96E]" /> {{ doc.name }}
+                      <!-- <DocumentIcon class="h-5 w-5 text-[#C8A96E]" />  -->
+                      {{ doc.name }}
                     </span>
                     <div class="flex items-center gap-4">
                       <button type="button" @click="previewDoc(doc)" class="text-[#C8A96E] hover:underline text-xs font-bold uppercase">Aperçu</button>
@@ -213,7 +214,7 @@
             <!-- CAPTCHA BOX DISPLAY -->
             <div class="bg-[var(--color-surface-elevated)] p-5 rounded-2xl border border-[var(--color-border)] flex flex-col items-center justify-center max-w-sm mx-auto">
               <span class="text-xs text-[var(--color-text-secondary)] uppercase font-bold tracking-widest mb-3 flex items-center gap-2">
-                <ShieldCheckIcon class="h-4 w-4 text-[#C8A96E]" />
+            <ShieldCheckIcon class="h-4 w-4 text-[#C8A96E]" />
                 Code de sécurité anti-robot
               </span>
               <div class="text-4xl font-mono font-black text-[#C8A96E] tracking-[0.5em] pl-4 select-none bg-[var(--color-background)]/50 px-6 py-4 rounded-xl border border-[var(--color-border)] shadow-inner">
@@ -340,7 +341,8 @@ import {
   XMarkIcon,
   ArrowUpTrayIcon,
   DevicePhoneMobileIcon,
-  KeyIcon
+  KeyIcon,
+  ShieldCheckIcon
 } from '@heroicons/vue/24/outline';
 import { continents as geoContinents, countries as geoCountries, citiesByCountry as geoCities } from '@/utils/geo_data.js';
 

@@ -100,9 +100,11 @@
 <script setup>
 import { computed, onMounted } from 'vue';
 import { useOrdersStore } from '@/store/modules/orders.js';
+import { useAuthStore } from '@/store/modules/auth.js';
 import { useToast } from 'vue-toastification';
 import { PlusIcon, EyeIcon, XMarkIcon, CheckIcon } from '@heroicons/vue/24/outline';
 
+const authStore = useAuthStore();
 const ordersStore = useOrdersStore();
 const toast = useToast();
 
@@ -116,7 +118,9 @@ const getDeliveryNoteForPO = (poId) => {
 
 const emittedPurchases = computed(() => {
   // Filters purchase orders where we are the emitter (e.g. buyer or distributor buying from other distributor)
-  return ordersStore.purchaseOrders.filter(o => o.emitter_type === 'distributor' || o.emitter_id === 'dist_1');
+  return ordersStore.purchaseOrders.filter(o => 
+    o.emitter_id === authStore.user?.id || o.emitter_id === authStore.user?.tenant
+  );
 });
 
 const cancelPO = (id) => {

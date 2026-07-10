@@ -269,7 +269,9 @@
 import { ref, computed } from 'vue';
 import { transactions } from '@/utils/vendor_db.js';
 import { useOrdersStore } from '@/store/modules/orders.js';
+import { useAuthStore } from '@/store/modules/auth.js';
 
+const authStore = useAuthStore();
 const ordersStore = useOrdersStore();
 const activeTab = ref('b2c');
 const searchQuery = ref('');
@@ -284,10 +286,11 @@ const pendingB2BCount = computed(() => {
 });
 
 const b2bOrders = computed(() => {
-  // Vendor orders received on the marketplace
-  return ordersStore.purchaseOrders.filter(po => 
-    po.receiver_type === 'vendor' || po.receiver_id === 'usr_vendor_1' || po.receiver_id === 'vendor_1'
-  );
+  return ordersStore.purchaseOrders.filter(po => {
+    const isPrimaryReceiver = po.receiver_id === authStore.user?.id || po.receiver_id === authStore.user?.tenant;
+    const hasSupplierItem = (po.products || []).some(p => p.supplierId === authStore.user?.id || p.supplierId === authStore.user?.tenant);
+    return isPrimaryReceiver || hasSupplierItem;
+  });
 });
 
 const filteredTransactions = computed(() => {

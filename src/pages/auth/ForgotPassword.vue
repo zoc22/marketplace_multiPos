@@ -23,7 +23,7 @@
             v-model="email" 
             required
             aria-label="Email"
-            class="w-full bg-[var(--color-background)] border border-[var(--color-border)] rounded-2xl py-4 pl-14 pr-4 text-[var(--color-text-primary)] text-base focus:ring-2 focus:ring-[#C8A96E] focus:border-transparent transition-all placeholder-[var(--color-text-tertiary)]"
+            class="w-full bg-[var(--color-background)] border border-[var(--color-border)] rounded-2xl py-4 pl-16 pr-4 text-[var(--color-text-primary)] text-base focus:ring-2 focus:ring-[#C8A96E] focus:border-transparent transition-all placeholder-[var(--color-text-tertiary)]"
             placeholder="votre.email@entreprise.com" 
           />
         </div>

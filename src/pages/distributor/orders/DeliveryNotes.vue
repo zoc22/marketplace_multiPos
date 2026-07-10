@@ -82,13 +82,18 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
 import { useOrdersStore } from '@/store/modules/orders.js';
+import { useAuthStore } from '@/store/modules/auth.js';
 import { ArrowLeftIcon, ChevronRightIcon, EyeIcon } from '@heroicons/vue/24/outline';
 
+const authStore = useAuthStore();
 const ordersStore = useOrdersStore();
 
-const deliveryNotes = computed(() => ordersStore.deliveryNotes);
+const deliveryNotes = computed(() => {
+  return ordersStore.deliveryNotes.filter(dn => 
+    dn.emitter_id === authStore.user?.id || dn.emitter_id === authStore.user?.tenant
+  );
+});
 
 const getPOReference = (poId) => {
   const po = ordersStore.purchaseOrders.find(o => o.id === poId);

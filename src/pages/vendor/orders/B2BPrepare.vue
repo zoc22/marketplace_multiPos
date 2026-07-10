@@ -46,13 +46,23 @@ import { useToast } from 'vue-toastification';
 import { ArrowLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/outline';
 import DeliveryNoteForm from '@/components/distributor/DeliveryNoteForm.vue';
 
+import { useAuthStore } from '@/store/modules/auth.js';
+
 const route = useRoute();
 const router = useRouter();
 const toast = useToast();
 const ordersStore = useOrdersStore();
+const authStore = useAuthStore();
 
 const order = computed(() => {
-  return ordersStore.purchaseOrders.find(o => o.id === route.params.id);
+  const rawOrder = ordersStore.purchaseOrders.find(o => o.id === route.params.id);
+  if (!rawOrder) return null;
+  const cloned = JSON.parse(JSON.stringify(rawOrder));
+  if (cloned.products) {
+    cloned.products = cloned.products.filter(p => p.supplierId === authStore.user?.id || p.supplierId === authStore.user?.tenant);
+  }
+  cloned.total = cloned.products.reduce((acc, p) => acc + (p.quantity * p.unit_price), 0);
+  return cloned;
 });
 
 const onGenerateDN = (data) => {

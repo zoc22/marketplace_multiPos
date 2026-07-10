@@ -77,14 +77,22 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useNotificationsStore } from '@/store/modules/notifications.js';
+import { useAuthStore } from '@/store/modules/auth.js';
 import { BellIcon } from '@heroicons/vue/24/outline';
 
+const authStore = useAuthStore();
 const notificationsStore = useNotificationsStore();
 const isDropdownOpen = ref(false);
 const bellContainer = ref(null);
 
-const notifications = computed(() => notificationsStore.notifications);
-const unreadCount = computed(() => notificationsStore.unreadCount);
+const notifications = computed(() => {
+  return notificationsStore.notifications.filter(n => 
+    !n.receiver_id || n.receiver_id === authStore.user?.id || n.receiver_id === authStore.user?.tenant
+  );
+});
+const unreadCount = computed(() => {
+  return notifications.value.filter(n => !n.read).length;
+});
 
 function handleClickOutside(event) {
   if (bellContainer.value && !bellContainer.value.contains(event.target)) {

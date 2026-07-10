@@ -135,7 +135,7 @@ async function handleReset() {
 
 <style scoped>
 .input-custom {
-  padding: 14px 16px 14px 46px;
+  padding: 14px 16px 14px 56px;
   border-radius: 0px !important;
   transition: all 0.2s ease;
 }

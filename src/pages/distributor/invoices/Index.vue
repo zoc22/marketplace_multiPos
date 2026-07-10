@@ -81,14 +81,21 @@
 import { computed } from 'vue';
 import { useInvoicesStore } from '@/store/modules/invoices.js';
 import { useOrdersStore } from '@/store/modules/orders.js';
+import { useAuthStore } from '@/store/modules/auth.js';
 import { EyeIcon, PrinterIcon } from '@heroicons/vue/24/outline';
 import { useToast } from 'vue-toastification';
 
+const authStore = useAuthStore();
 const invoicesStore = useInvoicesStore();
 const ordersStore = useOrdersStore();
 const toast = useToast();
 
-const invoices = computed(() => invoicesStore.invoices);
+const invoices = computed(() => {
+  return invoicesStore.invoices.filter(i => 
+    i.emitter_id === authStore.user?.id || i.receiver_id === authStore.user?.id ||
+    i.emitter_id === authStore.user?.tenant || i.receiver_id === authStore.user?.tenant
+  );
+});
 
 const getPOReference = (poId) => {
   const po = ordersStore.purchaseOrders.find(o => o.id === poId);

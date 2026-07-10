@@ -86,12 +86,14 @@
 import { computed } from 'vue';
 import { useInvoicesStore } from '@/store/modules/invoices.js';
 import { useOrdersStore } from '@/store/modules/orders.js';
+import { useAuthStore } from '@/store/modules/auth.js';
 
+const authStore = useAuthStore();
 const invoicesStore = useInvoicesStore();
 const ordersStore = useOrdersStore();
 
 const filteredInvoices = computed(() => {
-  return invoicesStore.invoices.filter(i => i.receiver_type === 'buyer');
+  return invoicesStore.invoices.filter(i => i.receiver_id === authStore.user?.id);
 });
 
 function getOrderRef(poId) {

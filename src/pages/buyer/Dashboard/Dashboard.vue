@@ -99,47 +99,8 @@
               <p class="text-xs text-[var(--color-text-secondary)]">Suivi graphique mensuel des dépenses sur l'année 2026.</p>
             </div>
           </div>
-          <!-- MOCK PREMIUM CHART (SVG DRAWING) -->
-          <div class="h-64 flex items-end justify-between px-2 pt-6 relative border-b border-[var(--color-border)] select-none">
-            <!-- Background grid lines -->
-            <div class="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-40">
-              <div class="border-t border-[var(--color-border)]/50 w-full h-px"></div>
-              <div class="border-t border-[var(--color-border)]/50 w-full h-px"></div>
-              <div class="border-t border-[var(--color-border)]/50 w-full h-px"></div>
-              <div class="border-t border-[var(--color-border)]/50 w-full h-px"></div>
-            </div>
-
-            <!-- Chart bar columns -->
-            <div class="flex flex-col items-center w-12 group z-10">
-              <div class="text-[9px] font-mono font-bold text-[var(--color-text-primary)] mb-1 opacity-0 group-hover:opacity-100 transition duration-150">120K</div>
-              <div class="w-6 bg-indigo-500/25 group-hover:bg-indigo-500 transition-all rounded-t-md" style="height: 80px;"></div>
-              <span class="text-[10px] font-mono text-[var(--color-text-secondary)] mt-2">Jan</span>
-            </div>
-            <div class="flex flex-col items-center w-12 group z-10">
-              <div class="text-[9px] font-mono font-bold text-[var(--color-text-primary)] mb-1 opacity-0 group-hover:opacity-100 transition duration-150">210K</div>
-              <div class="w-6 bg-indigo-500/25 group-hover:bg-indigo-500 transition-all rounded-t-md" style="height: 140px;"></div>
-              <span class="text-[10px] font-mono text-[var(--color-text-secondary)] mt-2">Fév</span>
-            </div>
-            <div class="flex flex-col items-center w-12 group z-10">
-              <div class="text-[9px] font-mono font-bold text-[var(--color-text-primary)] mb-1 opacity-0 group-hover:opacity-100 transition duration-150">95K</div>
-              <div class="w-6 bg-indigo-500/25 group-hover:bg-indigo-500 transition-all rounded-t-md" style="height: 60px;"></div>
-              <span class="text-[10px] font-mono text-[var(--color-text-secondary)] mt-2">Mar</span>
-            </div>
-            <div class="flex flex-col items-center w-12 group z-10">
-              <div class="text-[9px] font-mono font-bold text-[var(--color-text-primary)] mb-1 opacity-0 group-hover:opacity-100 transition duration-150">340K</div>
-              <div class="w-6 bg-indigo-500/25 group-hover:bg-indigo-500 transition-all rounded-t-md" style="height: 200px;"></div>
-              <span class="text-[10px] font-mono text-[var(--color-text-secondary)] mt-2">Avr</span>
-            </div>
-            <div class="flex flex-col items-center w-12 group z-10">
-              <div class="text-[9px] font-mono font-bold text-[var(--color-text-primary)] mb-1 opacity-0 group-hover:opacity-100 transition duration-150">150K</div>
-              <div class="w-6 bg-indigo-500/25 group-hover:bg-indigo-500 transition-all rounded-t-md" style="height: 100px;"></div>
-              <span class="text-[10px] font-mono text-[var(--color-text-secondary)] mt-2">Mai</span>
-            </div>
-            <div class="flex flex-col items-center w-12 group z-10">
-              <div class="text-[9px] font-mono font-bold text-[var(--color-text-primary)] mb-1 opacity-0 group-hover:opacity-100 transition duration-150">480K</div>
-              <div class="w-6 bg-[var(--color-primary)] transition-all rounded-t-md" style="style: height: 230px; height: 220px;"></div>
-              <span class="text-[10px] font-mono text-[var(--color-primary)] font-bold mt-2">Juin</span>
-            </div>
+          <div class="h-64 relative">
+            <canvas ref="chartCanvas" id="buyer-spending-chart"></canvas>
           </div>
         </div>
 
@@ -225,11 +186,59 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useAuthStore } from '@/store/modules/auth.js';
 import { orders as dbOrders } from '@/utils/supplier_db.js';
+import { Chart } from 'chart.js/auto';
 
 const authStore = useAuthStore();
+const chartCanvas = ref(null);
+let chartInstance = null;
+
+onMounted(() => {
+  if (chartCanvas.value) {
+    chartInstance = new Chart(chartCanvas.value, {
+      type: 'bar',
+      data: {
+        labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin'],
+        datasets: [{
+          label: 'Achats Mensuels (FCFA)',
+          data: [525000, 1350000, 392000, 1800000, 1875000, 2544062],
+          backgroundColor: '#4f46e5',
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              font: {
+                family: 'monospace',
+                size: 9
+              }
+            }
+          },
+          x: {
+            ticks: {
+              font: {
+                family: 'monospace',
+                size: 10
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+});
 
 const customerOrders = computed(() => {
   return dbOrders.value || [];

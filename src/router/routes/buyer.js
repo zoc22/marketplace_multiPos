@@ -45,6 +45,11 @@ export const buyerRoutes = [
         component: () => import('@/pages/buyer/Dashboard/Purchases.vue'),
       },
       {
+        path: 'track/:id/return',
+        name: 'BuyerTrackReturn',
+        component: () => import('@/pages/buyer/Dashboard/TrackReturn.vue'),
+      },
+      {
         path: 'track/:id',
         name: 'TrackDelivery',
         component: () => import('@/pages/buyer/Dashboard/TrackDelivery.vue'),

@@ -47,73 +47,158 @@
 
     <!-- MAIN GRID -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <!-- DETAILS SHEET -->
+      <!-- DETAILS SHEET (DASHBOARD TABLE STYLE) -->
       <div class="lg:col-span-2 space-y-6">
-        <PrintTemplate 
-          v-if="order"
-          title="BON DE COMMANDE ACHETEUR" 
-          :reference="order.reference" 
-          :date="order.date_emission"
-        >
+        <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-6 shadow-sm relative overflow-hidden">
           <!-- Stamp watermark -->
           <div 
             v-if="order?.status === 'DELIVERED'"
-            class="absolute top-24 right-12 border-4 border-emerald-600 text-emerald-600 font-mono font-black uppercase text-xs px-3 py-1.5 rounded-lg -rotate-12 select-none opacity-80"
+            class="absolute top-6 right-6 border-4 border-emerald-600 text-emerald-600 font-mono font-black uppercase text-xs px-3 py-1.5 rounded-lg -rotate-12 select-none opacity-80"
           >
             ÉMARGÉ ✓
           </div>
 
-          <!-- Parties details -->
-          <div class="grid grid-cols-2 gap-6 py-6 border-b border-slate-200 text-sm">
-            <div class="space-y-1">
-              <span class="block text-xs font-mono text-slate-400 uppercase tracking-wider font-extrabold">Fournisseur Destinataire</span>
-              <p class="text-base font-extrabold text-slate-800">{{ order?.receiver_id }} ({{ order?.receiver_type }})</p>
+          <div class="border-b border-[var(--color-border)] pb-4 mb-4">
+            <h3 class="text-sm font-mono font-black text-[var(--color-primary)] uppercase tracking-wider">Récapitulatif du Bon de Commande</h3>
+          </div>
+
+          <!-- Metadata Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-mono text-[var(--color-text-secondary)] border-b border-[var(--color-border)] pb-4 mb-6">
+            <div>
+              <span class="block text-[10px] text-[var(--color-text-muted)] uppercase">Destinataire :</span>
+              <span class="font-bold text-[var(--color-text-primary)] text-xs">{{ order?.receiver_id }}</span>
             </div>
-            <div class="space-y-1">
-              <span class="block text-xs font-mono text-slate-400 uppercase tracking-wider font-extrabold">Adresse de Livraison</span>
-              <p class="text-slate-650 text-xs font-medium">{{ order?.shipping_address || 'Non spécifiée' }}</p>
+            <div>
+              <span class="block text-[10px] text-[var(--color-text-muted)] uppercase">Livraison :</span>
+              <span class="font-bold text-[var(--color-text-primary)]">{{ order?.shipping_address }}</span>
+            </div>
+            <div>
+              <span class="block text-[10px] text-[var(--color-text-muted)] uppercase">Date émis :</span>
+              <span class="font-bold text-[var(--color-text-primary)]">{{ formatDate(order?.date_emission) }}</span>
             </div>
           </div>
 
-          <!-- Items list -->
-          <div class="py-6">
-            <table class="w-full text-left text-sm border-collapse">
+          <!-- Products Table -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse">
               <thead>
-                <tr class="border-b border-slate-350 text-xs text-slate-600 font-mono uppercase font-black bg-slate-50">
-                  <th class="py-3 px-3 border border-slate-200">Produit</th>
-                  <th class="py-3 px-3 border border-slate-200 text-center">Quantité</th>
-                  <th class="py-3 px-3 border border-slate-200 text-right">Prix Unitaire</th>
-                  <th class="py-3 px-3 border border-slate-200 text-right">Montant HT</th>
+                <tr class="bg-[var(--color-surface-elevated)] border-b border-[var(--color-border)] text-[10px] font-mono text-[var(--color-text-secondary)] uppercase">
+                  <th class="p-3">Produit</th>
+                  <th class="p-3 text-center">Quantité</th>
+                  <th class="p-3 text-right">Prix Unitaire</th>
+                  <th class="p-3 text-right">Montant HT</th>
+                  <th class="p-3 text-center">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                <tr 
-                  v-for="(item, idx) in order?.products" 
-                  :key="idx"
-                  class="text-slate-800 border-b border-slate-200"
-                >
-                  <td class="py-3.5 px-3 border border-slate-200 font-semibold">{{ item.product_id }}</td>
-                  <td class="py-3.5 px-3 border border-slate-200 text-center font-mono font-bold">{{ item.quantity }}</td>
-                  <td class="py-3.5 px-3 border border-slate-200 text-right font-mono">{{ formatMoney(item.unit_price) }}</td>
-                  <td class="py-3.5 px-3 border border-slate-200 text-right font-mono font-bold text-slate-950">{{ formatMoney(item.quantity * item.unit_price) }}</td>
+                <tr v-for="(item, idx) in paginatedProducts" :key="idx" class="border-b border-[var(--color-border)] hover:bg-[var(--color-surface-hover)] transition">
+                  <td class="p-3 font-bold text-[var(--color-text-primary)]">{{ item.product_id }}</td>
+                  <td class="p-3 text-center font-mono font-black text-[var(--color-text-primary)]">
+                    <div v-if="order?.isOriginalDraft" class="flex items-center justify-center space-x-1.5">
+                      <button 
+                        @click="updateProductQty(item.product_id, Math.max(1, item.quantity - 1))" 
+                        class="px-1.5 py-0.5 bg-[var(--color-surface-elevated)] border border-[var(--color-border)] rounded text-xs hover:bg-[var(--color-surface-hover)] font-bold cursor-pointer"
+                      >
+                        -
+                      </button>
+                      <span class="w-8 text-center">{{ item.quantity }}</span>
+                      <button 
+                        @click="updateProductQty(item.product_id, item.quantity + 1)" 
+                        class="px-1.5 py-0.5 bg-[var(--color-surface-elevated)] border border-[var(--color-border)] rounded text-xs hover:bg-[var(--color-surface-hover)] font-bold cursor-pointer"
+                      >
+                        +
+                      </button>
+                    </div>
+                    <span v-else>{{ item.quantity }}</span>
+                  </td>
+                  <td class="p-3 text-right font-mono text-[var(--color-text-primary)]">{{ formatMoney(item.unit_price) }}</td>
+                  <td class="p-3 text-right font-mono font-bold text-[var(--color-text-primary)]">{{ formatMoney(item.quantity * item.unit_price) }}</td>
+                  <td class="p-3 text-center space-x-1.5">
+                    <template v-if="order?.isOriginalDraft">
+                      <button 
+                        @click="removeProduct(item.product_id)" 
+                        class="px-2.5 py-1 bg-red-500/10 text-red-650 font-mono text-[10px] font-bold uppercase rounded hover:bg-red-500 hover:text-white transition cursor-pointer"
+                      >
+                        Retirer
+                      </button>
+                    </template>
+                    <template v-else>
+                      <button @click="showProductSheet(item)" class="px-2.5 py-1 bg-[var(--color-primary-muted)] text-[var(--color-primary)] font-mono text-[10px] font-bold uppercase rounded hover:bg-[var(--color-primary)] hover:text-white transition cursor-pointer">
+                        Fiche
+                      </button>
+                      <button @click="raiseProductAlert(item)" class="px-2.5 py-1 bg-amber-500/10 text-amber-600 font-mono text-[10px] font-bold uppercase rounded hover:bg-amber-500 hover:text-white transition cursor-pointer">
+                        Signaler
+                      </button>
+                    </template>
+                  </td>
                 </tr>
               </tbody>
             </table>
           </div>
 
-          <div class="flex justify-end pt-4 border-t border-slate-200">
-            <div class="w-72 space-y-1.5 text-xs font-mono text-slate-605 font-extrabold">
-              <div class="flex justify-between border-b border-slate-200 pb-2">
-                <span>CONTRAT SOUS-TOTAL:</span>
-                <span>{{ formatMoney(order?.total) }}</span>
+          <!-- Add Product form if Draft -->
+          <div v-if="order?.isOriginalDraft" class="mt-6 p-4 bg-[var(--color-surface-elevated)] border border-[var(--color-border)] rounded-xl space-y-3">
+            <h4 class="text-xs uppercase font-mono font-bold text-[var(--color-primary)]">Ajouter un produit (Fournisseur ciblé)</h4>
+            <div class="flex flex-col sm:flex-row gap-3">
+              <select 
+                v-model="productToAdd" 
+                class="flex-1 bg-[var(--color-background)] border border-[var(--color-border)] rounded-lg px-3 py-1.5 text-xs text-[var(--color-text-primary)] focus:outline-none"
+              >
+                <option value="">Sélectionnez un produit...</option>
+                <option v-for="p in availableSupplierProducts" :key="p.id" :value="p.id">
+                  {{ p.name }} - {{ formatMoney(p.price) }}
+                </option>
+              </select>
+              <div class="flex items-center space-x-2">
+                <label class="text-[10px] uppercase font-mono text-[var(--color-text-secondary)]">Quantité</label>
+                <input 
+                  type="number" 
+                  v-model.number="qtyToAdd" 
+                  min="1" 
+                  class="w-16 bg-[var(--color-background)] border border-[var(--color-border)] rounded-lg px-2 py-1 text-xs text-center font-bold text-[var(--color-text-primary)]"
+                />
               </div>
-              <div class="flex justify-between text-slate-900 pt-3 text-sm font-sans font-black">
-                <span>VALEUR TTC :</span>
-                <span>{{ formatMoney(order?.total) }}</span>
+              <button 
+                @click="addProductToOrder" 
+                :disabled="!productToAdd"
+                class="px-4 py-1.5 bg-[var(--color-primary)] text-white hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg text-xs font-bold uppercase transition cursor-pointer"
+              >
+                Ajouter
+              </button>
+            </div>
+          </div>
+
+          <!-- Product Pagination -->
+          <div v-if="totalProductPages > 1" class="flex justify-between items-center pt-4 font-mono text-xs">
+            <button @click="prevProductPage" :disabled="currentProductPage === 1" class="px-2.5 py-1 bg-[var(--color-surface-elevated)] border border-[var(--color-border)] rounded text-[10px] disabled:opacity-40 uppercase cursor-pointer flex items-center space-x-1">
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+              </svg>
+              <span>Précédent</span>
+            </button>
+            <span class="text-[10px] text-[var(--color-text-secondary)]">Page {{ currentProductPage }} / {{ totalProductPages }}</span>
+            <button @click="nextProductPage" :disabled="currentProductPage === totalProductPages" class="px-2.5 py-1 bg-[var(--color-surface-elevated)] border border-[var(--color-border)] rounded text-[10px] disabled:opacity-40 uppercase cursor-pointer flex items-center space-x-1">
+              <span>Suivant</span>
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Total summary -->
+          <div class="flex justify-end pt-6 border-t border-[var(--color-border)] mt-6">
+            <div class="w-80 space-y-2 text-xs font-mono text-[var(--color-text-secondary)] font-bold">
+              <div class="flex justify-between">
+                <span>SOUS-TOTAL COMMANDE :</span>
+                <span class="text-[var(--color-text-primary)] font-extrabold">{{ formatMoney(orderSubtotal) }}</span>
+              </div>
+              <div class="flex justify-between text-sm font-sans font-black text-[var(--color-text-primary)] pt-2 border-t border-[var(--color-border)]">
+                <span class="text-[var(--color-primary)]">VALEUR TOTAL TTC :</span>
+                <span class="text-base font-mono font-bold">{{ formatMoney(order?.total) }}</span>
               </div>
             </div>
           </div>
-        </PrintTemplate>
+        </div>
       </div>
 
       <!-- TIMELINE COLUMN -->
@@ -132,7 +217,10 @@
           <!-- Non-invasive help alert -->
           <div v-if="showHelp" class="p-3 bg-[var(--color-primary-muted)] text-[var(--color-text-primary)] rounded-lg text-xs space-y-1.5 border border-[var(--color-primary-border)]">
             <p class="font-bold flex items-center space-x-1">
-              <span>🛡️ Système de paiement Séquestre</span>
+              <svg class="w-4 h-4 text-[var(--color-primary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.249-8.25-3.286zm0 30v-3.75m0 0L12 12" />
+              </svg>
+              <span>Système de paiement Séquestre</span>
             </p>
             <ol class="list-decimal pl-4 space-y-1 text-[11px] text-[var(--color-text-secondary)]">
               <li>L'argent est déduit de votre solde et bloqué par l'admin (séquestre).</li>
@@ -219,7 +307,7 @@ import { useOrdersStore } from '@/store/modules/orders.js';
 import { useDisputesStore } from '@/store/modules/disputes.js';
 import { usePaymentsStore } from '@/store/modules/payments.js';
 import { useToast } from 'vue-toastification';
-import { orders as dbOrders } from '@/utils/supplier_db.js';
+import { orders as dbOrders, products as catalogProducts } from '@/utils/supplier_db.js';
 import StatusBadge from '@/components/common/StatusBadge.vue';
 import OrderTimeline from '@/components/common/OrderTimeline.vue';
 import PrintButton from '@/components/print/PrintButton.vue';
@@ -232,12 +320,118 @@ const disputesStore = useDisputesStore();
 const paymentsStore = usePaymentsStore();
 const orderId = route.params.id;
 
+const selectedSupplierId = route.query.supplier;
+
+const availableSupplierProducts = computed(() => {
+  if (!selectedSupplierId) return [];
+  return catalogProducts.value.filter(p => {
+    return p.supplierId === selectedSupplierId && !order.value?.products?.some(op => op.product_id === p.name);
+  });
+});
+
+const productToAdd = ref('');
+const qtyToAdd = ref(1);
+
+function updateProductQty(productName, newQty) {
+  if (!order.value) return;
+  const rawOrder = ordersStore.purchaseOrders.find(o => o.id === orderId) || 
+                   dbOrders.value.find(o => o.id === orderId);
+  if (rawOrder) {
+    const rawProducts = rawOrder.products || rawOrder.items || [];
+    const prod = rawProducts.find(p => (p.productName || p.product_id) === productName);
+    if (prod) {
+      prod.quantity = newQty;
+      prod.qty = newQty;
+      prod.total = newQty * (prod.unit_price || prod.unitPrice || 0);
+      rawOrder.total = rawProducts.reduce((sum, p) => sum + ((p.quantity || p.qty || 0) * (p.unit_price || p.unitPrice || 0)), 0);
+      toast.success("Quantité mise à jour");
+    }
+  }
+}
+
+function removeProduct(productName) {
+  if (!order.value) return;
+  const rawOrder = ordersStore.purchaseOrders.find(o => o.id === orderId) || 
+                   dbOrders.value.find(o => o.id === orderId);
+  if (rawOrder) {
+    const rawProducts = rawOrder.products || rawOrder.items || [];
+    const index = rawProducts.findIndex(p => (p.productName || p.product_id) === productName);
+    if (index > -1) {
+      rawProducts.splice(index, 1);
+      rawOrder.total = rawProducts.reduce((sum, p) => sum + ((p.quantity || p.qty || 0) * (p.unit_price || p.unitPrice || 0)), 0);
+      toast.success("Produit retiré du bon de commande");
+    }
+  }
+}
+
+function addProductToOrder() {
+  if (!productToAdd.value || !order.value) return;
+  const selectedProd = catalogProducts.value.find(p => p.id === productToAdd.value);
+  if (!selectedProd) return;
+
+  const rawOrder = ordersStore.purchaseOrders.find(o => o.id === orderId) || 
+                   dbOrders.value.find(o => o.id === orderId);
+  if (rawOrder) {
+    const rawProducts = rawOrder.products || rawOrder.items || [];
+    rawProducts.push({
+      product_id: selectedProd.id,
+      productName: selectedProd.name,
+      quantity: qtyToAdd.value,
+      qty: qtyToAdd.value,
+      unit_price: selectedProd.price,
+      unitPrice: selectedProd.price,
+      supplierId: selectedSupplierId,
+      status: 'Pending'
+    });
+    rawOrder.total = rawProducts.reduce((sum, p) => sum + ((p.quantity || p.qty || 0) * (p.unit_price || p.unitPrice || 0)), 0);
+    toast.success("Produit ajouté avec succès");
+    productToAdd.value = '';
+    qtyToAdd.value = 1;
+  }
+}
+
 const showHelp = ref(false);
 const isDisputeModalOpen = ref(false);
 const disputeForm = ref({
   reason: 'Articles non conformes',
   description: ''
 });
+
+// Products list pagination
+const currentProductPage = ref(1);
+const productsPerPage = 5;
+
+const orderSubtotal = computed(() => {
+  if (!order.value || !order.value.products) return 0;
+  return order.value.products.reduce((acc, p) => acc + (p.quantity * p.unit_price), 0);
+});
+
+const totalProductPages = computed(() => {
+  if (!order.value || !order.value.products) return 0;
+  return Math.ceil(order.value.products.length / productsPerPage);
+});
+
+const paginatedProducts = computed(() => {
+  if (!order.value || !order.value.products) return [];
+  const start = (currentProductPage.value - 1) * productsPerPage;
+  return order.value.products.slice(start, start + productsPerPage);
+});
+
+function prevProductPage() {
+  if (currentProductPage.value > 1) currentProductPage.value--;
+}
+
+function nextProductPage() {
+  if (currentProductPage.value < totalProductPages.value) currentProductPage.value++;
+}
+
+function showProductSheet(item) {
+  toast.info(`Chargement de la fiche technique pour : ${item.product_id}`);
+}
+
+function raiseProductAlert(item) {
+  toast.warning(`Alerte de conformité signalée pour : ${item.product_id}`);
+}
 
 const order = computed(() => {
   const rawOrder = ordersStore.purchaseOrders.find(o => o.id === orderId) || 
@@ -248,7 +442,13 @@ const order = computed(() => {
 
   // Normalize items / products array
   const rawProducts = rawOrder.products || rawOrder.items || [];
-  const normalizedProducts = rawProducts.map(item => ({
+  const selectedSupplierId = route.query.supplier;
+  
+  const filteredRawProducts = selectedSupplierId
+    ? rawProducts.filter(item => item.supplierId === selectedSupplierId)
+    : rawProducts;
+
+  const normalizedProducts = filteredRawProducts.map(item => ({
     product_id: item.productName || item.product_id || 'Produit',
     quantity: item.quantity || item.qty || 0,
     unit_price: item.unitPrice || item.unit_price || 0,
@@ -270,6 +470,10 @@ const order = computed(() => {
     normalizedStatus = statusMap[rawOrder.status];
   }
 
+  const computedTotal = selectedSupplierId
+    ? Math.floor(normalizedProducts.reduce((acc, p) => acc + (p.quantity * p.unit_price), 0) * 1.1925) + 5000
+    : rawOrder.total || 0;
+
   return {
     ...rawOrder,
     reference: rawOrder.reference || rawOrder.id || 'N/A',
@@ -279,7 +483,8 @@ const order = computed(() => {
     shipping_address: rawOrder.shipping_address || rawOrder.deliveryMode || 'Non spécifiée',
     status: normalizedStatus,
     products: normalizedProducts,
-    total: rawOrder.total || 0
+    total: computedTotal,
+    isOriginalDraft: rawOrder.status === 'Draft'
   };
 });
 
@@ -289,6 +494,15 @@ const existingDispute = computed(() => {
 
 function formatMoney(val) {
   return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XAF', minimumFractionDigits: 0 }).format(val || 0).replace('XAF', 'FCFA');
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return 'N/A';
+  return new Date(dateStr).toLocaleDateString('fr-FR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  });
 }
 
 function submitDispute() {

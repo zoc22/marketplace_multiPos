@@ -65,13 +65,13 @@
               </label>
               <div class="relative flex items-center">
                 <span class="absolute left-4 text-[var(--color-text-tertiary)] pointer-events-none">
-                  <EnvelopeIcon class="h-6 w-6" />
+                  <!-- <EnvelopeIcon class="h-6 w-6" /> -->
                 </span>
                 <input 
                   type="email" 
                   v-model="email" 
                   :required="step === 1"
-                  class="w-full bg-[var(--color-background)] border border-[var(--color-border)] rounded-2xl py-4 pl-14 pr-4 text-[var(--color-text-primary)] text-base focus:ring-2 focus:ring-[#C8A96E] focus:border-transparent transition-all placeholder-[var(--color-text-tertiary)]"
+                  class="w-full bg-[var(--color-background)] border border-[var(--color-border)] rounded-2xl py-4 pl-16 pr-4 text-[var(--color-text-primary)] text-base focus:ring-2 focus:ring-[#C8A96E] focus:border-transparent transition-all placeholder-[var(--color-text-tertiary)]"
                   placeholder="votre.email@entreprise.com" 
                 />
               </div>
@@ -89,13 +89,13 @@
               </div>
               <div class="relative flex items-center">
                 <span class="absolute left-4 text-[var(--color-text-tertiary)] pointer-events-none">
-                  <KeyIcon class="h-6 w-6" />
+                  <!-- <KeyIcon class="h-6 w-6" /> -->
                 </span>
                 <input 
                   type="password" 
                   v-model="password" 
                   :required="step === 1"
-                  class="w-full bg-[var(--color-background)] border border-[var(--color-border)] rounded-2xl py-4 pl-14 pr-4 text-[var(--color-text-primary)] text-base focus:ring-2 focus:ring-[#C8A96E] focus:border-transparent transition-all placeholder-[var(--color-text-tertiary)]"
+                  class="w-full bg-[var(--color-background)] border border-[var(--color-border)] rounded-2xl py-4 pl-16 pr-4 text-[var(--color-text-primary)] text-base focus:ring-2 focus:ring-[#C8A96E] focus:border-transparent transition-all placeholder-[var(--color-text-tertiary)]"
                   placeholder="••••••••" 
                 />
               </div>
@@ -108,13 +108,13 @@
               </label>
               <div class="relative flex items-center">
                 <span class="absolute left-4 text-[#C8A96E] pointer-events-none">
-                  <ShieldCheckIcon class="h-6 w-6" />
+                  <!-- <ShieldCheckIcon class="h-6 w-6" /> -->
                 </span>
                 <input 
                   type="text" 
                   v-model="uniqueCode" 
                   :required="step === 1 && isSupplier"
-                  class="w-full bg-[var(--color-background)] border border-[#C8A96E]/50 rounded-2xl py-4 pl-14 pr-4 text-[var(--color-text-primary)] text-base focus:ring-2 focus:ring-[#C8A96E] focus:border-transparent transition-all placeholder-[var(--color-text-tertiary)]"
+                  class="w-full bg-[var(--color-background)] border border-[#C8A96E]/50 rounded-2xl py-4 pl-16 pr-4 text-[var(--color-text-primary)] text-base focus:ring-2 focus:ring-[#C8A96E] focus:border-transparent transition-all placeholder-[var(--color-text-tertiary)]"
                   placeholder="Ex: ADMIN-789X" 
                 />
               </div>
@@ -144,7 +144,7 @@
             <!-- CAPTCHA BOX DISPLAY -->
             <div class="bg-[var(--color-surface-elevated)] p-5 rounded-2xl border border-[var(--color-border)] flex flex-col items-center justify-center">
               <span class="text-xs text-[var(--color-text-secondary)] uppercase font-bold tracking-widest mb-3 flex items-center gap-2">
-                <ShieldCheckIcon class="h-4 w-4 text-[#C8A96E]" />
+                <!-- <ShieldCheckIcon class="h-4 w-4 text-[#C8A96E]" /> -->
                 Code de sécurité anti-robot
               </span>
               <div class="text-4xl font-mono font-black text-[#C8A96E] tracking-[0.5em] pl-4 select-none bg-[var(--color-background)]/50 px-6 py-4 rounded-xl border border-[var(--color-border)] shadow-inner">
@@ -164,7 +164,7 @@
                   type="text" 
                   v-model="twoFactorCode" 
                   :required="step === 2"
-                  class="w-full bg-[var(--color-background)] border border-[var(--color-border)] rounded-2xl py-5 pl-14 pr-4 text-[var(--color-text-primary)] tracking-[1em] text-center text-2xl font-mono font-black focus:ring-2 focus:ring-[#C8A96E] focus:border-transparent transition-all placeholder-[var(--color-text-tertiary)]"
+                  class="w-full bg-[var(--color-background)] border border-[var(--color-border)] rounded-2xl py-5 pl-16 pr-4 text-[var(--color-text-primary)] tracking-[1em] text-center text-2xl font-mono font-black focus:ring-2 focus:ring-[#C8A96E] focus:border-transparent transition-all placeholder-[var(--color-text-tertiary)]"
                   placeholder="----" 
                   maxlength="4"
                   ref="twoFactorInput"
@@ -384,26 +384,26 @@ function redirectUser(userRoles) {
 
 function fillPreset(role) {
   if (role === 'admin') {
-    email.value = 'admin@test.com';
+    email.value = 'admin@gmail.com';
     password.value = 'password';
     isSupplier.value = true;
     uniqueCode.value = 'ADMIN123';
   } else if (role === 'buyer') {
-    email.value = 'buyer@test.com';
+    email.value = 'buyer@gmail.com';
     password.value = 'password';
     isSupplier.value = false;
   } else if (role === 'vendor') {
-    email.value = 'vendor@test.com';
+    email.value = 'vendor@gmail.com';
     password.value = 'password';
     isSupplier.value = true;
     uniqueCode.value = 'VEND123';
   } else if (role === 'distributor') {
-    email.value = 'distributor@test.com';
+    email.value = 'distributor@gmail.com';
     password.value = 'password';
     isSupplier.value = true;
     uniqueCode.value = 'DIST123';
   } else if (role === 'supplier') {
-    email.value = 'vendor2@test.com';
+    email.value = 'vendor2@gmail.com';
     password.value = 'password';
     isSupplier.value = true;
     uniqueCode.value = 'VEND123';

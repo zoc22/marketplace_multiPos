@@ -4,18 +4,34 @@ import { products as seedProducts, warehouses as seedWarehouses, orders as seedO
 const seedRFQs = [];
 
 // Load from localStorage or set default
-const STORAGE_KEY = 'supplier_portal_db_v3';
+const STORAGE_KEY = 'supplier_portal_db_v4';
+
+export const b2b_suppliers = ref([
+  { id: 'usr_vendor_1', name: 'TechSupplies SARL', category: 'Intrants Agricoles', email: 'vendor@gmail.com', phone: '+237 6 99 88 77 66', address: 'Zone Industrielle de Bassa, Douala', status: 'Active', paymentTerms: 'Net 30', taxId: 'N001' },
+  { id: 'usr_vendor_2', name: 'SolarPlus Cameroun', category: 'Produits Chimiques', email: 'vendor2@gmail.com', phone: '+237 6 55 66 77 88', address: 'Yaoundé, Cameroun', status: 'Active', paymentTerms: 'Cash on Delivery', taxId: 'N002' },
+  { id: 'usr_vendor_3', name: 'Nylon Packaging Douala', category: 'Emballages', email: 'nylon@gmail.com', phone: '+237 6 33 33 33 33', address: 'Bonabéri, Cameroun', status: 'Active', paymentTerms: 'Net 15', taxId: 'N003' }
+]);
 
 const defaultState = {
   walletFree: 8500000,
   walletLocked: [],
-  products: seedProducts.map(p => ({
-    ...p,
-    batches: [
-      { id: 'b_1', date: '2026-05-10', qty: Math.floor(p.stock * 0.4), initialQty: Math.floor(p.stock * 0.4), price: p.price * 0.85 },
-      { id: 'b_2', date: '2026-06-01', qty: Math.floor(p.stock * 0.6), initialQty: Math.floor(p.stock * 0.6), price: p.price * 0.90 }
-    ]
-  })),
+  products: seedProducts.map(p => {
+    let b2bSupplierId = 'usr_vendor_1';
+    const nameLow = p.name.toLowerCase();
+    if (nameLow.includes('solaire') || nameLow.includes('panneau') || nameLow.includes('batterie') || nameLow.includes('ciment') || nameLow.includes('fer') || nameLow.includes('peinture') || nameLow.includes('outil')) {
+      b2bSupplierId = 'usr_vendor_2';
+    } else if (nameLow.includes('pagne') || nameLow.includes('ndop') || nameLow.includes('robe') || nameLow.includes('sac') || nameLow.includes('costume') || nameLow.includes('karité') || nameLow.includes('savon') || nameLow.includes('pneu') || nameLow.includes('moteur')) {
+      b2bSupplierId = 'usr_vendor_3';
+    }
+    return {
+      ...p,
+      supplierId: b2bSupplierId,
+      batches: [
+        { id: 'b_1', date: '2026-05-10', qty: Math.floor(p.stock * 0.4), initialQty: Math.floor(p.stock * 0.4), price: p.price * 0.85 },
+        { id: 'b_2', date: '2026-06-01', qty: Math.floor(p.stock * 0.6), initialQty: Math.floor(p.stock * 0.6), price: p.price * 0.90 }
+      ]
+    };
+  }),
   warehouses: seedWarehouses.map((w, idx) => ({
     ...w,
     capacity: 500000 + (idx * 150000),
@@ -28,146 +44,158 @@ const defaultState = {
   })),
   orders: [
     {
-      id: "ord_mock_1",
-      reference: "B2B-PO-2026-0812-25",
+      id: "BC-2026-001",
+      reference: "BC-2026-001",
       clientId: "cli_buyer_demo",
-      clientName: "Alice Smith",
-      clientCompany: "ALPHA RETAIL LTD",
-      supplierName: "Zama-Agro Sahel",
+      clientName: "Alice Kamga",
+      clientCompany: "Kamga B2C Sourcing",
       deliveryMode: "Route Heavy Truck (Camion 10t)",
       carrierName: "Afrique Logistique Express",
       waybill: "AWB-LT-893-OM-902",
       items: [
-        { productId: "prod_1", productName: "Sac de Cacao Premium (Bord champ) Original V1", sku: "SKU-AGR-0001", quantity: 150, unitPrice: 3500, totalPrice: 525000 },
-        { productId: "prod_2", productName: "Sachet de Poivre Blanc de Penja Original V2", sku: "SKU-AGR-0002", quantity: 200, unitPrice: 8000, totalPrice: 1600000 }
+        { productId: "prod_souris_wireless", productName: "Souris Sans Fil Logitech", sku: "EL-LOG-MOU", quantity: 2, unitPrice: 15000, totalPrice: 30000, supplierId: "usr_vendor_1", status: "Delivered" },
+        { productId: "prod_panneau_solaire", productName: "Panneau Solaire Monocristallin 400W", sku: "EN-PAN-SOL", quantity: 4, unitPrice: 85000, totalPrice: 340000, supplierId: "usr_vendor_2", status: "Delivered" }
       ],
-      subtotal: 2125000,
-      tax: 409062,
-      shippingFee: 5000,
-      total: 2539062,
+      subtotal: 370000,
+      tax: 71225,
+      shippingFee: 10000,
+      total: 451225,
       status: "Delivered",
       paymentStatus: "Settled",
-      created_at: "2026-06-15T10:30:00Z",
+      created_at: "2026-07-01T10:00:00Z",
       history: [
-        { status: "Submitted", timestamp: "2026-06-15T10:30:00Z", label: "Bon de commande soumis", description: "Soumission initiale par ALPHA RETAIL LTD." },
-        { status: "Approved", timestamp: "2026-06-15T14:20:00Z", label: "Approuvé par Zama-Agro", description: "Validation des stocks physiques au hub logistique." },
-        { status: "Shipped", timestamp: "2026-06-16T08:00:00Z", label: "En transit logistique", description: "Expédié via Afrique Logistique Express (Camion 10t)." },
-        { status: "Delivered", timestamp: "2026-06-18T16:45:00Z", label: "Livré & Validé", description: "Livraison réceptionnée et signée électroniquement." }
+        { status: "Submitted", timestamp: "2026-07-01T10:00:00Z", label: "Bon de commande soumis", description: "Soumission initiale par Kamga B2C Sourcing." },
+        { status: "Approved", timestamp: "2026-07-01T14:20:00Z", label: "Approuvé par les Fournisseurs", description: "Validation des stocks physiques." },
+        { status: "Shipped", timestamp: "2026-07-02T08:00:00Z", label: "En transit logistique", description: "Expédié via Afrique Logistique Express." },
+        { status: "Delivered", timestamp: "2026-07-03T16:45:00Z", label: "Livré & Validé", description: "Livraison réceptionnée et signée électroniquement." }
       ]
     },
     {
-      id: "ord_mock_2",
-      reference: "B2B-PO-2026-0941-88",
+      id: "BC-2026-002",
+      reference: "BC-2026-002",
       clientId: "cli_buyer_demo",
-      clientName: "Alice Smith",
-      clientCompany: "ALPHA RETAIL LTD",
-      supplierName: "SOPRO-CAM S.A.",
+      clientName: "Alice Kamga",
+      clientCompany: "Kamga B2C Sourcing",
       deliveryMode: "Express Isothermal Van",
       carrierName: "Gofetch Cargo Transit",
       waybill: "AWB-CE-412-BB-312",
       items: [
-        { productId: "prod_3", productName: "Riz Parfumé Ndop Original V1", sku: "SKU-AGR-0003", quantity: 50, unitPrice: 15500, totalPrice: 775000 },
-        { productId: "prod_4", productName: "Miel Pur de l'Adamaoua Original V2", sku: "SKU-AGR-0005", quantity: 120, unitPrice: 4500, totalPrice: 540000 }
+        { productId: "prod_cable_hdmi", productName: "Câble HDMI 4K 1.8m", sku: "EL-CAB-HD", quantity: 5, unitPrice: 5000, totalPrice: 25000, supplierId: "usr_vendor_1", status: "Shipped" },
+        { productId: "prod_jute_sac", productName: "Sacs Jute de Cacao", sku: "PK-JUT-SAC", quantity: 100, unitPrice: 1500, totalPrice: 150000, supplierId: "usr_vendor_3", status: "Preparing" }
       ],
-      subtotal: 1315000,
-      tax: 253137,
-      shippingFee: 5000,
-      total: 1573137,
+      subtotal: 175000,
+      tax: 33687,
+      shippingFee: 10000,
+      total: 218687,
       status: "Shipped",
       paymentStatus: "Escrow_Held",
-      created_at: "2026-06-22T09:15:00Z",
+      created_at: "2026-07-02T14:30:00Z",
       history: [
-        { status: "Submitted", timestamp: "2026-06-22T09:15:00Z", label: "Bon de commande soumis", description: "Requis d'approvisionnement express pour ALPHA RETAIL LTD." },
-        { status: "Approved", timestamp: "2026-06-22T11:40:00Z", label: "Approuvé par SOPRO-CAM", description: "Stocks physiques réservés." },
-        { status: "Preparing", timestamp: "2026-06-23T08:30:00Z", label: "En préparation", description: "Colisage et contrôle qualité." },
-        { status: "Packed", timestamp: "2026-06-23T14:00:00Z", label: "Colis emballé", description: "Génération du Bon de Livraison BL-0941." },
-        { status: "Shipped", timestamp: "2026-06-24T07:30:00Z", label: "En cours de livraison", description: "En cours de route vers Yaoundé Hub." }
+        { status: "Submitted", timestamp: "2026-07-02T14:30:00Z", label: "Bon de commande soumis", description: "Requis d'approvisionnement express pour Kamga B2C Sourcing." },
+        { status: "Approved", timestamp: "2026-07-02T17:40:00Z", label: "Approuvé", description: "Stocks physiques réservés." },
+        { status: "Preparing", timestamp: "2026-07-03T08:30:00Z", label: "Préparation Logistique", description: "Colisage et contrôle qualité en cours." },
+        { status: "Packed", timestamp: "2026-07-03T14:00:00Z", label: "Colis emballés", description: "Génération des Bons de Livraison." },
+        { status: "Shipped", timestamp: "2026-07-04T07:30:00Z", label: "En cours de livraison", description: "En cours de route vers Yaoundé Hub." }
       ]
     },
     {
-      id: "ord_mock_3",
-      reference: "B2B-PO-2026-1025-04",
+      id: "BC-2026-003",
+      reference: "BC-2026-003",
       clientId: "cli_buyer_demo",
-      clientName: "Alice Smith",
-      clientCompany: "ALPHA RETAIL LTD",
-      supplierName: "Nylon Packaging Douala",
+      clientName: "Alice Kamga",
+      clientCompany: "Kamga B2C Sourcing",
       deliveryMode: "Urban Moto Cargo",
       carrierName: "Sawa Express Riders",
       waybill: "AWB-LT-012-MC-104",
       items: [
-        { productId: "prod_5", productName: "Sac de Ciment 50kg CPJ 35 Original V3", sku: "SKU-BTP-0001", quantity: 80, unitPrice: 4900, totalPrice: 392000 }
+        { productId: "prod_batterie_gel", productName: "Batterie Solaire Gel 200Ah", sku: "EN-BAT-GEL", quantity: 5, unitPrice: 135000, totalPrice: 675000, supplierId: "usr_vendor_2", status: "Preparing" }
       ],
-      subtotal: 392000,
-      tax: 75460,
+      subtotal: 675000,
+      tax: 129937,
       shippingFee: 5000,
-      total: 472460,
+      total: 809937,
       status: "Preparing",
       paymentStatus: "Escrow_Held",
-      created_at: "2026-06-24T14:20:00Z",
+      created_at: "2026-07-04T08:00:00Z",
       history: [
-        { status: "Submitted", timestamp: "2026-06-24T14:20:00Z", label: "Bon de commande soumis", description: "Demande urgente de sacs BTP." },
-        { status: "Approved", timestamp: "2026-06-24T16:00:00Z", label: "Approuvé par Nylon Packaging", description: "Planification du dispatch urbain." },
-        { status: "Preparing", timestamp: "2026-06-25T08:00:00Z", label: "En cours de colisage", description: "Chargement de la moto cargo." }
+        { status: "Submitted", timestamp: "2026-07-04T08:00:00Z", label: "Bon de commande soumis", description: "Demande urgente de batteries BTP." },
+        { status: "Approved", timestamp: "2026-07-04T10:00:00Z", label: "Approuvé", description: "Planification du dispatch urbain." },
+        { status: "Preparing", timestamp: "2026-07-05T08:00:00Z", label: "Préparation Logistique", description: "Chargement et colisage." }
       ]
     },
     {
-      id: "ord_mock_4",
-      reference: "B2B-PO-2026-1108-61",
+      id: "BC-2026-004",
+      reference: "BC-2026-004",
       clientId: "cli_buyer_demo",
-      clientName: "Alice Smith",
-      clientCompany: "ALPHA RETAIL LTD",
-      supplierName: "Zama-Agro Sahel",
+      clientName: "Alice Kamga",
+      clientCompany: "Kamga B2C Sourcing",
       deliveryMode: "Rail Cargo (Cameroun Rail Fret)",
       carrierName: "Afrique Logistique Express",
       waybill: "AWB-RL-819-CM-401",
       items: [
-        { productId: "prod_6", productName: "Tenue Traditionnelle Ndop Original V1", sku: "SKU-TEX-0002", quantity: 40, unitPrice: 45000, totalPrice: 1800000 }
+        { productId: "prod_souris_wireless", productName: "Souris Sans Fil Logitech", sku: "EL-LOG-MOU", quantity: 10, unitPrice: 15000, totalPrice: 150000, supplierId: "usr_vendor_1", status: "Pending" },
+        { productId: "prod_kraft_bag", productName: "Emballages Thermoscellés Kraft", sku: "PK-KRA-BAG", quantity: 200, unitPrice: 150, totalPrice: 30000, supplierId: "usr_vendor_3", status: "Pending" }
       ],
-      subtotal: 1800000,
-      tax: 346500,
-      shippingFee: 5000,
-      total: 2151500,
-      status: "Approved",
+      subtotal: 180000,
+      tax: 34650,
+      shippingFee: 10000,
+      total: 224650,
+      status: "Draft",
       paymentStatus: "Escrow_Held",
-      created_at: "2026-06-24T17:45:00Z",
+      created_at: "2026-07-05T09:00:00Z",
       history: [
-        { status: "Submitted", timestamp: "2026-06-24T17:45:00Z", label: "Bon de commande soumis", description: "Réquisition de textiles traditionnels." },
-        { status: "Approved", timestamp: "2026-06-25T09:00:00Z", label: "Approuvé par Zama-Agro", description: "Stocks confirmés et réservés." }
+        { status: "Draft", timestamp: "2026-07-05T09:00:00Z", label: "Brouillon enregistré", description: "Brouillon multi-fournisseur créé." }
       ]
     },
     {
-      id: "ord_mock_5",
-      reference: "B2B-PO-2026-1215-99",
+      id: "BC-2026-005",
+      reference: "BC-2026-005",
       clientId: "cli_buyer_demo",
-      clientName: "Alice Smith",
-      clientCompany: "ALPHA RETAIL LTD",
-      supplierName: "SOPRO-CAM S.A.",
+      clientName: "Alice Kamga",
+      clientCompany: "Kamga B2C Sourcing",
       deliveryMode: "Route Heavy Truck (Camion 10t)",
       carrierName: "Afrique Logistique Express",
       waybill: "AWB-LT-893-OM-915",
       items: [
-        { productId: "prod_7", productName: "Panneau Solaire Monocristallin 400W Original V1", sku: "SKU-ENE-0001", quantity: 15, unitPrice: 125000, totalPrice: 1875000 }
+        { productId: "prod_panneau_solaire", productName: "Panneau Solaire Monocristallin 400W", sku: "EN-PAN-SOL", quantity: 1, unitPrice: 85000, totalPrice: 85000, supplierId: "usr_vendor_2", status: "Pending" }
       ],
-      subtotal: 1875000,
-      tax: 360937,
+      subtotal: 85000,
+      tax: 16362,
       shippingFee: 5000,
-      total: 2240937,
-      status: "Submitted",
+      total: 106362,
+      status: "Draft",
       paymentStatus: "Escrow_Held",
-      created_at: "2026-06-25T11:30:00Z",
+      created_at: "2026-07-06T11:00:00Z",
       history: [
-        { status: "Submitted", timestamp: "2026-06-25T11:30:00Z", label: "Bon de commande soumis", description: "Soumission initiale pour ALPHA RETAIL LTD." }
+        { status: "Draft", timestamp: "2026-07-06T11:00:00Z", label: "Brouillon enregistré", description: "Brouillon solaire créé." }
       ]
     },
-    ...seedOrders.map(o => ({
-      ...o,
-      reference: o.reference || o.id || `B2B-PO-2026-${String(Math.random()).slice(-4)}`,
-      status: o.status || 'Pending',
-      items: o.items || [
-        { productId: 'p_1', name: 'Engrais Bio NPK Bag', qty: 200, unitPrice: 12500 },
-        { productId: 'p_2', name: 'Pompe Solaire MPPT 500W', qty: 15, unitPrice: 320000 }
+    {
+      id: "BC-2026-006",
+      reference: "BC-2026-006",
+      clientId: "cli_buyer_demo",
+      clientName: "Alice Kamga",
+      clientCompany: "Kamga B2C Sourcing",
+      deliveryMode: "Route Heavy Truck (Camion 10t)",
+      carrierName: "Afrique Logistique Express",
+      waybill: "AWB-LT-893-OM-906",
+      items: [
+        { productId: "prod_souris_wireless", productName: "Souris Sans Fil Logitech", sku: "EL-LOG-MOU", quantity: 5, unitPrice: 15000, totalPrice: 75000, supplierId: "usr_vendor_1", status: "Pending" },
+        { productId: "prod_cable_hdmi", productName: "Câble HDMI 4K 1.8m", sku: "EL-CAB-HD", quantity: 10, unitPrice: 5000, totalPrice: 50000, supplierId: "usr_vendor_1", status: "Pending" }
+      ],
+      subtotal: 125000,
+      tax: 24062,
+      shippingFee: 10000,
+      total: 159062,
+      status: "Packed",
+      paymentStatus: "Escrow_Held",
+      created_at: "2026-07-07T09:00:00Z",
+      history: [
+        { status: "Submitted", timestamp: "2026-07-07T09:00:00Z", label: "Bon de commande soumis", description: "Soumission initiale." },
+        { status: "Approved", timestamp: "2026-07-07T14:20:00Z", label: "Approuvé par le Vendeur", description: "Validation des stocks physiques." },
+        { status: "Packed", timestamp: "2026-07-08T08:00:00Z", label: "BL Généré", description: "Le vendeur a généré le bon de livraison." }
       ]
-    }))
+    }
   ],
   rfqs: seedRFQs.map(r => ({
     ...r,
@@ -190,39 +218,61 @@ const defaultState = {
       lastSync: '2026-06-18 05:12'
     }
   })),
-  b2b_suppliers: [
-    { id: 'sup_001', name: 'Zama-Agro Sahel', category: 'Intrants Agricoles', email: 'contact@zama-agro.bf', phone: '+226 70 00 00 00', address: 'Bobo-Dioulasso, Burkina Faso', status: 'Active', paymentTerms: 'Net 30', taxId: 'N001' },
-    { id: 'sup_002', name: 'SOPRO-CAM S.A.', category: 'Produits Chimiques', email: 'sales@soprocam.cm', phone: '+237 690 00 00 00', address: 'Douala, Cameroun', status: 'Active', paymentTerms: 'Cash on Delivery', taxId: 'N002' },
-    { id: 'sup_003', name: 'Nylon Packaging Douala', category: 'Emballages', email: 'pack@nylondouala.cm', phone: '+237 670 00 00 00', address: 'Bonabéri, Cameroun', status: 'Suspended', paymentTerms: 'Net 15', taxId: 'N003' }
-  ],
   purchases: [
-    { id: 'po_001', supplierIds: ['sup_001'], date: '2026-06-10', items: [{ name: 'Sacs Jute de Cacao', qty: 1000, unitPrice: 1500, supplierId: 'sup_001' }], amount: 1500000, status: 'Received' },
-    { id: 'po_002', supplierIds: ['sup_002'], date: '2026-06-14', items: [{ name: 'Intrants Azotés Solubles (Litres)', qty: 250, unitPrice: 19200, supplierId: 'sup_002' }], amount: 4800000, status: 'Sent' },
-    { id: 'po_003', supplierIds: ['sup_001', 'sup_003'], date: '2026-06-17', items: [{ name: 'Emballages Thermoscellés Kraft', qty: 5000, unitPrice: 130, supplierId: 'sup_003' }, { name: 'Ficelle Jute', qty: 100, unitPrice: 500, supplierId: 'sup_001' }], amount: 700000, status: 'Draft' }
+    { id: 'po_001', supplierIds: ['usr_vendor_1'], date: '2026-07-01', items: [{ name: 'Sacs Jute de Cacao', qty: 1000, unitPrice: 1500, supplierId: 'usr_vendor_1' }], amount: 1500000, status: 'Received' },
+    { id: 'po_002', supplierIds: ['usr_vendor_2'], date: '2026-07-04', items: [{ name: 'Batterie Solaire Gel 200Ah', qty: 250, unitPrice: 135000, supplierId: 'usr_vendor_2' }], amount: 33750000, status: 'Sent' }
   ],
   delivery_notes: [
-    { id: 'dn_001', purchaseId: 'po_001', supplierId: 'sup_001', date: '2026-06-15', receivedBy: 'Alizéta Traoré', status: 'Verified', items: [{ name: 'Sacs Jute de Cacao', qtyExpected: 1000, qtyReceived: 1000 }] }
+    { id: 'dn_001', purchaseId: 'BC-2026-001', supplierId: 'usr_vendor_1', date: '2026-07-02', receivedBy: 'Alice Kamga', status: 'Verified', items: [{ name: 'Souris Sans Fil Logitech', qtyExpected: 2, qtyReceived: 2 }] },
+    {
+      id: 'dn_003',
+      purchaseId: 'BC-2026-006',
+      supplierId: 'usr_vendor_1',
+      date: '2026-07-07',
+      receivedBy: '',
+      status: 'Awaiting_Validation',
+      items: [
+        { name: 'Souris Sans Fil Logitech', qtyExpected: 5, qtyReceived: 4 },
+        { name: 'Câble HDMI 4K 1.8m', qtyExpected: 10, qtyReceived: 8 },
+        { name: 'Panneau Solaire Monocristallin 400W', qtyExpected: 0, qtyReceived: 1 }
+      ]
+    }
+  ],
+  returns: [
+    {
+      id: 'RET-2026-001',
+      reference: 'RET-2026-001',
+      parent_order_id: 'BC-2026-006',
+      parent_delivery_note_id: 'dn_003',
+      buyer_id: 'usr_buyer_1',
+      buyer_name: 'Alice Kamga',
+      supplier_id: 'usr_vendor_1',
+      supplier_name: 'TechSupplies SARL',
+      created_at: '2026-07-08T11:30:00Z',
+      status: 'Requested',
+      reason: 'Quantité manquante et articles non conformes',
+      items: [
+        { productId: 'prod_souris_wireless', productName: 'Souris Sans Fil Logitech', originalQty: 5, returnQty: 1, comment: 'Manque 1 unité, emballage humide' },
+        { productId: 'prod_cable_hdmi', productName: 'Câble HDMI 4K 1.8m', originalQty: 10, returnQty: 2, comment: '2 câbles non fonctionnels à l’arrivée' }
+      ],
+      comments: [
+        { author: 'Alice Kamga', text: 'Réception incomplète et articles endommagés', date: '2026-07-08T11:30:00Z' }
+      ],
+      linked_bc_id: null
+    }
   ],
   expenses: [
-    { id: 'exp_001', date: '2026-06-05', category: 'Carburant Logistique', amount: 350000, description: 'Livraison Douala-Yaoundé Super' },
-    { id: 'exp_002', date: '2026-06-10', category: 'Loyer Entrepôt', amount: 1200000, description: 'Facturation Mensuelle Hub Bassa' },
-    { id: 'exp_003', date: '2026-06-15', category: 'Droits de Douane', amount: 890000, description: 'Transit Port Douala Intrants Solaire' },
-    { id: 'exp_004', date: '2026-06-17', category: 'Salaires Équipe', amount: 2450000, description: 'Opérateurs entrepôts & dispatch' }
+    { id: 'exp_001', date: '2026-07-05', category: 'Carburant Logistique', amount: 350000, description: 'Livraison Douala-Yaoundé Super' },
+    { id: 'exp_002', date: '2026-07-10', category: 'Loyer Entrepôt', amount: 1200000, description: 'Facturation Mensuelle Hub Bassa' }
   ],
   team: [
-    { id: 'usr_techsupp_mgr', name: 'Jean Dupont', email: 'supplier@enterprise.local', role: 'Business Director', permissions: ['manage_stock', 'issue_rfq', 'approve_orders', 'view_ledger', 'edit_team'] },
-    { id: 'usr_techsupp_clerk', name: 'Alizéta Traoré', email: 'clerk@techsupplies.com', role: 'Storage Officer', permissions: ['manage_stock', 'view_ledger'] },
-    { id: 'usr_techsupp_helper', name: 'Ibrahim Bello', email: 'bello.helper@techsupplies.com', role: 'Transit Staff', permissions: ['manage_stock'] }
+    { id: 'usr_techsupp_mgr', name: 'Jean Dupont', email: 'supplier@enterprise.local', role: 'Business Director', permissions: ['manage_stock', 'issue_rfq', 'approve_orders', 'view_ledger', 'edit_team'] }
   ],
   withdrawals: [
-    { id: 'wth_001', date: '2026-06-02', method: 'Orange Money', amount: 4500000, status: 'Completed', reference: 'OM-TXN-283401' },
-    { id: 'wth_002', date: '2026-06-12', method: 'MTN MoMo', amount: 12000000, status: 'Completed', reference: 'MOMO-PAY-983020' },
-    { id: 'wth_003', date: '2026-06-16', method: 'Virement de compte CCA Bank', amount: 25000000, status: 'Pending', reference: 'CCA-EFT-400192' }
+    { id: 'wth_001', date: '2026-07-02', method: 'Orange Money', amount: 4500000, status: 'Completed', reference: 'OM-TXN-283401' }
   ],
   carriers: [
-    { id: 'car_001', name: 'Afrique Logistique Express', type: 'Camion 10 Tonnes', plate: 'LT-893-OA', route: 'Douala - Yaoundé - Bafoussam', status: 'Active' },
-    { id: 'car_002', name: 'Gofetch Cargo Transit', type: 'Fourgonnette Isotherme', plate: 'CE-412-BB', route: 'Yaoundé - Kribi - Ebolowa', status: 'Transit' },
-    { id: 'car_003', name: 'Sawa Express Riders', type: 'Motos Cargo Robust', plate: 'LT-012-MC', route: 'Zone Industrielle de Bassa (Douala)', status: 'Active' }
+    { id: 'car_001', name: 'Afrique Logistique Express', type: 'Camion 10 Tonnes', plate: 'LT-893-OA', route: 'Douala - Yaoundé - Bafoussam', status: 'Active' }
   ],
   kycDoc: {
     status: 'VERIFIED',
@@ -240,16 +290,26 @@ const defaultState = {
 };
 
 const saved = localStorage.getItem(STORAGE_KEY);
-const parsed = saved ? JSON.parse(saved) : defaultState;
+let parsed = saved ? JSON.parse(saved) : defaultState;
+
+// Force schema migration if legacy data is present
+if (parsed && parsed.b2b_suppliers) {
+  const hasOldIds = parsed.b2b_suppliers.some(s => s.id === 'sup_001');
+  if (hasOldIds || !parsed.orders || parsed.orders.length < 5) {
+    // Migration: overwrite with the aligned mock data structure
+    parsed = defaultState;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultState));
+  }
+}
 
 export const products = ref(parsed.products);
 export const warehouses = ref(parsed.warehouses);
 export const orders = ref(parsed.orders);
 export const rfqs = ref(parsed.rfqs);
 export const stores = ref(parsed.stores);
-export const b2b_suppliers = ref(parsed.b2b_suppliers || defaultState.b2b_suppliers);
 export const purchases = ref(parsed.purchases);
 export const delivery_notes = ref(parsed.delivery_notes || defaultState.delivery_notes);
+export const returns = ref(parsed.returns || defaultState.returns);
 export const expenses = ref(parsed.expenses);
 export const team = ref(parsed.team);
 export const withdrawals = ref(parsed.withdrawals);
@@ -260,7 +320,7 @@ export const walletLocked = ref(parsed.walletLocked || []);
 
 // Watch for deep changes and sync with localStorage
 watch(
-  [products, warehouses, orders, rfqs, stores, b2b_suppliers, purchases, delivery_notes, expenses, team, withdrawals, carriers, kycDoc, walletFree, walletLocked],
+  [products, warehouses, orders, rfqs, stores, b2b_suppliers, purchases, delivery_notes, returns, expenses, team, withdrawals, carriers, kycDoc, walletFree, walletLocked],
   () => {
     const serialized = {
       products: products.value,
@@ -271,6 +331,7 @@ watch(
       b2b_suppliers: b2b_suppliers.value,
       purchases: purchases.value,
       delivery_notes: delivery_notes.value,
+      returns: returns.value,
       expenses: expenses.value,
       team: team.value,
       withdrawals: withdrawals.value,
@@ -289,7 +350,6 @@ export function purchaseFIFOStock(productId, qtyNeeded) {
   const prod = products.value.find(p => p.id === productId);
   if (!prod) return false;
   
-  // order batches oldest first (id b_1, b_2, etc or date)
   const sortedBatches = (prod.batches || []).sort((a, b) => new Date(a.date) - new Date(b.date));
   
   let leftToConsume = qtyNeeded;
@@ -310,7 +370,6 @@ export function purchaseFIFOStock(productId, qtyNeeded) {
     }
   }
   
-  // Math remaining total stock
   prod.stock = sortedBatches.reduce((acc, b) => acc + b.qty, 0);
   return { success: leftToConsume === 0, consumedDetails };
 }

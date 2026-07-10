@@ -39,5 +39,27 @@ export const mockDeliveryNotes = [
     shipping_mode: 'Routier Pro',
     signature: '',
     photo_proof: ''
+  },
+  {
+    id: 'dn_003',
+    reference: 'BL-2026-006',
+    purchase_order_id: 'BC-2026-006',
+    emitter_id: 'usr_vendor_1',
+    emitter_type: 'vendor',
+    receiver_id: 'usr_buyer_1',
+    receiver_type: 'buyer',
+    date_emission: new Date('2026-07-07T10:00:00Z'),
+    date_livraison: null,
+    status: 'IN_TRANSIT',
+    products: [
+      { product_id: 'prod_souris_wireless', quantity_delivered: 4, unit_price: 15000, total: 60000, lot_number: 'LOT-MS-02' },
+      { product_id: 'prod_cable_hdmi', quantity_delivered: 8, unit_price: 5000, total: 40000, lot_number: 'LOT-CB-10' },
+      { product_id: 'prod_panneau_solaire', quantity_delivered: 1, unit_price: 85000, total: 85000, lot_number: 'LOT-SOL-05' }
+    ],
+    carrier: 'Afrique Logistique Express',
+    tracking_number: 'TRK-003',
+    shipping_mode: 'Routier Pro',
+    signature: '',
+    photo_proof: ''
   }
 ];

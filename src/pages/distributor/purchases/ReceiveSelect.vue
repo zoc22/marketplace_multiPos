@@ -63,13 +63,15 @@
 <script setup>
 import { computed } from 'vue';
 import { useOrdersStore } from '@/store/modules/orders.js';
+import { useAuthStore } from '@/store/modules/auth.js';
 
+const authStore = useAuthStore();
 const ordersStore = useOrdersStore();
 
 const pendingIncomingDNs = computed(() => {
   // Filters delivery notes destined to the distributor and not yet fully delivered
   return ordersStore.deliveryNotes.filter(dn => 
-    (dn.receiver_type === 'distributor' || dn.receiver_id === 'dist_1') &&
+    (dn.receiver_id === authStore.user?.id || dn.receiver_id === authStore.user?.tenant) &&
     dn.status !== 'DELIVERED'
   );
 });

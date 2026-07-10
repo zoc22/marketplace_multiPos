@@ -18,6 +18,7 @@
     "@vueuse/core": "^12.8.2",
     "apexcharts": "^4.5.0",
     "axios": "^1.8.1",
+    "chart.js": "^4.5.1",
     "dayjs": "^1.11.13",
     "dotenv": "^17.2.3",
     "express": "^4.21.2",

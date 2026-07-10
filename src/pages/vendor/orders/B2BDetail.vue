@@ -21,7 +21,7 @@
           label="Imprimer le BC" 
         />
         <router-link
-          v-if="order.status === 'PENDING' || order.status === 'VALIDATED'"
+          v-if="order.status === 'PENDING' || order.status === 'VALIDATED' || order.status === 'Returned'"
           :to="'/vendor/orders/b2b/' + order.id + '/prepare'"
           class="px-4 py-2 bg-[var(--color-primary)] hover:opacity-90 text-white font-mono text-xs font-bold rounded-xl transition flex items-center space-x-1.5 cursor-pointer"
         >
@@ -164,11 +164,21 @@ import { useRoute } from 'vue-router';
 import { useOrdersStore } from '@/store/modules/orders.js';
 import PrintButton from '@/components/print/PrintButton.vue';
 
+import { useAuthStore } from '@/store/modules/auth.js';
+
 const route = useRoute();
 const ordersStore = useOrdersStore();
+const authStore = useAuthStore();
 
 const order = computed(() => {
-  return ordersStore.purchaseOrders.find(o => o.id === route.params.id);
+  const rawOrder = ordersStore.purchaseOrders.find(o => o.id === route.params.id);
+  if (!rawOrder) return null;
+  const cloned = JSON.parse(JSON.stringify(rawOrder));
+  if (cloned.products) {
+    cloned.products = cloned.products.filter(p => p.supplierId === authStore.user?.id || p.supplierId === authStore.user?.tenant);
+  }
+  cloned.total = cloned.products.reduce((acc, p) => acc + (p.quantity * p.unit_price), 0);
+  return cloned;
 });
 
 const associatedDN = computed(() => {

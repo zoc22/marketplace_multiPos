@@ -104,5 +104,27 @@ export const mockProducts = [
     sku: 'BT-FER-ROD',
     supplierId: 'usr_dist_2',
     description: 'Fer à béton haute adhérence certifié aux normes locales.'
+  },
+  {
+    id: 'prod_kraft_bag',
+    name: 'Emballages Thermoscellés Kraft',
+    category: 'Emballages',
+    price: 150,
+    stock: 10000,
+    unit: 'unité',
+    sku: 'PK-KRA-BAG',
+    supplierId: 'usr_vendor_3',
+    description: 'Sacs Kraft pour emballages alimentaires écologiques.'
+  },
+  {
+    id: 'prod_jute_sac',
+    name: 'Sacs Jute de Cacao',
+    category: 'Emballages',
+    price: 1500,
+    stock: 5000,
+    unit: 'unité',
+    sku: 'PK-JUT-SAC',
+    supplierId: 'usr_vendor_3',
+    description: 'Sacs en toile de jute robustes pour exportation agricole.'
   }
 ];

@@ -147,6 +147,9 @@ import {
 } from '@heroicons/vue/24/outline';
 import Pagination from '@/components/Pagination.vue';
 
+import { useAuthStore } from '@/store/modules/auth.js';
+
+const authStore = useAuthStore();
 const ordersStore = useOrdersStore();
 const toast = useToast();
 
@@ -190,12 +193,13 @@ onMounted(() => {
 
 const filteredOrders = computed(() => {
   return ordersStore.purchaseOrders.filter(o => {
+    const isDestined = o.receiver_id === authStore.user?.id || o.receiver_id === authStore.user?.tenant;
     const matchStatus = statusFilter.value === 'ALL' || o.status === statusFilter.value;
     const searchLow = searchQuery.value.toLowerCase();
     const matchSearch = o.reference.toLowerCase().includes(searchLow) || 
                         o.emitter_id.toLowerCase().includes(searchLow) ||
                         o.emitter_type.toLowerCase().includes(searchLow);
-    return matchStatus && matchSearch;
+    return isDestined && matchStatus && matchSearch;
   });
 });
 

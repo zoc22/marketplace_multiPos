@@ -13,7 +13,7 @@ export const useAuthStore = defineStore('auth', {
       user: null, // Logged in user info
       roles: [],  // Current authenticated roles: 'admin', 'supplier', 'buyer', 'pos'
       currentSubdomain: '', // Stancl Tenancy active subdomain: 'techsupplies', 'solarplus', 'agrodistrib', 'btpmaterials'
-      
+
       // Virtual Database of registered accounts
       users: [...mockUsers],
 
@@ -65,7 +65,7 @@ export const useAuthStore = defineStore('auth', {
       virtualEmails: [
         {
           id: 1,
-          to: 'contact@techsupplies.test',
+          to: 'contact@techsupplies.com',
           subject: 'Votre compte professionnel Vendeur B2B a été approuvé !',
           body: 'Félicitations, votre enregistrement et audit KYC ont été validés. Bienvenue sur le Hub B2B Kong S.A.',
           time: '2026-03-01 10:00:23',
@@ -78,7 +78,7 @@ export const useAuthStore = defineStore('auth', {
       twoFactorRequiredEmail: null,
       forgotPasswordEmail: null,
       resetPasswordEmail: null,
-      
+
       // Temporary registration storage for multi-step checks
       tempRegistration: null
     };
@@ -118,7 +118,7 @@ export const useAuthStore = defineStore('auth', {
       this.token = `jwt_sig_simulated_${Date.now()}`;
       this.user = { ...u };
       this.roles = [...u.roles];
-      
+
       if (u.tenant) {
         this.currentSubdomain = u.tenant;
       } else {
@@ -134,7 +134,7 @@ export const useAuthStore = defineStore('auth', {
       // Mock social login: logs in as the standard buyer
       const u = this.users.find(x => x.id === 'usr_buyer_main');
       if (!u) throw new Error('Utilisateur de démonstration introuvable.');
-      
+
       this.token = `jwt_sig_social_${provider}_${Date.now()}`;
       this.user = { ...u };
       this.roles = [...u.roles];
@@ -180,7 +180,7 @@ export const useAuthStore = defineStore('auth', {
     forgotPassword(email) {
       const u = this.users.find(x => x.email?.toLowerCase() === email.toLowerCase());
       const randomCode = Math.floor(100000 + Math.random() * 900000).toString();
-      
+
       this.forgotPasswordEmail = email;
       this.verificationCode = randomCode;
 
@@ -208,7 +208,7 @@ export const useAuthStore = defineStore('auth', {
       u.password = newPassword;
       this.forgotPasswordEmail = null;
       this.verificationCode = null;
-      
+
       this.sendVirtualEmail(
         email,
         'Vault Credentials Sec-Key Changed',
@@ -364,7 +364,7 @@ export const useAuthStore = defineStore('auth', {
         'KYC Compliance Verification Cleared',
         `Your company tenant registrations (${t?.name || 'Supplier'}) have passed verification. You are authorized to log in.`
       );
-      
+
       this.saveState();
     },
 

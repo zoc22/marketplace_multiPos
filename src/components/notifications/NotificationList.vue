@@ -67,9 +67,11 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useNotificationsStore } from '@/store/modules/notifications.js';
+import { useAuthStore } from '@/store/modules/auth.js';
 import NotificationItem from './NotificationItem.vue';
 import { BellIcon } from '@heroicons/vue/24/outline';
 
+const authStore = useAuthStore();
 const notificationsStore = useNotificationsStore();
 
 const selectedType = ref('all');
@@ -83,7 +85,9 @@ const typeOptions = [
 ];
 
 const filteredNotifications = computed(() => {
-  let list = [...notificationsStore.notifications];
+  let list = notificationsStore.notifications.filter(n => 
+    !n.receiver_id || n.receiver_id === authStore.user?.id || n.receiver_id === authStore.user?.tenant
+  );
 
   // Filter by Type
   if (selectedType.value !== 'all') {

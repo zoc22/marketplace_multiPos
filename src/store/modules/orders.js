@@ -122,7 +122,7 @@ export const useOrdersStore = defineStore('orders', {
       const productsStore = useProductsStore();
       const po = this.purchaseOrders.find(o => o.id === poId);
       if (po) {
-        po.status = 'PROCESSING';
+        po.status = 'Packed';
         const newDN = {
           id: generateUUID(),
           reference: deliveryNoteData.reference || `BL-${Date.now().toString().slice(-6)}-${Math.floor(Math.random() * 1000)}`,
